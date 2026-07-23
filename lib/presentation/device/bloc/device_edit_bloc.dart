@@ -23,12 +23,12 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     required CreateDeviceUsecase createDevice,
     required UpdateDeviceUsecase updateDevice,
     required DeleteDeviceUsecase deleteDevice,
-  })  : _getDevice = getDevice,
-        _getRulesForDevice = getRulesForDevice,
-        _createDevice = createDevice,
-        _updateDevice = updateDevice,
-        _deleteDevice = deleteDevice,
-        super(DeviceEditState(isEdit: deviceId != null)) {
+  }) : _getDevice = getDevice,
+       _getRulesForDevice = getRulesForDevice,
+       _createDevice = createDevice,
+       _updateDevice = updateDevice,
+       _deleteDevice = deleteDevice,
+       super(DeviceEditState(isEdit: deviceId != null)) {
     on<DeviceEditStarted>(_onStarted);
     on<DeviceEditNameChanged>(_onNameChanged);
     on<DeviceEditScheduleTypeChanged>(_onScheduleTypeChanged);
@@ -115,10 +115,7 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     Emitter<DeviceEditState> emit,
   ) {
     emit(
-      state.copyWith(
-        scheduleType: event.scheduleType,
-        clearIntervalUnit: true,
-      ),
+      state.copyWith(scheduleType: event.scheduleType, clearIntervalUnit: true),
     );
   }
 

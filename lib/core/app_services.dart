@@ -23,19 +23,17 @@ import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
 
 class AppServices {
   AppServices(this.database)
-      : deviceRepository = DeviceRepositoryImpl(
-          db: database,
-          devices: DeviceLocalDataSourceImpl(database.deviceDao),
-          rules: MaintenanceRuleLocalDataSourceImpl(
-            database.maintenanceRuleDao,
-          ),
-          logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
-        ),
-        deviceLogRepository = DeviceLogRepositoryImpl(
-          db: database,
-          logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
-          devices: DeviceLocalDataSourceImpl(database.deviceDao),
-        ) {
+    : deviceRepository = DeviceRepositoryImpl(
+        db: database,
+        devices: DeviceLocalDataSourceImpl(database.deviceDao),
+        rules: MaintenanceRuleLocalDataSourceImpl(database.maintenanceRuleDao),
+        logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
+      ),
+      deviceLogRepository = DeviceLogRepositoryImpl(
+        db: database,
+        logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
+        devices: DeviceLocalDataSourceImpl(database.deviceDao),
+      ) {
     watchDeviceSummaries = WatchDeviceSummariesUsecase(deviceRepository);
     getDevice = GetDeviceUsecase(deviceRepository);
     getAllDevices = GetAllDevicesUsecase(deviceRepository);
@@ -82,8 +80,8 @@ class AppServicesScope extends InheritedWidget {
   final AppServices services;
 
   static AppServices of(BuildContext context) {
-    final scope =
-        context.dependOnInheritedWidgetOfExactType<AppServicesScope>();
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<AppServicesScope>();
     assert(scope != null, 'AppServicesScope not found');
     return scope!.services;
   }

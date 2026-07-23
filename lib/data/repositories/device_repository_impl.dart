@@ -26,11 +26,11 @@ class DeviceRepositoryImpl extends DeviceRepository {
     required MaintenanceRuleLocalDataSource rules,
     required DeviceLogLocalDataSource logs,
     MaintenanceStatusCalculator? calculator,
-  })  : _db = db,
-        _devices = devices,
-        _rules = rules,
-        _logs = logs,
-        _calculator = calculator ?? MaintenanceStatusCalculator();
+  }) : _db = db,
+       _devices = devices,
+       _rules = rules,
+       _logs = logs,
+       _calculator = calculator ?? MaintenanceStatusCalculator();
 
   @override
   Future<List<Device>> getDevices() async {
@@ -58,16 +58,15 @@ class DeviceRepositoryImpl extends DeviceRepository {
       final ruleModels = await _rules.getRulesForDevices(ids);
       final rulesByDevice = <String, List<MaintenanceRule>>{};
       for (final rule in ruleModels) {
-        rulesByDevice
-            .putIfAbsent(rule.deviceId, () => [])
-            .add(rule.toEntity());
+        rulesByDevice.putIfAbsent(rule.deviceId, () => []).add(rule.toEntity());
       }
 
       final summaries = <DeviceSummary>[];
       for (final device in devices) {
         final rules = rulesByDevice[device.id] ?? const [];
-        final latestLog =
-            (await _logs.getLatestLogForDevice(device.id))?.toEntity();
+        final latestLog = (await _logs.getLatestLogForDevice(
+          device.id,
+        ))?.toEntity();
         final result = _calculator.evaluateDevice(
           device: device,
           rules: rules,
@@ -87,7 +86,9 @@ class DeviceRepositoryImpl extends DeviceRepository {
       summaries.sort((a, b) {
         final byStatus = b.status.severity.compareTo(a.status.severity);
         if (byStatus != 0) return byStatus;
-        return a.device.name.toLowerCase().compareTo(b.device.name.toLowerCase());
+        return a.device.name.toLowerCase().compareTo(
+          b.device.name.toLowerCase(),
+        );
       });
       return summaries;
     });
@@ -107,9 +108,9 @@ class DeviceRepositoryImpl extends DeviceRepository {
 
   @override
   Stream<List<MaintenanceRule>> watchRulesForDevice(String deviceId) {
-    return _rules.watchRulesForDevice(deviceId).map(
-          (models) => models.map((m) => m.toEntity()).toList(),
-        );
+    return _rules
+        .watchRulesForDevice(deviceId)
+        .map((models) => models.map((m) => m.toEntity()).toList());
   }
 
   @override
@@ -146,11 +147,7 @@ class DeviceRepositoryImpl extends DeviceRepository {
 
   @override
   Future<void> setDeviceStatus(String id, DeviceStatus status) async {
-    await _devices.setDeviceStatus(
-      id,
-      status.storageValue,
-      DateTime.now(),
-    );
+    await _devices.setDeviceStatus(id, status.storageValue, DateTime.now());
   }
 
   @override

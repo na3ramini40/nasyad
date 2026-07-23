@@ -32,11 +32,12 @@ class TransferPage extends StatelessWidget {
         final message = switch (state.feedback) {
           TransferFeedback.exportShared => l10n.exportSuccess,
           TransferFeedback.exportCopied => l10n.exportCopied,
-          TransferFeedback.exportSaved =>
-            l10n.exportSaved(state.feedbackDetail ?? ''),
+          TransferFeedback.exportSaved => l10n.exportSaved(
+            state.feedbackDetail ?? '',
+          ),
           TransferFeedback.importSuccess => l10n.importSuccess(
-              int.tryParse(state.feedbackDetail ?? '') ?? 0,
-            ),
+            int.tryParse(state.feedbackDetail ?? '') ?? 0,
+          ),
           TransferFeedback.none => null,
         };
         if (message != null) {
@@ -71,17 +72,15 @@ class TransferPage extends StatelessWidget {
                 SelectableOptionTile(
                   label: l10n.exportScopeAll,
                   selected: state.scope == ExportScopeKind.all,
-                  onTap: () => bloc.add(
-                    const TransferScopeChanged(ExportScopeKind.all),
-                  ),
+                  onTap: () =>
+                      bloc.add(const TransferScopeChanged(ExportScopeKind.all)),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 SelectableOptionTile(
                   label: l10n.exportScopeOne,
                   selected: state.scope == ExportScopeKind.one,
-                  onTap: () => bloc.add(
-                    const TransferScopeChanged(ExportScopeKind.one),
-                  ),
+                  onTap: () =>
+                      bloc.add(const TransferScopeChanged(ExportScopeKind.one)),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 SelectableOptionTile(
@@ -113,9 +112,8 @@ class TransferPage extends StatelessWidget {
                         child: SelectableOptionTile(
                           label: device.name,
                           selected: selected,
-                          onTap: () => bloc.add(
-                            TransferDeviceToggled(device.id),
-                          ),
+                          onTap: () =>
+                              bloc.add(TransferDeviceToggled(device.id)),
                         ),
                       );
                     }),
@@ -129,17 +127,15 @@ class TransferPage extends StatelessWidget {
                 SelectableOptionTile(
                   label: l10n.formatJson,
                   selected: state.format == ExportFormat.json,
-                  onTap: () => bloc.add(
-                    const TransferFormatChanged(ExportFormat.json),
-                  ),
+                  onTap: () =>
+                      bloc.add(const TransferFormatChanged(ExportFormat.json)),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 SelectableOptionTile(
                   label: l10n.formatCsv,
                   selected: state.format == ExportFormat.csv,
-                  onTap: () => bloc.add(
-                    const TransferFormatChanged(ExportFormat.csv),
-                  ),
+                  onTap: () =>
+                      bloc.add(const TransferFormatChanged(ExportFormat.csv)),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 SelectableOptionTile(
@@ -160,10 +156,10 @@ class TransferPage extends StatelessWidget {
                         isLoading: state.status == TransferStatus.busy,
                         onPressed: state.canExport
                             ? () => bloc.add(
-                                  TransferShareRequested(
-                                    noDevicesMessage: noDevicesMessage,
-                                  ),
-                                )
+                                TransferShareRequested(
+                                  noDevicesMessage: noDevicesMessage,
+                                ),
+                              )
                             : null,
                       ),
                     ),
@@ -175,10 +171,10 @@ class TransferPage extends StatelessWidget {
                         isLoading: state.status == TransferStatus.busy,
                         onPressed: state.canExport
                             ? () => bloc.add(
-                                  TransferSaveRequested(
-                                    noDevicesMessage: noDevicesMessage,
-                                  ),
-                                )
+                                TransferSaveRequested(
+                                  noDevicesMessage: noDevicesMessage,
+                                ),
+                              )
                             : null,
                       ),
                     ),
@@ -193,10 +189,10 @@ class TransferPage extends StatelessWidget {
                   onPressed: state.isBusy
                       ? null
                       : () => bloc.add(
-                            TransferPickImportRequested(
-                              invalidFileMessage: l10n.importInvalid,
-                            ),
+                          TransferPickImportRequested(
+                            invalidFileMessage: l10n.importInvalid,
                           ),
+                        ),
                 ),
                 if (state.importPreview != null) ...[
                   const SizedBox(height: AppSpacing.md),

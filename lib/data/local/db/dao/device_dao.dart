@@ -16,9 +16,9 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
   }
 
   Future<List<DevicesTableData>> getAllDevices() {
-    return (select(devicesTable)
-          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
-        .get();
+    return (select(
+      devicesTable,
+    )..orderBy([(t) => OrderingTerm.asc(t.name)])).get();
   }
 
   Future<List<DevicesTableData>> getDevicesByIds(List<String> ids) {
@@ -37,8 +37,9 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
   }
 
   Future<DevicesTableData?> getDeviceById(String id) {
-    return (select(devicesTable)..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    return (select(
+      devicesTable,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
   }
 
   Future<int> insertDevice(DevicesTableCompanion device) {
@@ -55,10 +56,7 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
 
   Future<int> setStatus(String id, String status, DateTime updatedAt) {
     return (update(devicesTable)..where((t) => t.id.equals(id))).write(
-      DevicesTableCompanion(
-        status: Value(status),
-        updatedAt: Value(updatedAt),
-      ),
+      DevicesTableCompanion(status: Value(status), updatedAt: Value(updatedAt)),
     );
   }
 }

@@ -8,46 +8,46 @@ import 'package:nasyad/core/theme/app_status_colors.dart';
 
 abstract final class AppTheme {
   static ThemeData get lightTheme => _build(
-        brightness: Brightness.light,
-        colorScheme: const ColorScheme.light(
-          primary: AppColors.primary,
-          onPrimary: Colors.white,
-          secondary: AppColors.secondary,
-          onSecondary: Colors.white,
-          error: AppColors.error,
-          onError: Colors.white,
-          surface: AppColors.surfaceLight,
-          onSurface: AppColors.primary,
-          onSurfaceVariant: AppColors.onSurfaceMutedLight,
-          outline: Color(0xFFD1D5DB),
-          outlineVariant: Color(0xFFE5E7EB),
-        ),
-        scaffoldBackground: AppColors.backgroundLight,
-        statusColors: AppStatusColors.light,
-        cardElevation: 1.5,
-        shadowColor: Colors.black.withValues(alpha: 0.08),
-      );
+    brightness: Brightness.light,
+    colorScheme: const ColorScheme.light(
+      primary: AppColors.primary,
+      onPrimary: Colors.white,
+      secondary: AppColors.secondary,
+      onSecondary: Colors.white,
+      error: AppColors.error,
+      onError: Colors.white,
+      surface: AppColors.surfaceLight,
+      onSurface: AppColors.primary,
+      onSurfaceVariant: AppColors.onSurfaceMutedLight,
+      outline: Color(0xFFD1D5DB),
+      outlineVariant: Color(0xFFE5E7EB),
+    ),
+    scaffoldBackground: AppColors.backgroundLight,
+    statusColors: AppStatusColors.light,
+    cardElevation: 1.5,
+    shadowColor: Colors.black.withValues(alpha: 0.08),
+  );
 
   static ThemeData get darkTheme => _build(
-        brightness: Brightness.dark,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.primary,
-          onPrimary: Colors.white,
-          secondary: AppColors.secondaryDark,
-          onSecondary: Color(0xFF00332C),
-          error: AppColors.errorDark,
-          onError: Color(0xFF3E0000),
-          surface: AppColors.surfaceDark,
-          onSurface: Color(0xFFE8EAED),
-          onSurfaceVariant: AppColors.onSurfaceMutedDark,
-          outline: Color(0xFF3F3F46),
-          outlineVariant: Color(0xFF2A2A2E),
-        ),
-        scaffoldBackground: AppColors.backgroundDark,
-        statusColors: AppStatusColors.dark,
-        cardElevation: 0,
-        shadowColor: Colors.transparent,
-      );
+    brightness: Brightness.dark,
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.primary,
+      onPrimary: Colors.white,
+      secondary: AppColors.secondaryDark,
+      onSecondary: Color(0xFF00332C),
+      error: AppColors.errorDark,
+      onError: Color(0xFF3E0000),
+      surface: AppColors.surfaceDark,
+      onSurface: Color(0xFFE8EAED),
+      onSurfaceVariant: AppColors.onSurfaceMutedDark,
+      outline: Color(0xFF3F3F46),
+      outlineVariant: Color(0xFF2A2A2E),
+    ),
+    scaffoldBackground: AppColors.backgroundDark,
+    statusColors: AppStatusColors.dark,
+    cardElevation: 0,
+    shadowColor: Colors.transparent,
+  );
 
   static ThemeData _build({
     required Brightness brightness,
@@ -77,8 +77,9 @@ abstract final class AppTheme {
         centerTitle: false,
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        systemOverlayStyle:
-            isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.light,
+        systemOverlayStyle: isDark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.light,
         titleTextStyle: textTheme.titleLarge?.copyWith(
           color: colorScheme.onPrimary,
           fontWeight: FontWeight.w700,
@@ -106,17 +107,21 @@ abstract final class AppTheme {
           elevation: 0,
           backgroundColor: colorScheme.secondary,
           foregroundColor: colorScheme.onSecondary,
-          disabledBackgroundColor:
-              colorScheme.onSurface.withValues(alpha: 0.12),
-          disabledForegroundColor:
-              colorScheme.onSurface.withValues(alpha: 0.38),
+          disabledBackgroundColor: colorScheme.onSurface.withValues(
+            alpha: 0.12,
+          ),
+          disabledForegroundColor: colorScheme.onSurface.withValues(
+            alpha: 0.38,
+          ),
           minimumSize: const Size.fromHeight(AppSpacing.minTapTarget),
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.sm,
           ),
           shape: const RoundedRectangleBorder(borderRadius: AppRadius.borderMd),
-          textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -134,7 +139,10 @@ abstract final class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.secondary,
-          minimumSize: const Size(AppSpacing.minTapTarget, AppSpacing.minTapTarget),
+          minimumSize: const Size(
+            AppSpacing.minTapTarget,
+            AppSpacing.minTapTarget,
+          ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -174,7 +182,9 @@ abstract final class AppTheme {
       chipTheme: ChipThemeData(
         shape: const StadiumBorder(),
         side: BorderSide.none,
-        labelStyle: textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600),
+        labelStyle: textTheme.labelMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.xs,
           vertical: AppSpacing.xxs,
@@ -195,7 +205,9 @@ abstract final class AppTheme {
         backgroundColor: colorScheme.surface,
         surfaceTintColor: Colors.transparent,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.xl),
+          ),
         ),
         showDragHandle: true,
         dragHandleColor: colorScheme.outline,

@@ -1,11 +1,6 @@
 part of 'device_log_bloc.dart';
 
-enum DeviceLogStatus {
-  ready,
-  saving,
-  saved,
-  failure,
-}
+enum DeviceLogStatus { ready, saving, saved, failure }
 
 final class DeviceLogFormState extends Equatable {
   const DeviceLogFormState({
@@ -47,11 +42,11 @@ final class DeviceLogFormState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        notes,
-        date,
-        usageDelta,
-        usageUnit,
-        errorMessage,
-      ];
+    status,
+    notes,
+    date,
+    usageDelta,
+    usageUnit,
+    errorMessage,
+  ];
 }

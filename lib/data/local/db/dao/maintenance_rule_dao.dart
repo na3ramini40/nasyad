@@ -27,9 +27,9 @@ class MaintenanceRuleDao extends DatabaseAccessor<AppDatabase>
     List<String> deviceIds,
   ) {
     if (deviceIds.isEmpty) return Future.value(const []);
-    return (select(maintenanceRulesTable)
-          ..where((t) => t.deviceId.isIn(deviceIds)))
-        .get();
+    return (select(
+      maintenanceRulesTable,
+    )..where((t) => t.deviceId.isIn(deviceIds))).get();
   }
 
   Future<int> insertRule(MaintenanceRulesTableCompanion rule) {
@@ -45,8 +45,8 @@ class MaintenanceRuleDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<int> deleteRulesForDevice(String deviceId) {
-    return (delete(maintenanceRulesTable)
-          ..where((t) => t.deviceId.equals(deviceId)))
-        .go();
+    return (delete(
+      maintenanceRulesTable,
+    )..where((t) => t.deviceId.equals(deviceId))).go();
   }
 }

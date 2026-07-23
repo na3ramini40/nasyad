@@ -18,11 +18,11 @@ class TransferBloc extends Bloc<TransferEvent, TransferState> {
     required ExportDataUsecase exportData,
     required ImportDataUsecase importData,
     TransferFileActions fileActions = const TransferFileActions(),
-  })  : _getAllDevices = getAllDevices,
-        _exportData = exportData,
-        _importData = importData,
-        _fileActions = fileActions,
-        super(const TransferState()) {
+  }) : _getAllDevices = getAllDevices,
+       _exportData = exportData,
+       _importData = importData,
+       _fileActions = fileActions,
+       super(const TransferState()) {
     on<TransferStarted>(_onStarted);
     on<TransferScopeChanged>(_onScopeChanged);
     on<TransferFormatChanged>(_onFormatChanged);
@@ -43,15 +43,12 @@ class TransferBloc extends Bloc<TransferEvent, TransferState> {
     TransferStarted event,
     Emitter<TransferState> emit,
   ) async {
-    emit(state.copyWith(status: TransferStatus.loadingDevices, clearError: true));
+    emit(
+      state.copyWith(status: TransferStatus.loadingDevices, clearError: true),
+    );
     try {
       final devices = await _getAllDevices();
-      emit(
-        state.copyWith(
-          status: TransferStatus.ready,
-          devices: devices,
-        ),
-      );
+      emit(state.copyWith(status: TransferStatus.ready, devices: devices));
     } catch (error) {
       emit(
         state.copyWith(
@@ -250,10 +247,7 @@ class TransferBloc extends Bloc<TransferEvent, TransferState> {
 
     emit(state.copyWith(status: TransferStatus.busy, clearError: true));
     try {
-      final result = await _importData(
-        content,
-        fileName: state.importFileName,
-      );
+      final result = await _importData(content, fileName: state.importFileName);
       final devices = await _getAllDevices();
       emit(
         state.copyWith(

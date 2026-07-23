@@ -34,25 +34,25 @@ class AppButton extends StatelessWidget {
 
     final button = switch (variant) {
       AppButtonVariant.primary => ElevatedButton(
-          onPressed: _enabled ? onPressed : null,
-          child: child,
-        ),
+        onPressed: _enabled ? onPressed : null,
+        child: child,
+      ),
       AppButtonVariant.secondary => OutlinedButton(
-          onPressed: _enabled ? onPressed : null,
-          child: child,
-        ),
+        onPressed: _enabled ? onPressed : null,
+        child: child,
+      ),
       AppButtonVariant.tonal => FilledButton.tonal(
-          onPressed: _enabled ? onPressed : null,
-          child: child,
-        ),
+        onPressed: _enabled ? onPressed : null,
+        child: child,
+      ),
       AppButtonVariant.danger => ElevatedButton(
-          onPressed: _enabled ? onPressed : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            foregroundColor: Theme.of(context).colorScheme.onError,
-          ),
-          child: child,
+        onPressed: _enabled ? onPressed : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.error,
+          foregroundColor: Theme.of(context).colorScheme.onError,
         ),
+        child: child,
+      ),
     };
 
     if (!expand) return button;

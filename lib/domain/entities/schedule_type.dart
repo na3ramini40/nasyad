@@ -1,8 +1,4 @@
-enum ScheduleType {
-  calendarInterval,
-  usageInterval,
-  fixedDate,
-}
+enum ScheduleType { calendarInterval, usageInterval, fixedDate }
 
 extension ScheduleTypeX on ScheduleType {
   String get storageValue => name;

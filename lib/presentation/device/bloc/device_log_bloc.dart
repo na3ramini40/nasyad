@@ -12,8 +12,8 @@ class DeviceLogBloc extends Bloc<DeviceLogEvent, DeviceLogFormState> {
   DeviceLogBloc({
     required this.deviceId,
     required CreateDeviceLogUsecase createDeviceLog,
-  })  : _createDeviceLog = createDeviceLog,
-        super(DeviceLogFormState(date: DateTime.now())) {
+  }) : _createDeviceLog = createDeviceLog,
+       super(DeviceLogFormState(date: DateTime.now())) {
     on<DeviceLogNotesChanged>(_onNotesChanged);
     on<DeviceLogDateChanged>(_onDateChanged);
     on<DeviceLogUsageDeltaChanged>(_onUsageDeltaChanged);

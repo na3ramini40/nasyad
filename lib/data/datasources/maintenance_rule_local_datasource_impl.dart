@@ -16,9 +16,9 @@ class MaintenanceRuleLocalDataSourceImpl
 
   @override
   Stream<List<MaintenanceRuleModel>> watchRulesForDevice(String deviceId) {
-    return _dao.watchRulesForDevice(deviceId).map(
-          (rows) => rows.map(MaintenanceRuleModel.fromTableData).toList(),
-        );
+    return _dao
+        .watchRulesForDevice(deviceId)
+        .map((rows) => rows.map(MaintenanceRuleModel.fromTableData).toList());
   }
 
   @override

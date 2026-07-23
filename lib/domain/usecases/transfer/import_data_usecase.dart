@@ -4,10 +4,7 @@ import 'package:nasyad/domain/repositories/device_repository.dart';
 import 'package:nasyad/domain/services/bundle_codec.dart';
 
 class ImportDataResult {
-  const ImportDataResult({
-    required this.bundle,
-    required this.format,
-  });
+  const ImportDataResult({required this.bundle, required this.format});
 
   final ExportBundle bundle;
   final ExportFormat format;
@@ -23,7 +20,8 @@ class ImportDataUsecase {
     ExportFormat? format,
     String? fileName,
   }) {
-    final detected = format ??
+    final detected =
+        format ??
         BundleCodec.formatFromExtension(fileName) ??
         BundleCodec.detectFormat(content);
     return BundleCodec.decode(content, format: detected);
@@ -34,7 +32,8 @@ class ImportDataUsecase {
     ExportFormat? format,
     String? fileName,
   }) async {
-    final detected = format ??
+    final detected =
+        format ??
         BundleCodec.formatFromExtension(fileName) ??
         BundleCodec.detectFormat(content);
     final bundle = BundleCodec.decode(content, format: detected);

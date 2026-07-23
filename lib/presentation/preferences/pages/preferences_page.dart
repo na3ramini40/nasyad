@@ -73,8 +73,7 @@ class PreferencesPage extends StatelessWidget {
                         RadioListTile<ThemeMode>(
                           value: ThemeMode.system,
                           title: Text(l10n.themeSystem),
-                          secondary:
-                              const Icon(Icons.brightness_auto_outlined),
+                          secondary: const Icon(Icons.brightness_auto_outlined),
                         ),
                         const Divider(height: 1),
                         RadioListTile<ThemeMode>(

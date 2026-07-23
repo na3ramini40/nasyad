@@ -49,24 +49,24 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
   ) {
     return switch (type) {
       ScheduleType.calendarInterval || ScheduleType.fixedDate => [
-          (storage: CalendarIntervalUnit.days.storageValue, label: l10n.unitDays),
-          (
-            storage: CalendarIntervalUnit.weeks.storageValue,
-            label: l10n.unitWeeks
-          ),
-          (
-            storage: CalendarIntervalUnit.months.storageValue,
-            label: l10n.unitMonths
-          ),
-        ],
+        (storage: CalendarIntervalUnit.days.storageValue, label: l10n.unitDays),
+        (
+          storage: CalendarIntervalUnit.weeks.storageValue,
+          label: l10n.unitWeeks,
+        ),
+        (
+          storage: CalendarIntervalUnit.months.storageValue,
+          label: l10n.unitMonths,
+        ),
+      ],
       ScheduleType.usageInterval => [
-          (storage: UsageIntervalUnit.hours.storageValue, label: l10n.unitHours),
-          (storage: UsageIntervalUnit.km.storageValue, label: l10n.unitKm),
-          (
-            storage: UsageIntervalUnit.cycles.storageValue,
-            label: l10n.unitCycles
-          ),
-        ],
+        (storage: UsageIntervalUnit.hours.storageValue, label: l10n.unitHours),
+        (storage: UsageIntervalUnit.km.storageValue, label: l10n.unitKm),
+        (
+          storage: UsageIntervalUnit.cycles.storageValue,
+          label: l10n.unitCycles,
+        ),
+      ],
     };
   }
 
@@ -80,14 +80,14 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
         : '';
 
     context.read<DeviceEditBloc>().add(
-          DeviceEditSaveRequested(
-            ruleName: ruleName,
-            nameRequiredMessage: l10n.deviceNameRequired,
-            selectScheduleTypeMessage: l10n.selectScheduleType,
-            selectIntervalUnitMessage: l10n.selectIntervalUnit,
-            intervalAmountRequiredMessage: l10n.intervalAmountRequired,
-          ),
-        );
+      DeviceEditSaveRequested(
+        ruleName: ruleName,
+        nameRequiredMessage: l10n.deviceNameRequired,
+        selectScheduleTypeMessage: l10n.selectScheduleType,
+        selectIntervalUnitMessage: l10n.selectIntervalUnit,
+        intervalAmountRequiredMessage: l10n.intervalAmountRequired,
+      ),
+    );
   }
 
   @override
@@ -115,16 +115,18 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
           context.go('/');
         } else if (state.status == DeviceEditStatus.failure &&
             state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
       },
       builder: (context, state) {
         if (state.status == DeviceEditStatus.loading ||
             state.status == DeviceEditStatus.initial) {
           return Scaffold(
-            appBar: AppBar(title: Text(isEdit ? l10n.editDevice : l10n.addEditDevice)),
+            appBar: AppBar(
+              title: Text(isEdit ? l10n.editDevice : l10n.addEditDevice),
+            ),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
@@ -143,9 +145,9 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                   icon: const Icon(Icons.delete_outline),
                   onPressed: state.isBusy
                       ? null
-                      : () => context
-                          .read<DeviceEditBloc>()
-                          .add(const DeviceEditDeleteRequested()),
+                      : () => context.read<DeviceEditBloc>().add(
+                          const DeviceEditDeleteRequested(),
+                        ),
                   tooltip: l10n.delete,
                 ),
             ],
@@ -160,9 +162,9 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                     label: l10n.deviceName,
                     hintText: l10n.deviceNameHint,
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => context
-                        .read<DeviceEditBloc>()
-                        .add(DeviceEditNameChanged(value)),
+                    onChanged: (value) => context.read<DeviceEditBloc>().add(
+                      DeviceEditNameChanged(value),
+                    ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.deviceNameRequired;
@@ -177,22 +179,23 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                   const SizedBox(height: AppSpacing.xs),
                   SelectableOptionTile(
                     label: l10n.scheduleByTime,
-                    selected: state.scheduleType == ScheduleType.calendarInterval,
+                    selected:
+                        state.scheduleType == ScheduleType.calendarInterval,
                     onTap: () => context.read<DeviceEditBloc>().add(
-                          const DeviceEditScheduleTypeChanged(
-                            ScheduleType.calendarInterval,
-                          ),
-                        ),
+                      const DeviceEditScheduleTypeChanged(
+                        ScheduleType.calendarInterval,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   SelectableOptionTile(
                     label: l10n.scheduleByUsage,
                     selected: state.scheduleType == ScheduleType.usageInterval,
                     onTap: () => context.read<DeviceEditBloc>().add(
-                          const DeviceEditScheduleTypeChanged(
-                            ScheduleType.usageInterval,
-                          ),
-                        ),
+                      const DeviceEditScheduleTypeChanged(
+                        ScheduleType.usageInterval,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   AppTextField(
@@ -202,9 +205,9 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (value) => context
-                        .read<DeviceEditBloc>()
-                        .add(DeviceEditIntervalChanged(value)),
+                    onChanged: (value) => context.read<DeviceEditBloc>().add(
+                      DeviceEditIntervalChanged(value),
+                    ),
                     validator: (value) {
                       final amount = int.tryParse(value?.trim() ?? '');
                       if (amount == null || amount <= 0) {
@@ -224,8 +227,8 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                           label: unit.label,
                           selected: state.intervalUnit == unit.storage,
                           onTap: () => context.read<DeviceEditBloc>().add(
-                                DeviceEditIntervalUnitChanged(unit.storage),
-                              ),
+                            DeviceEditIntervalUnitChanged(unit.storage),
+                          ),
                         ),
                       ),
                   ],
@@ -237,21 +240,20 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                       child: SelectableOptionTile(
                         label: suggestion.label,
-                        selected: state.scheduleType ==
-                                suggestion.scheduleType &&
+                        selected:
+                            state.scheduleType == suggestion.scheduleType &&
                             state.intervalUnit == suggestion.intervalUnit &&
                             state.intervalValue.trim() ==
                                 '${suggestion.intervalValue}',
                         onTap: () => context.read<DeviceEditBloc>().add(
-                              DeviceEditSuggestionApplied(suggestion),
-                            ),
+                          DeviceEditSuggestionApplied(suggestion),
+                        ),
                       ),
                     ),
                   const SizedBox(height: AppSpacing.xl),
                   AppButton(
                     label: l10n.save,
-                    onPressed:
-                        state.isBusy ? null : () => _save(l10n, state),
+                    onPressed: state.isBusy ? null : () => _save(l10n, state),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                 ],

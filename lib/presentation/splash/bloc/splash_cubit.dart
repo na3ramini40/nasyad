@@ -17,9 +17,8 @@ final class SplashReady extends SplashState {
 }
 
 class SplashCubit extends Cubit<SplashState> {
-  SplashCubit({
-    this.minDisplay = const Duration(milliseconds: 1200),
-  }) : super(const SplashLoading());
+  SplashCubit({this.minDisplay = const Duration(milliseconds: 1200)})
+    : super(const SplashLoading());
 
   final Duration minDisplay;
 

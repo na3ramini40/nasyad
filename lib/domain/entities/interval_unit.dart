@@ -1,14 +1,6 @@
-enum CalendarIntervalUnit {
-  days,
-  weeks,
-  months,
-}
+enum CalendarIntervalUnit { days, weeks, months }
 
-enum UsageIntervalUnit {
-  km,
-  hours,
-  cycles,
-}
+enum UsageIntervalUnit { km, hours, cycles }
 
 extension CalendarIntervalUnitX on CalendarIntervalUnit {
   String get storageValue => name;

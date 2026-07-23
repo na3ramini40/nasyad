@@ -1,8 +1,4 @@
-enum DeviceStatus {
-  active,
-  archived,
-  deleted,
-}
+enum DeviceStatus { active, archived, deleted }
 
 extension DeviceStatusX on DeviceStatus {
   String get storageValue => name;

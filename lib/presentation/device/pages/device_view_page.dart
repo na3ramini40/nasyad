@@ -25,105 +25,107 @@ class DevicePage extends StatelessWidget {
         if (state is DeviceDetailArchived) {
           context.go('/');
         } else if (state is DeviceDetailError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
         return switch (state) {
           DeviceDetailLoading() || DeviceDetailArchived() => Scaffold(
-              appBar: AppBar(title: Text(l10n.deviceDetails)),
-              body: const Center(child: CircularProgressIndicator()),
-            ),
+            appBar: AppBar(title: Text(l10n.deviceDetails)),
+            body: const Center(child: CircularProgressIndicator()),
+          ),
           DeviceDetailNotFound() => Scaffold(
-              appBar: AppBar(title: Text(l10n.deviceDetails)),
-              body: Center(child: Text(l10n.noDevicesTitle)),
-            ),
+            appBar: AppBar(title: Text(l10n.deviceDetails)),
+            body: Center(child: Text(l10n.noDevicesTitle)),
+          ),
           DeviceDetailError(:final message) => Scaffold(
-              appBar: AppBar(title: Text(l10n.deviceDetails)),
-              body: Center(child: Text(message)),
-            ),
+            appBar: AppBar(title: Text(l10n.deviceDetails)),
+            body: Center(child: Text(message)),
+          ),
           DeviceDetailLoaded(:final summary, :final logs) => Scaffold(
-              appBar: AppBar(
-                title: Text(l10n.deviceDetails),
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
-                  tooltip: l10n.back,
+            appBar: AppBar(
+              title: Text(l10n.deviceDetails),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.pop(),
+                tooltip: l10n.back,
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.archive_outlined),
+                  onPressed: () => context.read<DeviceDetailBloc>().add(
+                    const DeviceDetailArchiveRequested(),
+                  ),
+                  tooltip: l10n.archive,
                 ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.archive_outlined),
-                    onPressed: () => context
-                        .read<DeviceDetailBloc>()
-                        .add(const DeviceDetailArchiveRequested()),
-                    tooltip: l10n.archive,
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined),
+                  onPressed: () => context.push('/device/$deviceId/edit'),
+                  tooltip: l10n.edit,
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => context.push('/device/$deviceId/log'),
+              tooltip: l10n.addLog,
+              child: const Icon(Icons.add),
+            ),
+            body: AppContent(
+              child: ListView(
+                children: [
+                  Text(
+                    summary.device.name,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.edit_outlined),
-                    onPressed: () => context.push('/device/$deviceId/edit'),
-                    tooltip: l10n.edit,
+                  const SizedBox(height: AppSpacing.sm),
+                  _statusBadge(l10n, summary.status),
+                  SectionHeader(title: l10n.activeMaintenanceRules),
+                  Card(
+                    child: summary.rules.isEmpty
+                        ? ListTile(title: Text(l10n.selectMaintenanceRule))
+                        : Column(
+                            children: [
+                              for (
+                                var i = 0;
+                                i < summary.rules.length;
+                                i++
+                              ) ...[
+                                ListTile(title: Text(summary.rules[i].name)),
+                                if (i != summary.rules.length - 1)
+                                  const Divider(height: 1),
+                              ],
+                            ],
+                          ),
                   ),
+                  SectionHeader(title: l10n.logHistory),
+                  Card(
+                    child: logs.isEmpty
+                        ? ListTile(title: Text(l10n.noLogsYet))
+                        : Column(
+                            children: [
+                              for (var i = 0; i < logs.length; i++)
+                                LogListItem(
+                                  title:
+                                      logs[i].notes?.trim().isNotEmpty == true
+                                      ? logs[i].notes!.trim()
+                                      : l10n.addLog,
+                                  subtitle: DateFormat.yMMMd(
+                                    locale.toString(),
+                                  ).add_jm().format(logs[i].date),
+                                  showDivider: i != logs.length - 1,
+                                ),
+                            ],
+                          ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () => context.push('/device/$deviceId/log'),
-                tooltip: l10n.addLog,
-                child: const Icon(Icons.add),
-              ),
-              body: AppContent(
-                child: ListView(
-                  children: [
-                    Text(
-                      summary.device.name,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    _statusBadge(l10n, summary.status),
-                    SectionHeader(title: l10n.activeMaintenanceRules),
-                    Card(
-                      child: summary.rules.isEmpty
-                          ? ListTile(title: Text(l10n.selectMaintenanceRule))
-                          : Column(
-                              children: [
-                                for (var i = 0;
-                                    i < summary.rules.length;
-                                    i++) ...[
-                                  ListTile(title: Text(summary.rules[i].name)),
-                                  if (i != summary.rules.length - 1)
-                                    const Divider(height: 1),
-                                ],
-                              ],
-                            ),
-                    ),
-                    SectionHeader(title: l10n.logHistory),
-                    Card(
-                      child: logs.isEmpty
-                          ? ListTile(title: Text(l10n.noLogsYet))
-                          : Column(
-                              children: [
-                                for (var i = 0; i < logs.length; i++)
-                                  LogListItem(
-                                    title: logs[i].notes?.trim().isNotEmpty ==
-                                            true
-                                        ? logs[i].notes!.trim()
-                                        : l10n.addLog,
-                                    subtitle: DateFormat.yMMMd(
-                                      locale.toString(),
-                                    ).add_jm().format(logs[i].date),
-                                    showDivider: i != logs.length - 1,
-                                  ),
-                              ],
-                            ),
-                    ),
-                    const SizedBox(height: AppSpacing.xxl),
-                  ],
-                ),
-              ),
             ),
+          ),
         };
       },
     );

@@ -1,12 +1,6 @@
 part of 'transfer_bloc.dart';
 
-enum TransferStatus {
-  initial,
-  loadingDevices,
-  ready,
-  busy,
-  failure,
-}
+enum TransferStatus { initial, loadingDevices, ready, busy, failure }
 
 enum TransferFeedback {
   none,
@@ -56,10 +50,9 @@ final class TransferState extends Equatable {
   }
 
   List<String> get exportIds => switch (scope) {
-        ExportScopeKind.all => const [],
-        ExportScopeKind.one || ExportScopeKind.selected =>
-          selectedIds.toList(),
-      };
+    ExportScopeKind.all => const [],
+    ExportScopeKind.one || ExportScopeKind.selected => selectedIds.toList(),
+  };
 
   TransferState copyWith({
     TransferStatus? status,
@@ -84,29 +77,32 @@ final class TransferState extends Equatable {
       format: format ?? this.format,
       selectedIds: selectedIds ?? this.selectedIds,
       importPreview: clearImport ? null : (importPreview ?? this.importPreview),
-      importFileName:
-          clearImport ? null : (importFileName ?? this.importFileName),
-      importContent:
-          clearImport ? null : (importContent ?? this.importContent),
-      feedback: clearFeedback ? TransferFeedback.none : (feedback ?? this.feedback),
-      feedbackDetail:
-          clearFeedback ? null : (feedbackDetail ?? this.feedbackDetail),
+      importFileName: clearImport
+          ? null
+          : (importFileName ?? this.importFileName),
+      importContent: clearImport ? null : (importContent ?? this.importContent),
+      feedback: clearFeedback
+          ? TransferFeedback.none
+          : (feedback ?? this.feedback),
+      feedbackDetail: clearFeedback
+          ? null
+          : (feedbackDetail ?? this.feedbackDetail),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 
   @override
   List<Object?> get props => [
-        status,
-        devices,
-        scope,
-        format,
-        selectedIds,
-        importPreview,
-        importFileName,
-        importContent,
-        feedback,
-        feedbackDetail,
-        errorMessage,
-      ];
+    status,
+    devices,
+    scope,
+    format,
+    selectedIds,
+    importPreview,
+    importFileName,
+    importContent,
+    feedback,
+    feedbackDetail,
+    errorMessage,
+  ];
 }

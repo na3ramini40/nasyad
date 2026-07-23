@@ -37,45 +37,21 @@ class HomePage extends StatelessWidget {
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             return switch (state) {
-              HomeInitial() || HomeLoading() =>
-                const Center(child: CircularProgressIndicator()),
+              HomeInitial() ||
+              HomeLoading() => const Center(child: CircularProgressIndicator()),
               HomeError(:final message) => Center(child: Text(message)),
               HomeLoaded(:final summaries) when summaries.isEmpty =>
                 _EmptyDevices(l10n: l10n),
               HomeLoaded(:final summaries) => ResponsiveBuilder(
-                  builder: (context, windowSize) {
-                    final columns =
-                        AppBreakpoints.deviceGridColumns(windowSize);
-                    final useGrid = columns > 1;
+                builder: (context, windowSize) {
+                  final columns = AppBreakpoints.deviceGridColumns(windowSize);
+                  final useGrid = columns > 1;
 
-                    if (!useGrid) {
-                      return ListView.separated(
-                        itemCount: summaries.length,
-                        separatorBuilder: (_, __) =>
-                            const SizedBox(height: AppSpacing.md),
-                        itemBuilder: (context, index) {
-                          final item = summaries[index];
-                          return DeviceCard(
-                            name: item.device.name,
-                            label: l10n.deviceName,
-                            status: _cardStatus(item.status),
-                            statusLabel: _statusLabel(l10n, item.status),
-                            lastLogText: _lastLogText(l10n, item.latestLog),
-                            onTap: () =>
-                                context.push('/device/${item.device.id}'),
-                          );
-                        },
-                      );
-                    }
-
-                    return GridView.builder(
+                  if (!useGrid) {
+                    return ListView.separated(
                       itemCount: summaries.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: columns,
-                        mainAxisSpacing: AppSpacing.md,
-                        crossAxisSpacing: AppSpacing.md,
-                        childAspectRatio: 1.25,
-                      ),
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: AppSpacing.md),
                       itemBuilder: (context, index) {
                         final item = summaries[index];
                         return DeviceCard(
@@ -84,19 +60,41 @@ class HomePage extends StatelessWidget {
                           status: _cardStatus(item.status),
                           statusLabel: _statusLabel(l10n, item.status),
                           lastLogText: _lastLogText(l10n, item.latestLog),
-                          variant: DeviceCardVariant.grid,
-                          progress: item.progress,
-                          leading: Icon(
-                            Icons.devices_other,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
                           onTap: () =>
                               context.push('/device/${item.device.id}'),
                         );
                       },
                     );
-                  },
-                ),
+                  }
+
+                  return GridView.builder(
+                    itemCount: summaries.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columns,
+                      mainAxisSpacing: AppSpacing.md,
+                      crossAxisSpacing: AppSpacing.md,
+                      childAspectRatio: 1.25,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = summaries[index];
+                      return DeviceCard(
+                        name: item.device.name,
+                        label: l10n.deviceName,
+                        status: _cardStatus(item.status),
+                        statusLabel: _statusLabel(l10n, item.status),
+                        lastLogText: _lastLogText(l10n, item.latestLog),
+                        variant: DeviceCardVariant.grid,
+                        progress: item.progress,
+                        leading: Icon(
+                          Icons.devices_other,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        onTap: () => context.push('/device/${item.device.id}'),
+                      );
+                    },
+                  );
+                },
+              ),
             };
           },
         ),
@@ -167,7 +165,7 @@ String? _lastLogText(AppLocalizations l10n, DeviceLog? log) {
   final value = diff.inMinutes < 60
       ? l10n.lastLogMinutesAgo(diff.inMinutes.clamp(1, 59))
       : diff.inDays < 7
-          ? l10n.lastLogDaysAgo(diff.inDays.clamp(1, 6))
-          : l10n.lastLogWeeksAgo((diff.inDays / 7).floor().clamp(1, 999));
+      ? l10n.lastLogDaysAgo(diff.inDays.clamp(1, 6))
+      : l10n.lastLogWeeksAgo((diff.inDays / 7).floor().clamp(1, 999));
   return l10n.lastLog(value);
 }

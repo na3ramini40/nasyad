@@ -24,10 +24,7 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            child: Text(title, style: Theme.of(context).textTheme.titleMedium),
           ),
           if (action != null) action!,
         ],

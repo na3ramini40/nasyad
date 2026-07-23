@@ -15,9 +15,9 @@ class DeviceLogLocalDataSourceImpl implements DeviceLogLocalDataSource {
 
   @override
   Stream<List<DeviceLogModel>> watchLogsForDevice(String deviceId) {
-    return _dao.watchLogsForDevice(deviceId).map(
-          (rows) => rows.map(DeviceLogModel.fromTableData).toList(),
-        );
+    return _dao
+        .watchLogsForDevice(deviceId)
+        .map((rows) => rows.map(DeviceLogModel.fromTableData).toList());
   }
 
   @override

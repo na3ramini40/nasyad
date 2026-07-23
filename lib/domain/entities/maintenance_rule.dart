@@ -50,14 +50,14 @@ class MaintenanceRule extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        deviceId,
-        name,
-        scheduleType,
-        intervalValue,
-        intervalUnit,
-        fixedDueAt,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    deviceId,
+    name,
+    scheduleType,
+    intervalValue,
+    intervalUnit,
+    fixedDueAt,
+    createdAt,
+    updatedAt,
+  ];
 }

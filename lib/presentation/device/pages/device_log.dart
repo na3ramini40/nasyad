@@ -63,9 +63,9 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
           context.pop();
         } else if (state.status == DeviceLogStatus.failure &&
             state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
         }
       },
       builder: (context, state) {
@@ -90,18 +90,17 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                     maxLines: 4,
                     minLines: 3,
                     textInputAction: TextInputAction.newline,
-                    onChanged: (value) => context
-                        .read<DeviceLogBloc>()
-                        .add(DeviceLogNotesChanged(value)),
+                    onChanged: (value) => context.read<DeviceLogBloc>().add(
+                      DeviceLogNotesChanged(value),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(
                     l10n.date,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   InkWell(
@@ -124,18 +123,17 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                     hintText: l10n.usageDeltaHint,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (value) => context
-                        .read<DeviceLogBloc>()
-                        .add(DeviceLogUsageDeltaChanged(value)),
+                    onChanged: (value) => context.read<DeviceLogBloc>().add(
+                      DeviceLogUsageDeltaChanged(value),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
                     l10n.usageUnit,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   for (final unit in UsageIntervalUnit.values)
@@ -148,9 +146,9 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                           UsageIntervalUnit.cycles => l10n.unitCycles,
                         },
                         selected: state.usageUnit == unit,
-                        onTap: () => context
-                            .read<DeviceLogBloc>()
-                            .add(DeviceLogUsageUnitChanged(unit)),
+                        onTap: () => context.read<DeviceLogBloc>().add(
+                          DeviceLogUsageUnitChanged(unit),
+                        ),
                       ),
                     ),
                   const SizedBox(height: AppSpacing.xl),
@@ -159,15 +157,14 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                     onPressed: state.isSaving
                         ? null
                         : () {
-                            if (!(_formKey.currentState?.validate() ??
-                                false)) {
+                            if (!(_formKey.currentState?.validate() ?? false)) {
                               return;
                             }
                             context.read<DeviceLogBloc>().add(
-                                  DeviceLogSubmitRequested(
-                                    usageUnitRequiredMessage: l10n.usageUnit,
-                                  ),
-                                );
+                              DeviceLogSubmitRequested(
+                                usageUnitRequiredMessage: l10n.usageUnit,
+                              ),
+                            );
                           },
                   ),
                 ],

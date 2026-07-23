@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LocaleCubit extends Cubit<Locale> {
   LocaleCubit({Locale? initialLocale})
-      : super(initialLocale ?? AppLocales.english);
+    : super(initialLocale ?? AppLocales.english);
 
   bool get isPersian => state.languageCode == 'fa';
 

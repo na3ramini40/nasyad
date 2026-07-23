@@ -15,9 +15,9 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
     required AppDatabase db,
     required DeviceLogLocalDataSource logs,
     required DeviceLocalDataSource devices,
-  })  : _db = db,
-        _logs = logs,
-        _devices = devices;
+  }) : _db = db,
+       _logs = logs,
+       _devices = devices;
 
   @override
   Future<List<DeviceLog>> getLogsForDevice(String deviceId) async {
@@ -27,9 +27,9 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
 
   @override
   Stream<List<DeviceLog>> watchLogsForDevice(String deviceId) {
-    return _logs.watchLogsForDevice(deviceId).map(
-          (models) => models.map((m) => m.toEntity()).toList(),
-        );
+    return _logs
+        .watchLogsForDevice(deviceId)
+        .map((models) => models.map((m) => m.toEntity()).toList());
   }
 
   @override

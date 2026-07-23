@@ -39,9 +39,9 @@ class StatusBadge extends StatelessWidget {
       StatusBadgeVariant.success => (status.success, status.onSuccess),
       StatusBadgeVariant.warning => (status.warning, status.onWarning),
       StatusBadgeVariant.neutral => (
-          scheme.surfaceContainerHighest,
-          scheme.onSurfaceVariant,
-        ),
+        scheme.surfaceContainerHighest,
+        scheme.onSurfaceVariant,
+      ),
     };
 
     return Semantics(
@@ -51,10 +51,7 @@ class StatusBadge extends StatelessWidget {
           horizontal: dense ? AppSpacing.xs : AppSpacing.sm,
           vertical: dense ? AppSpacing.xxs : 6,
         ),
-        decoration: ShapeDecoration(
-          color: bg,
-          shape: const StadiumBorder(),
-        ),
+        decoration: ShapeDecoration(color: bg, shape: const StadiumBorder()),
         child: Text(
           label,
           style: theme.textTheme.labelMedium?.copyWith(

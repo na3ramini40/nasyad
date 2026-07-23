@@ -31,8 +31,8 @@ class ExportDataUsecase {
   }) async {
     final devices = switch (scope) {
       ExportScopeKind.all => await _devices.getAllDevices(),
-      ExportScopeKind.one || ExportScopeKind.selected =>
-        await _devices.getDevicesByIds(deviceIds),
+      ExportScopeKind.one ||
+      ExportScopeKind.selected => await _devices.getDevicesByIds(deviceIds),
     };
 
     if (scope == ExportScopeKind.one && deviceIds.length != 1) {
@@ -49,9 +49,7 @@ class ExportDataUsecase {
     for (final device in devices) {
       final rules = await _devices.getRulesForDevice(device.id);
       final logs = await _logs.getLogsForDevice(device.id);
-      bundles.add(
-        ExportDeviceBundle(device: device, rules: rules, logs: logs),
-      );
+      bundles.add(ExportDeviceBundle(device: device, rules: rules, logs: logs));
     }
 
     final bundle = ExportBundle(

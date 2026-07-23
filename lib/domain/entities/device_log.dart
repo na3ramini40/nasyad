@@ -22,12 +22,12 @@ class DeviceLog extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        deviceId,
-        date,
-        notes,
-        usageDelta,
-        usageUnit,
-        createdAt,
-      ];
+    id,
+    deviceId,
+    date,
+    notes,
+    usageDelta,
+    usageUnit,
+    createdAt,
+  ];
 }

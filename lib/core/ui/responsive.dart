@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 
-typedef ResponsiveWidgetBuilder = Widget Function(
-  BuildContext context,
-  AppWindowSize windowSize,
-);
+typedef ResponsiveWidgetBuilder =
+    Widget Function(BuildContext context, AppWindowSize windowSize);
 
 class ResponsiveBuilder extends StatelessWidget {
   const ResponsiveBuilder({super.key, required this.builder});
@@ -55,7 +53,8 @@ class AppContent extends StatelessWidget {
         final targetWidth = resolvedMax.isInfinite
             ? width
             : math.min(resolvedMax, width);
-        final resolvedPadding = padding ??
+        final resolvedPadding =
+            padding ??
             EdgeInsets.symmetric(
               horizontal: AppBreakpoints.pagePadding(windowSize),
               vertical: AppSpacing.md,
@@ -65,8 +64,7 @@ class AppContent extends StatelessWidget {
           alignment: align,
           child: SizedBox(
             width: targetWidth,
-            height:
-                constraints.hasBoundedHeight ? constraints.maxHeight : null,
+            height: constraints.hasBoundedHeight ? constraints.maxHeight : null,
             child: Padding(padding: resolvedPadding, child: child),
           ),
         );
@@ -153,11 +151,7 @@ class AppPageScaffold extends StatelessWidget {
     return Scaffold(
       appBar: title == null && leading == null && actions == null
           ? null
-          : AppBar(
-              title: title,
-              leading: leading,
-              actions: actions,
-            ),
+          : AppBar(title: title, leading: leading, actions: actions),
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
       body: content,

@@ -19,21 +19,14 @@ Future<T?> showAppBottomSheet<T>({
       final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
       return Padding(
         padding: EdgeInsets.only(bottom: bottomInset),
-        child: AppBottomSheet(
-          title: title,
-          child: builder(context),
-        ),
+        child: AppBottomSheet(title: title, child: builder(context)),
       );
     },
   );
 }
 
 class AppBottomSheet extends StatelessWidget {
-  const AppBottomSheet({
-    super.key,
-    required this.child,
-    this.title,
-  });
+  const AppBottomSheet({super.key, required this.child, this.title});
 
   final Widget child;
   final String? title;

@@ -12,10 +12,7 @@ final class DeviceDetailLoading extends DeviceDetailState {
 }
 
 final class DeviceDetailLoaded extends DeviceDetailState {
-  const DeviceDetailLoaded({
-    required this.summary,
-    required this.logs,
-  });
+  const DeviceDetailLoaded({required this.summary, required this.logs});
 
   final DeviceSummary summary;
   final List<DeviceLog> logs;

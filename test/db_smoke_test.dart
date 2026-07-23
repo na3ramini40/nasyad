@@ -12,8 +12,9 @@ void main() {
     final services = AppServices(AppDatabase(NativeDatabase.memory()));
     addTearDown(services.dispose);
 
-    final first = await services.watchDeviceSummaries().first
-        .timeout(const Duration(seconds: 2));
+    final first = await services.watchDeviceSummaries().first.timeout(
+      const Duration(seconds: 2),
+    );
     expect(first, isEmpty);
   });
 }

@@ -15,22 +15,22 @@ part 'app_database.g.dart';
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
-      : super(executor ?? driftDatabase(name: 'nasyad'));
+    : super(executor ?? driftDatabase(name: 'nasyad'));
 
   @override
   int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (Migrator m) async {
-          await m.createAll();
-        },
-        onUpgrade: (Migrator m, int from, int to) async {
-          if (from < 2) {
-            await m.deleteTable('device_logs_table');
-            await m.deleteTable('devices_table');
-            await m.createAll();
-          }
-        },
-      );
+    onCreate: (Migrator m) async {
+      await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.deleteTable('device_logs_table');
+        await m.deleteTable('devices_table');
+        await m.createAll();
+      }
+    },
+  );
 }

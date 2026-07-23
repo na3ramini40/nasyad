@@ -17,10 +17,10 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
     required WatchDeviceSummariesUsecase watchDeviceSummaries,
     required WatchLogsForDeviceUsecase watchLogsForDevice,
     required ArchiveDeviceUsecase archiveDevice,
-  })  : _watchDeviceSummaries = watchDeviceSummaries,
-        _watchLogsForDevice = watchLogsForDevice,
-        _archiveDevice = archiveDevice,
-        super(const DeviceDetailLoading()) {
+  }) : _watchDeviceSummaries = watchDeviceSummaries,
+       _watchLogsForDevice = watchLogsForDevice,
+       _archiveDevice = archiveDevice,
+       super(const DeviceDetailLoading()) {
     on<DeviceDetailStarted>(_onStarted);
     on<_DeviceDetailSummaryUpdated>(_onSummaryUpdated);
     on<_DeviceDetailLogsUpdated>(_onLogsUpdated);

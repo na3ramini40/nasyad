@@ -36,8 +36,7 @@ class ExportBundle extends Equatable {
 
   int get deviceCount => devices.length;
 
-  int get ruleCount =>
-      devices.fold(0, (sum, d) => sum + d.rules.length);
+  int get ruleCount => devices.fold(0, (sum, d) => sum + d.rules.length);
 
   int get logCount => devices.fold(0, (sum, d) => sum + d.logs.length);
 

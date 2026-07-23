@@ -265,7 +265,9 @@ abstract final class BundleCodec {
     buffer.writeln('Nasyad export');
     buffer.writeln('format: ${bundle.format}');
     buffer.writeln('version: ${bundle.version}');
-    buffer.writeln('exportedAt: ${bundle.exportedAt.toUtc().toIso8601String()}');
+    buffer.writeln(
+      'exportedAt: ${bundle.exportedAt.toUtc().toIso8601String()}',
+    );
     buffer.writeln();
 
     for (final d in bundle.devices) {
@@ -276,9 +278,15 @@ abstract final class BundleCodec {
       buffer.writeln('description: ${device.description ?? ''}');
       buffer.writeln('status: ${device.status.storageValue}');
       buffer.writeln('currentUsage: ${device.currentUsage}');
-      buffer.writeln('usageAtLastMaintenance: ${device.usageAtLastMaintenance}');
-      buffer.writeln('createdAt: ${device.createdAt.toUtc().toIso8601String()}');
-      buffer.writeln('updatedAt: ${device.updatedAt.toUtc().toIso8601String()}');
+      buffer.writeln(
+        'usageAtLastMaintenance: ${device.usageAtLastMaintenance}',
+      );
+      buffer.writeln(
+        'createdAt: ${device.createdAt.toUtc().toIso8601String()}',
+      );
+      buffer.writeln(
+        'updatedAt: ${device.updatedAt.toUtc().toIso8601String()}',
+      );
       buffer.writeln();
 
       for (final rule in d.rules) {
@@ -292,8 +300,12 @@ abstract final class BundleCodec {
         buffer.writeln(
           'fixedDueAt: ${rule.fixedDueAt?.toUtc().toIso8601String() ?? ''}',
         );
-        buffer.writeln('createdAt: ${rule.createdAt.toUtc().toIso8601String()}');
-        buffer.writeln('updatedAt: ${rule.updatedAt.toUtc().toIso8601String()}');
+        buffer.writeln(
+          'createdAt: ${rule.createdAt.toUtc().toIso8601String()}',
+        );
+        buffer.writeln(
+          'updatedAt: ${rule.updatedAt.toUtc().toIso8601String()}',
+        );
         buffer.writeln();
       }
 
@@ -417,9 +429,7 @@ abstract final class BundleCodec {
     final rulesRaw = json['rules'];
     final logsRaw = json['logs'];
     final rules = rulesRaw is List
-        ? rulesRaw
-            .map((e) => _ruleFromJson(e as Map<String, dynamic>))
-            .toList()
+        ? rulesRaw.map((e) => _ruleFromJson(e as Map<String, dynamic>)).toList()
         : <MaintenanceRule>[];
     final logs = logsRaw is List
         ? logsRaw.map((e) => _logFromJson(e as Map<String, dynamic>)).toList()
@@ -428,16 +438,16 @@ abstract final class BundleCodec {
   }
 
   static Map<String, dynamic> _ruleToJson(MaintenanceRule rule) => {
-        'id': rule.id,
-        'deviceId': rule.deviceId,
-        'name': rule.name,
-        'scheduleType': rule.scheduleType.storageValue,
-        'intervalValue': rule.intervalValue,
-        'intervalUnit': rule.intervalUnit,
-        'fixedDueAt': rule.fixedDueAt?.toUtc().toIso8601String(),
-        'createdAt': rule.createdAt.toUtc().toIso8601String(),
-        'updatedAt': rule.updatedAt.toUtc().toIso8601String(),
-      };
+    'id': rule.id,
+    'deviceId': rule.deviceId,
+    'name': rule.name,
+    'scheduleType': rule.scheduleType.storageValue,
+    'intervalValue': rule.intervalValue,
+    'intervalUnit': rule.intervalUnit,
+    'fixedDueAt': rule.fixedDueAt?.toUtc().toIso8601String(),
+    'createdAt': rule.createdAt.toUtc().toIso8601String(),
+    'updatedAt': rule.updatedAt.toUtc().toIso8601String(),
+  };
 
   static MaintenanceRule _ruleFromJson(Map<String, dynamic> json) =>
       _ruleFromMap({
@@ -453,24 +463,24 @@ abstract final class BundleCodec {
       });
 
   static Map<String, dynamic> _logToJson(DeviceLog log) => {
-        'id': log.id,
-        'deviceId': log.deviceId,
-        'date': log.date.toUtc().toIso8601String(),
-        'notes': log.notes,
-        'usageDelta': log.usageDelta,
-        'usageUnit': log.usageUnit?.storageValue,
-        'createdAt': log.createdAt.toUtc().toIso8601String(),
-      };
+    'id': log.id,
+    'deviceId': log.deviceId,
+    'date': log.date.toUtc().toIso8601String(),
+    'notes': log.notes,
+    'usageDelta': log.usageDelta,
+    'usageUnit': log.usageUnit?.storageValue,
+    'createdAt': log.createdAt.toUtc().toIso8601String(),
+  };
 
   static DeviceLog _logFromJson(Map<String, dynamic> json) => _logFromMap({
-        'id': '${json['id']}',
-        'deviceId': '${json['deviceId']}',
-        'date': '${json['date']}',
-        'notes': json['notes']?.toString() ?? '',
-        'usageDelta': json['usageDelta']?.toString() ?? '',
-        'usageUnit': json['usageUnit']?.toString() ?? '',
-        'createdAt': '${json['createdAt']}',
-      });
+    'id': '${json['id']}',
+    'deviceId': '${json['deviceId']}',
+    'date': '${json['date']}',
+    'notes': json['notes']?.toString() ?? '',
+    'usageDelta': json['usageDelta']?.toString() ?? '',
+    'usageUnit': json['usageUnit']?.toString() ?? '',
+    'createdAt': '${json['createdAt']}',
+  });
 
   static Device _deviceFromMap(Map<String, String> map) {
     final id = map['id']?.trim() ?? '';
@@ -546,8 +556,9 @@ abstract final class BundleCodec {
       date: date,
       notes: (notes == null || notes.isEmpty) ? null : notes,
       usageDelta: deltaRaw.isEmpty ? null : int.tryParse(deltaRaw),
-      usageUnit:
-          unitRaw.isEmpty ? null : UsageIntervalUnitX.fromStorage(unitRaw),
+      usageUnit: unitRaw.isEmpty
+          ? null
+          : UsageIntervalUnitX.fromStorage(unitRaw),
       createdAt: createdAt,
     );
   }
@@ -559,8 +570,7 @@ abstract final class BundleCodec {
     return DateTime.tryParse(text);
   }
 
-  static String _csvRow(List<String> cells) =>
-      cells.map(_escapeCsv).join(',');
+  static String _csvRow(List<String> cells) => cells.map(_escapeCsv).join(',');
 
   static String _escapeCsv(String value) {
     if (value.contains(',') ||

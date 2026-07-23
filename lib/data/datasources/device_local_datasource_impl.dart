@@ -28,8 +28,8 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   @override
   Stream<List<DeviceModel>> watchActiveDevices() {
     return _dao.watchActiveDevices().map(
-          (rows) => rows.map(DeviceModel.fromTableData).toList(),
-        );
+      (rows) => rows.map(DeviceModel.fromTableData).toList(),
+    );
   }
 
   @override

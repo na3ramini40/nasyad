@@ -73,12 +73,12 @@ final class DeviceEditSaveRequested extends DeviceEditEvent {
 
   @override
   List<Object?> get props => [
-        ruleName,
-        nameRequiredMessage,
-        selectScheduleTypeMessage,
-        selectIntervalUnitMessage,
-        intervalAmountRequiredMessage,
-      ];
+    ruleName,
+    nameRequiredMessage,
+    selectScheduleTypeMessage,
+    selectIntervalUnitMessage,
+    intervalAmountRequiredMessage,
+  ];
 }
 
 final class DeviceEditDeleteRequested extends DeviceEditEvent {

@@ -9,10 +9,7 @@ class RuleStatusResult {
   final MaintenanceStatus status;
   final double progress;
 
-  const RuleStatusResult({
-    required this.status,
-    required this.progress,
-  });
+  const RuleStatusResult({required this.status, required this.progress});
 }
 
 class MaintenanceStatusCalculator {
@@ -28,20 +25,17 @@ class MaintenanceStatusCalculator {
 
     return switch (rule.scheduleType) {
       ScheduleType.calendarInterval => _calendar(
-          rule: rule,
-          latestLog: latestLog,
-          createdAt: device.createdAt,
-          now: current,
-        ),
-      ScheduleType.usageInterval => _usage(
-          rule: rule,
-          device: device,
-        ),
+        rule: rule,
+        latestLog: latestLog,
+        createdAt: device.createdAt,
+        now: current,
+      ),
+      ScheduleType.usageInterval => _usage(rule: rule, device: device),
       ScheduleType.fixedDate => _fixedDate(
-          rule: rule,
-          latestLog: latestLog,
-          now: current,
-        ),
+        rule: rule,
+        latestLog: latestLog,
+        now: current,
+      ),
     };
   }
 
@@ -94,10 +88,7 @@ class MaintenanceStatusCalculator {
     final dueAt = _addCalendar(anchor, value, calendarUnit);
     final totalMs = dueAt.difference(anchor).inMilliseconds;
     if (totalMs <= 0) {
-      return const RuleStatusResult(
-        status: MaintenanceStatus.due,
-        progress: 1,
-      );
+      return const RuleStatusResult(status: MaintenanceStatus.due, progress: 1);
     }
 
     final elapsedMs = now.difference(anchor).inMilliseconds;
@@ -120,8 +111,10 @@ class MaintenanceStatusCalculator {
       );
     }
 
-    final used =
-        (device.currentUsage - device.usageAtLastMaintenance).clamp(0, 1 << 30);
+    final used = (device.currentUsage - device.usageAtLastMaintenance).clamp(
+      0,
+      1 << 30,
+    );
     final progress = (used / value).clamp(0.0, 1.0);
     return RuleStatusResult(
       status: _statusFromProgress(progress),
@@ -152,10 +145,7 @@ class MaintenanceStatusCalculator {
     final start = latestLog?.date ?? dueAt.subtract(const Duration(days: 30));
     final totalMs = dueAt.difference(start).inMilliseconds;
     if (totalMs <= 0 || !now.isBefore(dueAt)) {
-      return const RuleStatusResult(
-        status: MaintenanceStatus.due,
-        progress: 1,
-      );
+      return const RuleStatusResult(status: MaintenanceStatus.due, progress: 1);
     }
 
     final elapsedMs = now.difference(start).inMilliseconds;
@@ -177,16 +167,15 @@ class MaintenanceStatusCalculator {
       CalendarIntervalUnit.days => from.add(Duration(days: value)),
       CalendarIntervalUnit.weeks => from.add(Duration(days: value * 7)),
       CalendarIntervalUnit.months => DateTime(
-          from.year,
-          from.month + value,
-          from.day,
-          from.hour,
-          from.minute,
-          from.second,
-          from.millisecond,
-          from.microsecond,
-        ),
+        from.year,
+        from.month + value,
+        from.day,
+        from.hour,
+        from.minute,
+        from.second,
+        from.millisecond,
+        from.microsecond,
+      ),
     };
   }
-
 }

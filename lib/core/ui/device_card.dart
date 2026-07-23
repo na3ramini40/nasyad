@@ -6,6 +6,7 @@ import 'package:nasyad/core/theme/app_status_colors.dart';
 import 'package:nasyad/core/ui/status_badge.dart';
 
 enum DeviceCardVariant { list, grid }
+
 enum DeviceMaintenanceStatus { upToDate, soon, due }
 
 class DeviceCard extends StatelessWidget {
@@ -159,8 +160,9 @@ class _GridDeviceCard extends StatelessWidget {
                           CircularProgressIndicator(
                             value: progress,
                             strokeWidth: 3,
-                            backgroundColor:
-                                scheme.outlineVariant.withValues(alpha: 0.5),
+                            backgroundColor: scheme.outlineVariant.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           Text(
                             '${(progress * 100).round()}%',
@@ -189,7 +191,9 @@ class _GridDeviceCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   data.lastLogText!,
-                  style: theme.textTheme.bodySmall?.copyWith(color: status.muted),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: status.muted,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

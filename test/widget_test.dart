@@ -138,10 +138,7 @@ void main() {
     await tester.pumpWidget(
       _wrap(
         Scaffold(
-          body: AppButton(
-            label: 'Save',
-            onPressed: () => tapped = true,
-          ),
+          body: AppButton(label: 'Save', onPressed: () => tapped = true),
         ),
       ),
     );

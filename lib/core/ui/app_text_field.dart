@@ -91,9 +91,9 @@ class AppTextField extends StatelessWidget {
         Text(
           label!,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w500,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         const SizedBox(height: AppSpacing.xs),
         field,

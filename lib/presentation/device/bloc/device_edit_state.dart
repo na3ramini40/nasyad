@@ -47,10 +47,12 @@ final class DeviceEditState extends Equatable {
       isEdit: isEdit,
       status: status ?? this.status,
       name: name ?? this.name,
-      scheduleType:
-          clearScheduleType ? null : (scheduleType ?? this.scheduleType),
-      intervalUnit:
-          clearIntervalUnit ? null : (intervalUnit ?? this.intervalUnit),
+      scheduleType: clearScheduleType
+          ? null
+          : (scheduleType ?? this.scheduleType),
+      intervalUnit: clearIntervalUnit
+          ? null
+          : (intervalUnit ?? this.intervalUnit),
       intervalValue: intervalValue ?? this.intervalValue,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
@@ -58,12 +60,12 @@ final class DeviceEditState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isEdit,
-        status,
-        name,
-        scheduleType,
-        intervalUnit,
-        intervalValue,
-        errorMessage,
-      ];
+    isEdit,
+    status,
+    name,
+    scheduleType,
+    intervalUnit,
+    intervalValue,
+    errorMessage,
+  ];
 }

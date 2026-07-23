@@ -47,8 +47,9 @@ GoRouter createAppRouter() {
         builder: (context, state) {
           final services = AppServicesScope.of(context);
           return BlocProvider(
-            create: (_) => HomeBloc(services.watchDeviceSummaries)
-              ..add(const HomeStarted()),
+            create: (_) =>
+                HomeBloc(services.watchDeviceSummaries)
+                  ..add(const HomeStarted()),
             child: const HomePage(),
           );
         },
@@ -150,7 +151,9 @@ GoRouter createAppRouter() {
     ],
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(title: const Text('Not found')),
-      body: Center(child: Text(state.error?.toString() ?? state.uri.toString())),
+      body: Center(
+        child: Text(state.error?.toString() ?? state.uri.toString()),
+      ),
     ),
   );
 }
