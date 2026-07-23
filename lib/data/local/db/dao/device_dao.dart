@@ -6,27 +6,59 @@ part 'device_dao.g.dart';
 
 @DriftAccessor(tables: [DevicesTable])
 class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
-  DeviceDao(AppDatabase db) : super(db);
+  DeviceDao(super.db);
+
+  Future<List<DevicesTableData>> getActiveDevices() {
+    return (select(devicesTable)
+          ..where((t) => t.status.equals('active'))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
 
   Future<List<DevicesTableData>> getAllDevices() {
-    return select(devicesTable).get();
+    return (select(devicesTable)
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
+
+  Future<List<DevicesTableData>> getDevicesByIds(List<String> ids) {
+    if (ids.isEmpty) return Future.value(const []);
+    return (select(devicesTable)
+          ..where((t) => t.id.isIn(ids))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
+
+  Stream<List<DevicesTableData>> watchActiveDevices() {
+    return (select(devicesTable)
+          ..where((t) => t.status.equals('active'))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .watch();
   }
 
   Future<DevicesTableData?> getDeviceById(String id) {
-    return (select(
-      devicesTable,
-    )..where((table) => table.id.equals(id))).getSingleOrNull();
+    return (select(devicesTable)..where((t) => t.id.equals(id)))
+        .getSingleOrNull();
   }
 
-  Future<int> insertDevice(DevicesTableData device) {
+  Future<int> insertDevice(DevicesTableCompanion device) {
     return into(devicesTable).insert(device);
   }
 
-  Future<bool> updateDevice(DevicesTableData device) {
+  Future<int> upsertDevice(DevicesTableCompanion device) {
+    return into(devicesTable).insertOnConflictUpdate(device);
+  }
+
+  Future<bool> replaceDevice(DevicesTableData device) {
     return update(devicesTable).replace(device);
   }
 
-  Future<int> deleteDevice(String id) {
-    return (delete(devicesTable)..where((table) => table.id.equals(id))).go();
+  Future<int> setStatus(String id, String status, DateTime updatedAt) {
+    return (update(devicesTable)..where((t) => t.id.equals(id))).write(
+      DevicesTableCompanion(
+        status: Value(status),
+        updatedAt: Value(updatedAt),
+      ),
+    );
   }
 }

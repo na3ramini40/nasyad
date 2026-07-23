@@ -1,12 +1,12 @@
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 
-class GetLogForDeviceUsecase {
-  final DeviceLogRepository repository;
+class GetLogsForDeviceUsecase {
+  final DeviceLogRepository _repository;
 
-  GetLogForDeviceUsecase(this.repository);
+  GetLogsForDeviceUsecase(this._repository);
 
   Future<List<DeviceLog>> call(String deviceId) {
-    return repository.getLogsForDevice(deviceId);
+    return _repository.getLogsForDevice(deviceId);
   }
 }

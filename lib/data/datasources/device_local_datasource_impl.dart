@@ -8,8 +8,28 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   DeviceLocalDataSourceImpl(this._dao);
 
   @override
-  Future<void> deleteDevice(String id) async {
-    await _dao.deleteDevice(id);
+  Future<List<DeviceModel>> getActiveDevices() async {
+    final rows = await _dao.getActiveDevices();
+    return rows.map(DeviceModel.fromTableData).toList();
+  }
+
+  @override
+  Future<List<DeviceModel>> getAllDevices() async {
+    final rows = await _dao.getAllDevices();
+    return rows.map(DeviceModel.fromTableData).toList();
+  }
+
+  @override
+  Future<List<DeviceModel>> getDevicesByIds(List<String> ids) async {
+    final rows = await _dao.getDevicesByIds(ids);
+    return rows.map(DeviceModel.fromTableData).toList();
+  }
+
+  @override
+  Stream<List<DeviceModel>> watchActiveDevices() {
+    return _dao.watchActiveDevices().map(
+          (rows) => rows.map(DeviceModel.fromTableData).toList(),
+        );
   }
 
   @override
@@ -19,18 +39,26 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   }
 
   @override
-  Future<List<DeviceModel>> getDevices() async {
-    final rows = await _dao.getAllDevices();
-    return rows.map(DeviceModel.fromTableData).toList();
+  Future<void> insertDevice(DeviceModel device) async {
+    await _dao.insertDevice(device.toCompanion());
   }
 
   @override
-  Future<void> insertDevice(DeviceModel device) async {
-    await _dao.insertDevice(device.toTableData());
+  Future<void> upsertDevice(DeviceModel device) async {
+    await _dao.upsertDevice(device.toCompanion());
   }
 
   @override
   Future<void> updateDevice(DeviceModel device) async {
-    await _dao.updateDevice(device.toTableData());
+    await _dao.replaceDevice(device.toTableData());
+  }
+
+  @override
+  Future<void> setDeviceStatus(
+    String id,
+    String status,
+    DateTime updatedAt,
+  ) async {
+    await _dao.setStatus(id, status, updatedAt);
   }
 }

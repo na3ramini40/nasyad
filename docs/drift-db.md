@@ -1,3 +1,16 @@
+# Drift in this project
+
+- Entry: `lib/data/local/db/app_database.dart` (`schemaVersion: 2`)
+- Tables: devices, maintenance_rules, device_logs
+- Device `status`: `active` | `archived` | `deleted`
+- Rules: many per device (create UI requires one)
+- Logs are device-level and reset all rules; optional `usageDelta` + `usageUnit`
+- Due status is computed (`MaintenanceStatusCalculator`), not stored
+- Tests: `AppDatabase(NativeDatabase.memory())`
+- Codegen: `flutter pub run build_runner build --delete-conflicting-outputs`
+
+---
+
 # Drift in a Nutshell
 
 This is a compact practical guide for using Drift in Flutter or Dart apps.

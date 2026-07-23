@@ -8,9 +8,13 @@ class DeviceLogsTable extends Table {
 
   DateTimeColumn get date => dateTime()();
 
-  IntColumn get usage => integer().nullable()();
-
   TextColumn get notes => text().nullable()();
+
+  IntColumn get usageDelta => integer().nullable()();
+
+  TextColumn get usageUnit => text().nullable()();
+
+  DateTimeColumn get createdAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {id};

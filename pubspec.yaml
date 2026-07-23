@@ -9,28 +9,36 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.8
   # network (future use)
 #  http: ^1.6.0
   # database
+  drift: ^2.23.0
   drift_flutter: ^0.2.8
+  sqlite3: ^2.9.4
   # di
 #  get_it: ^9.2.0
 #  injectable: ^2.7.1
   # state
-#  flutter_bloc: ^9.1.1
+  flutter_bloc: ^9.1.1
   # navigation
   go_router: ^17.0.1
   # notifications
 #  flutter_local_notifications: ^19.5.0
   # date & localization
-#  intl: ^0.20.2
+  intl: any
 #  shamsi_date: ^1.1.1
 #  persian_datetime_picker: ^3.2.0
   # models
 #  freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   equatable: ^2.0.8
+  # transfer (export / import / share)
+  share_plus: ^11.1.0
+  path_provider: ^2.1.5
+  file_selector: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -44,8 +52,9 @@ dev_dependencies:
 #  intl_utils: ^2.8.13
   drift_dev: ^2.23.0
 #  mocktail: ^1.0.4
-  drift_db_viewer: ^2.1.0
+#  drift_db_viewer: ^2.1.0
 
 
 flutter:
   uses-material-design: true
+  generate: true

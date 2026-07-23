@@ -1,30 +1,174 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:nasyad/core/app_services.dart';
+import 'package:nasyad/core/l10n/l10n.dart';
+import 'package:nasyad/core/theme/app_breakpoints.dart';
+import 'package:nasyad/core/theme/app_theme.dart';
+import 'package:nasyad/core/theme/theme_mode_cubit.dart';
+import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/main.dart';
+import 'package:nasyad/presentation/splash/bloc/splash_cubit.dart';
+
+import 'sqlite_test_setup.dart';
+
+Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider(create: (_) => LocaleCubit(initialLocale: locale)),
+      BlocProvider(create: (_) => ThemeModeCubit()),
+    ],
+    child: MaterialApp(
+      locale: locale,
+      supportedLocales: AppLocales.supported,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      home: child,
+    ),
+  );
+}
+
+AppServices _testServices() {
+  return AppServices(AppDatabase(NativeDatabase.memory()));
+}
+
+Future<void> _pumpPastSplash(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 1300));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _pumpApp(WidgetTester tester, AppServices services) async {
+  await tester.pumpWidget(MyApp(services: services));
+  await _pumpPastSplash(tester);
+}
+
+Future<void> _disposeApp(WidgetTester tester, AppServices services) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  await tester.pump(const Duration(milliseconds: 50));
+  await services.dispose();
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUpAll(setupSqliteForTests);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('splash navigates to home empty state', (tester) async {
+    final services = _testServices();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await _pumpApp(tester, services);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('No devices yet'), findsOneWidget);
+    expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
+
+    await _disposeApp(tester, services);
+  });
+
+  testWidgets('preferences switches language to persian', (tester) async {
+    final services = _testServices();
+
+    await _pumpApp(tester, services);
+
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Preferences'), findsOneWidget);
+    await tester.tap(find.text('Persian'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('تنظیمات'), findsOneWidget);
+    expect(find.text('فارسی'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+
+    expect(find.text('نصیاد'), findsOneWidget);
+    expect(find.text('هنوز دستگاهی نیست'), findsOneWidget);
+
+    await _disposeApp(tester, services);
+  });
+
+  testWidgets('preferences can select dark theme', (tester) async {
+    final services = _testServices();
+
+    await _pumpApp(tester, services);
+
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+
+    final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(materialApp.themeMode, ThemeMode.dark);
+
+    await _disposeApp(tester, services);
+  });
+
+  test('SplashCubit emits ready after delay', () async {
+    final cubit = SplashCubit(minDisplay: Duration.zero);
+    expect(cubit.state, isA<SplashLoading>());
+    await cubit.start();
+    expect(cubit.state, isA<SplashReady>());
+    await cubit.close();
+  });
+
+  testWidgets('StatusBadge variants render labels', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        const Scaffold(
+          body: Row(
+            children: [
+              StatusBadge.success(label: 'Up to Date'),
+              StatusBadge.warning(label: 'Maintenance Due'),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Up to Date'), findsOneWidget);
+    expect(find.text('Maintenance Due'), findsOneWidget);
+  });
+
+  testWidgets('AppButton invokes onPressed', (tester) async {
+    var tapped = false;
+
+    await tester.pumpWidget(
+      _wrap(
+        Scaffold(
+          body: AppButton(
+            label: 'Save',
+            onPressed: () => tapped = true,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Save'));
+    expect(tapped, isTrue);
+  });
+
+  testWidgets('DeviceCard switches to grid on wide screens', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1200, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      _wrap(
+        Scaffold(
+          body: AppContent(
+            child: ResponsiveBuilder(
+              builder: (context, windowSize) {
+                final columns = AppBreakpoints.deviceGridColumns(windowSize);
+                return Text('columns:$columns');
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('columns:3'), findsOneWidget);
   });
 }

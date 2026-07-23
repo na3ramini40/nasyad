@@ -17,11 +17,14 @@ Follow what is already active in `pubspec.yaml`:
 
 - `go_router`
 - `drift_flutter`
+- `flutter_bloc`
 - `equatable`
 - `json_annotation`
 - `build_runner` + `drift_dev`
+- `flutter_localizations` + `intl` (en / fa)
+- `share_plus`, `path_provider`, `file_selector` (export / import)
 
-Do not assume this repo already uses `flutter_bloc`, `get_it`, or `injectable`.
+Do not assume this repo already uses `get_it` or `injectable`.
 
 ## Current `lib/` Layout
 
@@ -30,6 +33,11 @@ lib/
   core/
     router/
     theme/
+    ui/
+    l10n/
+    utils/
+    app_services.dart
+  l10n/
   data/
     datasources/
     local/db/
@@ -38,12 +46,25 @@ lib/
   domain/
     entities/
     repositories/
+    services/
     usecases/
       device/
       device_log/
+      transfer/
   presentation/
-    device/pages/
-    home/pages/
+    splash/
+      bloc/
+      pages/
+    home/
+      bloc/
+      pages/
+    device/
+      bloc/
+      pages/
+    preferences/pages/
+    transfer/
+      bloc/
+      pages/
   main.dart
 ```
 
@@ -52,7 +73,12 @@ lib/
 - Keep the layers: `core`, `data`, `domain`, `presentation`.
 - Keep `main.dart` thin.
 - Keep routing in `lib/core/router/`.
-- Keep theme code in `lib/core/theme/`.
+- Keep theme tokens and `ThemeData` in `lib/core/theme/`.
+- Keep shared design-system widgets in `lib/core/ui/` (buttons, badges, fields, cards, responsive helpers). Prefer theme tokens over hard-coded styles.
+- Keep UI strings in `lib/l10n/` ARB files (`app_en.arb`, `app_fa.arb`). Use `AppLocalizations.of(context)`; do not hard-code user-facing English/Persian text in widgets.
+- Supported locales: English (`en`) and Persian (`fa`, RTL). Switch via `LocaleCubit` on Preferences.
+- Theme mode (system / light / dark) via `ThemeModeCubit` on Preferences.
+- Feature state lives in `presentation/<feature>/bloc/` using `flutter_bloc` (Bloc or Cubit). Pages listen/build from blocs; do not call use cases directly from widgets.
 - Keep Drift schema and database setup in `lib/data/local/db/`.
 - Keep data models and repository implementations in the data layer.
 - Keep domain entities and repository contracts free of Flutter UI code.
@@ -62,7 +88,7 @@ lib/
 
 - Use `presentation/device/...`, not `presentation/devices/...`.
 - Use `device_log` for log-related domain use cases.
-- Do not document folders that do not exist yet, such as `maintenance/`, `injection/`, `bloc/`, or `widgets/`.
+- Do not document folders that do not exist yet, such as `maintenance/` or `injection/`.
 
 ## Docs
 

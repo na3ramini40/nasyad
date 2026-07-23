@@ -8,18 +8,36 @@ class DeviceLogLocalDataSourceImpl implements DeviceLogLocalDataSource {
   DeviceLogLocalDataSourceImpl(this._dao);
 
   @override
-  Future<void> deleteDeviceLog(String id) async {
-    await _dao.deleteLog(id);
-  }
-
-  @override
   Future<List<DeviceLogModel>> getLogsForDevice(String deviceId) async {
     final rows = await _dao.getLogsForDevice(deviceId);
     return rows.map(DeviceLogModel.fromTableData).toList();
   }
 
   @override
+  Stream<List<DeviceLogModel>> watchLogsForDevice(String deviceId) {
+    return _dao.watchLogsForDevice(deviceId).map(
+          (rows) => rows.map(DeviceLogModel.fromTableData).toList(),
+        );
+  }
+
+  @override
+  Future<DeviceLogModel?> getLatestLogForDevice(String deviceId) async {
+    final row = await _dao.getLatestLogForDevice(deviceId);
+    return row == null ? null : DeviceLogModel.fromTableData(row);
+  }
+
+  @override
   Future<void> insertDeviceLog(DeviceLogModel log) async {
-    await _dao.insertLog(log.toTableData());
+    await _dao.insertLog(log.toCompanion());
+  }
+
+  @override
+  Future<void> upsertDeviceLog(DeviceLogModel log) async {
+    await _dao.upsertLog(log.toCompanion());
+  }
+
+  @override
+  Future<void> deleteDeviceLog(String id) async {
+    await _dao.deleteLog(id);
   }
 }

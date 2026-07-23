@@ -17,6 +17,8 @@ This application is a local-first maintenance tracking system for devices, asset
 - Add item page: lets the user create a new tracked item and define its maintenance or check rule.
 - Item details page: shows the item information, maintenance rules, latest status, and log history.
 - Add log page: lets the user record a new maintenance, inspection, or follow-up log for an item.
+- Preferences: language, theme, and data transfer.
+- Export & Import: choose scope (all / one / selected), format (JSON / CSV / plain text), then share or save; import from a file.
 
 ## Features
 
@@ -24,4 +26,5 @@ This application is a local-first maintenance tracking system for devices, asset
 - Define custom maintenance or check schedules by time, date, or usage.
 - View current maintenance status for all tracked items.
 - Record logs and keep a simple local maintenance history.
+- Export and import devices, rules, and logs in JSON, CSV, or plain text.
 - Store all app data locally for the current version.

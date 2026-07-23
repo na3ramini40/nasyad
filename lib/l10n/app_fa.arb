@@ -1,0 +1,156 @@
+{
+  "@@locale": "fa",
+  "appTitle": "نصیاد",
+  "more": "بیشتر",
+  "back": "بازگشت",
+  "save": "ذخیره",
+  "delete": "حذف",
+  "edit": "ویرایش",
+  "addDevice": "افزودن دستگاه",
+  "addLog": "افزودن گزارش",
+  "submitLog": "ثبت گزارش",
+  "language": "زبان",
+  "english": "انگلیسی",
+  "persian": "فارسی",
+  "preferences": "تنظیمات",
+  "appearance": "ظاهر",
+  "themeSystem": "پیش‌فرض سیستم",
+  "themeLight": "روشن",
+  "themeDark": "تاریک",
+  "deviceName": "نام دستگاه",
+  "deviceNameHint": "نام دستگاه را وارد کنید...",
+  "deviceNameRequired": "نام دستگاه الزامی است",
+  "maintenanceRule": "قانون نگهداری",
+  "selectMaintenanceRule": "یک قانون نگهداری انتخاب کنید",
+  "selectScheduleType": "زمان یا مصرف را انتخاب کنید",
+  "selectIntervalUnit": "یک واحد انتخاب کنید",
+  "scheduleType": "نوع زمان‌بندی",
+  "scheduleByTime": "بر اساس زمان",
+  "scheduleByUsage": "بر اساس مصرف",
+  "intervalAmount": "هر",
+  "intervalAmountHint": "یک عدد وارد کنید...",
+  "intervalAmountRequired": "عددی بزرگ‌تر از ۰ وارد کنید",
+  "intervalUnit": "واحد",
+  "suggestions": "پیشنهادها",
+  "unitDays": "روز",
+  "unitWeeks": "هفته",
+  "unitMonths": "ماه",
+  "ruleEvery": "هر {value} {unit}",
+  "@ruleEvery": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "addEditDevice": "افزودن/ویرایش دستگاه",
+  "editDevice": "ویرایش دستگاه",
+  "deviceDetails": "جزئیات دستگاه",
+  "needsService": "نیاز به سرویس",
+  "upToDate": "به‌روز",
+  "maintenanceDue": "زمان سرویس رسیده",
+  "maintenanceSoon": "به زودی",
+  "noDevicesTitle": "هنوز دستگاهی نیست",
+  "noDevicesHint": "یک دستگاه اضافه کنید و یک قانون نگهداری انتخاب کنید.",
+  "noLogsYet": "هنوز گزارشی نیست",
+  "usageDelta": "مصرف از آخرین گزارش",
+  "usageDeltaHint": "اختیاری، مثلاً ۱۲۰",
+  "usageUnit": "واحد مصرف",
+  "unitHours": "ساعت",
+  "unitKm": "کیلومتر",
+  "unitCycles": "سیکل",
+  "archive": "بایگانی",
+  "activeMaintenanceRules": "قوانین نگهداری فعال",
+  "logHistory": "تاریخچه گزارش‌ها",
+  "notes": "یادداشت‌ها",
+  "notesHint": "یادداشت نگهداری را وارد کنید...",
+  "notesRequired": "یادداشت الزامی است",
+  "date": "تاریخ",
+  "lastLog": "آخرین گزارش: {value}",
+  "@lastLog": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "lastLogMinutesAgo": "{count} دقیقه پیش",
+  "@lastLogMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogDaysAgo": "{count} روز پیش",
+  "@lastLogDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogWeeksAgo": "{count} هفته پیش",
+  "@lastLogWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleEvery3Months": "هر ۳ ماه",
+  "ruleEvery500Hours": "هر ۵۰۰ ساعت",
+  "ruleEvery6Months": "هر ۶ ماه",
+  "sampleDeviceAc": "کولر گازی - پذیرایی",
+  "sampleDeviceCar": "خودرو",
+  "sampleDeviceLaptop": "لپ‌تاپ",
+  "sampleLogFilterReplaced": "تعویض فیلتر",
+  "sampleLogOilChange": "تعویض روغن",
+  "sampleLogGeneralCheck": "بازرسی عمومی",
+  "data": "داده",
+  "exportImport": "خروجی و ورودی",
+  "exportImportHint": "پشتیبان‌گیری یا بازیابی دستگاه‌ها، قوانین و گزارش‌ها.",
+  "exportSection": "خروجی",
+  "importSection": "ورودی",
+  "exportScope": "محدوده خروجی",
+  "exportScopeAll": "همه داده‌ها",
+  "exportScopeOne": "یک دستگاه",
+  "exportScopeSelected": "دستگاه‌های انتخاب‌شده",
+  "exportFormat": "قالب",
+  "formatJson": "JSON",
+  "formatCsv": "CSV",
+  "formatPlainText": "متن ساده",
+  "selectDevices": "انتخاب دستگاه‌ها",
+  "share": "اشتراک‌گذاری",
+  "saveFile": "ذخیره",
+  "chooseFile": "انتخاب فایل",
+  "importAction": "وارد کردن",
+  "importPreview": "آماده برای وارد کردن: {devices} دستگاه، {rules} قانون، {logs} گزارش",
+  "@importPreview": {
+    "placeholders": {
+      "devices": { "type": "int" },
+      "rules": { "type": "int" },
+      "logs": { "type": "int" }
+    }
+  },
+  "exportSuccess": "خروجی آماده است",
+  "exportSaved": "ذخیره شد در {path}",
+  "@exportSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "exportCopied": "خروجی در کلیپ‌بورد کپی شد (اشتراک‌گذاری در این سامانه در دسترس نیست)",
+  "importSuccess": "{devices} دستگاه وارد شد",
+  "@importSuccess": {
+    "placeholders": {
+      "devices": { "type": "int" }
+    }
+  },
+  "exportNoDevices": "دستگاهی برای خروجی انتخاب نشده است",
+  "importInvalid": "خواندن این فایل ممکن نشد",
+  "noDevicesForExport": "دستگاهی برای خروجی وجود ندارد"
+}

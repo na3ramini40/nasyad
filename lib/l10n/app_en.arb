@@ -1,0 +1,156 @@
+{
+  "@@locale": "en",
+  "appTitle": "Nasyad",
+  "more": "More",
+  "back": "Back",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "addDevice": "Add device",
+  "addLog": "Add Log",
+  "submitLog": "Submit Log",
+  "language": "Language",
+  "english": "English",
+  "persian": "Persian",
+  "preferences": "Preferences",
+  "appearance": "Appearance",
+  "themeSystem": "System default",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "deviceName": "Device Name",
+  "deviceNameHint": "Enter device name...",
+  "deviceNameRequired": "Device name is required",
+  "maintenanceRule": "Maintenance Rule",
+  "selectMaintenanceRule": "Select a maintenance rule",
+  "selectScheduleType": "Choose time or usage",
+  "selectIntervalUnit": "Choose a unit",
+  "scheduleType": "Schedule type",
+  "scheduleByTime": "By time",
+  "scheduleByUsage": "By usage",
+  "intervalAmount": "Every",
+  "intervalAmountHint": "Enter a number...",
+  "intervalAmountRequired": "Enter a number greater than 0",
+  "intervalUnit": "Unit",
+  "suggestions": "Suggestions",
+  "unitDays": "Days",
+  "unitWeeks": "Weeks",
+  "unitMonths": "Months",
+  "ruleEvery": "Every {value} {unit}",
+  "@ruleEvery": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "addEditDevice": "Add/Edit Device",
+  "editDevice": "Edit Device",
+  "deviceDetails": "Device Details",
+  "needsService": "Needs Service",
+  "upToDate": "Up to Date",
+  "maintenanceDue": "Maintenance Due",
+  "maintenanceSoon": "Due Soon",
+  "noDevicesTitle": "No devices yet",
+  "noDevicesHint": "Add a device and choose one maintenance rule to start tracking.",
+  "noLogsYet": "No logs yet",
+  "usageDelta": "Usage since last log",
+  "usageDeltaHint": "Optional, e.g. 120",
+  "usageUnit": "Usage unit",
+  "unitHours": "Hours",
+  "unitKm": "Kilometers",
+  "unitCycles": "Cycles",
+  "archive": "Archive",
+  "activeMaintenanceRules": "Active Maintenance Rules",
+  "logHistory": "Log History",
+  "notes": "Notes",
+  "notesHint": "Enter maintenance notes...",
+  "notesRequired": "Notes are required",
+  "date": "Date",
+  "lastLog": "Last Log: {value}",
+  "@lastLog": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "lastLogMinutesAgo": "{count} mins ago",
+  "@lastLogMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogDaysAgo": "{count} days ago",
+  "@lastLogDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogWeeksAgo": "{count} week ago",
+  "@lastLogWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleEvery3Months": "Every 3 Months",
+  "ruleEvery500Hours": "Every 500 Hours",
+  "ruleEvery6Months": "Every 6 Months",
+  "sampleDeviceAc": "AC Unit - Living Room",
+  "sampleDeviceCar": "Car",
+  "sampleDeviceLaptop": "Laptop",
+  "sampleLogFilterReplaced": "Filter Replaced",
+  "sampleLogOilChange": "Oil Change",
+  "sampleLogGeneralCheck": "General check",
+  "data": "Data",
+  "exportImport": "Export & Import",
+  "exportImportHint": "Back up or restore devices, rules, and logs.",
+  "exportSection": "Export",
+  "importSection": "Import",
+  "exportScope": "What to export",
+  "exportScopeAll": "All data",
+  "exportScopeOne": "One device",
+  "exportScopeSelected": "Selected devices",
+  "exportFormat": "Format",
+  "formatJson": "JSON",
+  "formatCsv": "CSV",
+  "formatPlainText": "Plain text",
+  "selectDevices": "Select devices",
+  "share": "Share",
+  "saveFile": "Save",
+  "chooseFile": "Choose file",
+  "importAction": "Import",
+  "importPreview": "Ready to import: {devices} devices, {rules} rules, {logs} logs",
+  "@importPreview": {
+    "placeholders": {
+      "devices": { "type": "int" },
+      "rules": { "type": "int" },
+      "logs": { "type": "int" }
+    }
+  },
+  "exportSuccess": "Export ready",
+  "exportSaved": "Saved to {path}",
+  "@exportSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "exportCopied": "Export copied to clipboard (share not available on this platform)",
+  "importSuccess": "Imported {devices} devices",
+  "@importSuccess": {
+    "placeholders": {
+      "devices": { "type": "int" }
+    }
+  },
+  "exportNoDevices": "No devices selected to export",
+  "importInvalid": "Could not read this file",
+  "noDevicesForExport": "No devices available to export"
+}

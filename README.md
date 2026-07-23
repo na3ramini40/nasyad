@@ -1,16 +1,47 @@
-# nasyad
+# Nasyad
 
-A new Flutter project.
+Local-first maintenance tracker for devices, assets, and recurring follow-ups. Data stays on device — no cloud sync in this phase.
 
-## Getting Started
+## Run locally
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+Tests and analysis:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+flutter analyze
+flutter test
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+After Drift / codegen changes:
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+More project rules: [`docs/AGENTS.md`](docs/AGENTS.md).
+
+## CI / CD (GitHub Actions)
+
+Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Flutter pinned to **3.35.6**.
+
+| Job | What | When |
+|-----|------|------|
+| **Verify** | format, Drift codegen freshness, `analyze`, `test` | Every push/PR/tag + manual run |
+| **Build APK** | release APK artifact (30 days) | Auto on `main`/`master` & `v*` tags; manual via **Run workflow** |
+| **GitHub Release** | attaches `nasyad-<tag>.apk` | Auto on tags like `v1.0.0` |
+
+### How to use
+
+1. Open a PR — **Verify** runs automatically (no APK yet).
+2. To build an APK from a PR branch: **Actions → CI → Run workflow** → pick the branch.
+3. Merge to `main`/`master` — Verify + APK build run automatically.
+4. Tag a release: `git tag v1.0.0 && git push origin v1.0.0` — builds APK and creates a GitHub Release.
+
+### Notes
+
+- Android release currently uses the **debug keystore** (see `android/app/build.gradle.kts`). Fine for sideloading; Play Store needs a real signing key.
+- Only APK is built for now; other platforms can be added later.
