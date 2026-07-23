@@ -19,7 +19,7 @@ flutter test
 After Drift / codegen changes:
 
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 More project rules: [`docs/AGENTS.md`](docs/AGENTS.md).
