@@ -117,9 +117,8 @@ class DevicePage extends StatelessWidget {
                       child: ListTile(
                         title: Text(l10n.addChild),
                         trailing: const Icon(Icons.add),
-                        onTap: () => context.push(
-                          '/device/new?parentId=$deviceId',
-                        ),
+                        onTap: () =>
+                            context.push('/device/new?parentId=$deviceId'),
                       ),
                     )
                   else ...[
@@ -150,7 +149,11 @@ class DevicePage extends StatelessWidget {
                             children: [
                               for (var i = 0; i < logs.length; i++)
                                 LogListItem(
-                                  title: _logTitle(l10n, logs[i].kind, logs[i].notes),
+                                  title: _logTitle(
+                                    l10n,
+                                    logs[i].kind,
+                                    logs[i].notes,
+                                  ),
                                   subtitle: DateFormat.yMMMd(
                                     locale.toString(),
                                   ).add_jm().format(logs[i].date),

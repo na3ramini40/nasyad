@@ -72,7 +72,9 @@ class Device extends Equatable {
       usageUnit: clearUsageUnit ? null : (usageUnit ?? this.usageUnit),
       currentUsage: currentUsage ?? this.currentUsage,
       scheduleType: clearSchedule ? null : (scheduleType ?? this.scheduleType),
-      intervalValue: clearSchedule ? null : (intervalValue ?? this.intervalValue),
+      intervalValue: clearSchedule
+          ? null
+          : (intervalValue ?? this.intervalValue),
       intervalUnit: clearSchedule ? null : (intervalUnit ?? this.intervalUnit),
       fixedDueAt: clearSchedule ? null : (fixedDueAt ?? this.fixedDueAt),
       lastMaintainedAt: clearLastMaintainedAt

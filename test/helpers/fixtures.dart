@@ -95,10 +95,7 @@ ExportBundle sampleBundle({
     devices:
         devices ??
         [
-          ExportDeviceBundle(
-            device: sampleDevice(),
-            logs: [sampleLog()],
-          ),
+          ExportDeviceBundle(device: sampleDevice(), logs: [sampleLog()]),
         ],
   );
 }

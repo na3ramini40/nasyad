@@ -47,10 +47,20 @@ void main(List<String> args) {
       'AppChangelog.latest (${latest.version}) != AppVersion.name '
       '(${AppVersion.name})',
     );
-  } else if (latest.en.isEmpty || latest.fa.isEmpty) {
+  } else if (!latest.hasNotesForAllLanguages) {
     errors.add(
-      'Changelog for ${latest.version} must have both en and fa notes',
+      'Changelog for ${latest.version} must have end-user notes for every '
+      'lib/l10n language (${changelogLanguageCodes.join(', ')})',
     );
+  }
+
+  for (final entry in AppChangelog.entries) {
+    if (!entry.hasNotesForAllLanguages) {
+      errors.add(
+        'Changelog ${entry.version} is missing notes for one or more '
+        'languages (${changelogLanguageCodes.join(', ')})',
+      );
+    }
   }
 
   String? tagArg;

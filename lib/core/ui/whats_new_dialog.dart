@@ -80,10 +80,7 @@ Future<bool> maybeShowWhatsNewOnLaunch(
   String currentVersion = AppVersion.name,
 }) async {
   final lastSeen = await readLastSeen();
-  final decision = decideWhatsNew(
-    lastSeen: lastSeen,
-    current: currentVersion,
-  );
+  final decision = decideWhatsNew(lastSeen: lastSeen, current: currentVersion);
 
   switch (decision) {
     case WhatsNewDecision.skipFirstInstall:

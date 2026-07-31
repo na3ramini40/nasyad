@@ -264,7 +264,9 @@ abstract final class BundleCodec {
       buffer.writeln('status: ${device.status.storageValue}');
       buffer.writeln('usageUnit: ${device.usageUnit?.storageValue ?? ''}');
       buffer.writeln('currentUsage: ${device.currentUsage}');
-      buffer.writeln('scheduleType: ${device.scheduleType?.storageValue ?? ''}');
+      buffer.writeln(
+        'scheduleType: ${device.scheduleType?.storageValue ?? ''}',
+      );
       buffer.writeln('intervalValue: ${device.intervalValue ?? ''}');
       buffer.writeln('intervalUnit: ${device.intervalUnit ?? ''}');
       buffer.writeln(
@@ -464,7 +466,8 @@ abstract final class BundleCodec {
     final intervalRaw = rule['intervalValue']?.trim() ?? '';
     final unitRaw = rule['intervalUnit']?.trim() ?? '';
     final scheduleType = ScheduleTypeX.fromStorage(typeRaw);
-    final usageUnit = unitRaw.isNotEmpty &&
+    final usageUnit =
+        unitRaw.isNotEmpty &&
             UsageIntervalUnit.values.any((u) => u.name == unitRaw)
         ? UsageIntervalUnitX.fromStorage(unitRaw)
         : device.usageUnit;

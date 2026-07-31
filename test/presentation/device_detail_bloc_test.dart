@@ -46,10 +46,7 @@ void main() {
   });
 
   test('emits not found when device missing', () async {
-    expectLater(
-      bloc.stream,
-      emitsThrough(isA<DeviceDetailNotFound>()),
-    );
+    expectLater(bloc.stream, emitsThrough(isA<DeviceDetailNotFound>()));
 
     bloc.add(const DeviceDetailStarted());
     await Future<void>.delayed(Duration.zero);
@@ -58,10 +55,7 @@ void main() {
 
   test('archives device', () async {
     bloc.add(const DeviceDetailArchiveRequested());
-    await expectLater(
-      bloc.stream,
-      emitsThrough(isA<DeviceDetailArchived>()),
-    );
+    await expectLater(bloc.stream, emitsThrough(isA<DeviceDetailArchived>()));
     expect(devices.statusChanges.first.$2.name, 'archived');
   });
 }

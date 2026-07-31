@@ -253,10 +253,9 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        onChanged: (value) =>
-                            context.read<DeviceEditBloc>().add(
-                              DeviceEditInitialElapsedChanged(value),
-                            ),
+                        onChanged: (value) => context
+                            .read<DeviceEditBloc>()
+                            .add(DeviceEditInitialElapsedChanged(value)),
                       ),
                     ],
                     const SizedBox(height: AppSpacing.lg),
@@ -287,7 +286,8 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                         padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                         child: SelectableOptionTile(
                           label: usageUnitLabel(l10n, unit),
-                          selected: state.usageUnit == unit ||
+                          selected:
+                              state.usageUnit == unit ||
                               (state.usageUnit == null &&
                                   state.intervalUnit == unit.storageValue),
                           onTap: () => context.read<DeviceEditBloc>().add(

@@ -169,9 +169,7 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                           : '${l10n.usageReading} (${usageUnitLabel(l10n, unit)})',
                       hintText: l10n.usageReadingHint,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       onChanged: (value) => context.read<DeviceLogBloc>().add(
                         DeviceLogUsageValueChanged(value),
                       ),
@@ -179,7 +177,8 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                         if (state.kind != DeviceLogKind.usageUpdate) {
                           return null;
                         }
-                        if (value == null || int.tryParse(value.trim()) == null) {
+                        if (value == null ||
+                            int.tryParse(value.trim()) == null) {
                           return l10n.usageReadingRequired;
                         }
                         return null;

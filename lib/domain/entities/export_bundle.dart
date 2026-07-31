@@ -6,10 +6,7 @@ class ExportDeviceBundle extends Equatable {
   final Device device;
   final List<DeviceLog> logs;
 
-  const ExportDeviceBundle({
-    required this.device,
-    this.logs = const [],
-  });
+  const ExportDeviceBundle({required this.device, this.logs = const []});
 
   @override
   List<Object?> get props => [device, logs];

@@ -49,10 +49,7 @@ class MaintenanceStatusCalculator {
     final progress = list
         .map((r) => r.progress)
         .fold<double>(0, (max, value) => value > max ? value : max);
-    return RuleStatusResult(
-      status: status,
-      progress: progress.clamp(0.0, 1.0),
-    );
+    return RuleStatusResult(status: status, progress: progress.clamp(0.0, 1.0));
   }
 
   Device? resolveUsageOwner(Device device, Map<String, Device> byId) {
@@ -87,10 +84,7 @@ class MaintenanceStatusCalculator {
     return result;
   }
 
-  RuleStatusResult _calendar({
-    required Device device,
-    required DateTime now,
-  }) {
+  RuleStatusResult _calendar({required Device device, required DateTime now}) {
     final value = device.intervalValue;
     final unit = device.intervalUnit;
     if (value == null || value <= 0 || unit == null) {
@@ -137,10 +131,7 @@ class MaintenanceStatusCalculator {
     );
   }
 
-  RuleStatusResult _fixedDate({
-    required Device device,
-    required DateTime now,
-  }) {
+  RuleStatusResult _fixedDate({required Device device, required DateTime now}) {
     final dueAt = device.fixedDueAt;
     if (dueAt == null) {
       return const RuleStatusResult(

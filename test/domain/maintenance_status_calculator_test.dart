@@ -170,10 +170,7 @@ void main() {
         intervalUnit: null,
       );
       final oil = sampleDevice(id: 'oil', parentId: 'car', usageUnit: null);
-      final owner = calculator.resolveUsageOwner(oil, {
-        'car': car,
-        'oil': oil,
-      });
+      final owner = calculator.resolveUsageOwner(oil, {'car': car, 'oil': oil});
       expect(owner?.id, 'car');
     });
 
@@ -236,12 +233,7 @@ void main() {
       );
       final oil = sampleDevice(id: 'oil', parentId: 'engine');
       final brakes = sampleDevice(id: 'brakes', parentId: 'car');
-      final found = calculator.descendantsOf('car', [
-        car,
-        engine,
-        oil,
-        brakes,
-      ]);
+      final found = calculator.descendantsOf('car', [car, engine, oil, brakes]);
       expect(found.map((d) => d.id).toSet(), {'engine', 'oil', 'brakes'});
     });
 

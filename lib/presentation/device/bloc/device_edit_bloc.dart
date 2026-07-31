@@ -26,12 +26,7 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
        _createDevice = createDevice,
        _updateDevice = updateDevice,
        _deleteDevice = deleteDevice,
-       super(
-         DeviceEditState(
-           isEdit: deviceId != null,
-           parentId: parentId,
-         ),
-       ) {
+       super(DeviceEditState(isEdit: deviceId != null, parentId: parentId)) {
     on<DeviceEditStarted>(_onStarted);
     on<DeviceEditNameChanged>(_onNameChanged);
     on<DeviceEditScheduleEnabledChanged>(_onScheduleEnabledChanged);

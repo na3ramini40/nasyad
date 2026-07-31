@@ -38,10 +38,7 @@ void main() {
   });
 
   test('emits error when watch fails', () async {
-    expectLater(
-      bloc.stream,
-      emitsThrough(isA<HomeError>()),
-    );
+    expectLater(bloc.stream, emitsThrough(isA<HomeError>()));
 
     bloc.add(const HomeStarted());
     await Future<void>.delayed(Duration.zero);

@@ -56,9 +56,6 @@ void main() {
       fontFamily: AppFonts.familyForLocale(const Locale('fa')),
     );
     expect(theme.textTheme.bodyMedium?.fontFamily, AppFonts.vazir);
-    expect(
-      AppFonts.familyForLocale(const Locale('en')),
-      isNull,
-    );
+    expect(AppFonts.familyForLocale(const Locale('en')), isNull);
   });
 }

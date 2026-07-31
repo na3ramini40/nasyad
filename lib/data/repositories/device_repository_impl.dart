@@ -132,10 +132,7 @@ class DeviceRepositoryImpl extends DeviceRepository {
       );
     }
     final usageOwner = _calculator.resolveUsageOwner(device, byId);
-    return _calculator.evaluateDevice(
-      device: device,
-      usageOwner: usageOwner,
-    );
+    return _calculator.evaluateDevice(device: device, usageOwner: usageOwner);
   }
 
   @override
@@ -174,7 +171,9 @@ class DeviceRepositoryImpl extends DeviceRepository {
 
   @override
   Future<void> setDeviceStatus(String id, DeviceStatus status) async {
-    final all = (await _devices.getAllDevices()).map((m) => m.toEntity()).toList();
+    final all = (await _devices.getAllDevices())
+        .map((m) => m.toEntity())
+        .toList();
     final descendants = _calculator.descendantsOf(id, all);
     final ids = [id, ...descendants.map((d) => d.id)];
     await _devices.setDeviceStatusForIds(

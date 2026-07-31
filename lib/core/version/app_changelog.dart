@@ -1,5 +1,8 @@
 import 'package:nasyad/core/version/semver.dart';
 
+/// Languages that must have end-user release notes (matches `lib/l10n`).
+const List<String> changelogLanguageCodes = ['en', 'fa'];
+
 class ChangelogEntry {
   const ChangelogEntry({
     required this.version,
@@ -11,41 +14,54 @@ class ChangelogEntry {
   final List<String> en;
   final List<String> fa;
 
+  /// End-user bullet points for [languageCode] (`en` / `fa`).
+  /// Unknown codes fall back to English.
   List<String> notesFor(String languageCode) {
-    return languageCode == 'fa' ? fa : en;
+    return switch (languageCode) {
+      'fa' => fa,
+      _ => en,
+    };
+  }
+
+  /// True when every supported app language has at least one note.
+  bool get hasNotesForAllLanguages {
+    for (final code in changelogLanguageCodes) {
+      if (notesFor(code).isEmpty) return false;
+    }
+    return true;
   }
 }
 
 abstract final class AppChangelog {
-  /// Newest first.
+  /// Newest first. Notes are written for end users in every `lib/l10n` language.
   static const List<ChangelogEntry> entries = [
     ChangelogEntry(
       version: '1.1.0',
       en: [
-        'Nest devices under parent assets; progress rolls up the tree.',
-        'Optional schedule on any node: calendar, usage, or a fixed date.',
-        'Mark maintained vs update usage (odometer) without resetting cycles.',
-        'Set how much of a cycle was already used when you add a schedule.',
-        'Export format v2 keeps parent links; older backups still import.',
+        'Organize devices in a tree — nest parts under a car, appliance, or any parent.',
+        'Add an optional schedule to any device: by calendar time, by usage (km, hours, or cycles), or a fixed due date.',
+        'Log two ways: mark something as maintained, or only update the usage reading. Updating usage no longer resets your progress.',
+        'When you add a schedule, you can say how much of the current cycle is already used.',
+        'Exports keep parent–child links. Older backups still import fine.',
       ],
       fa: [
-        'دستگاه‌ها را زیر دارایی والد تو در تو کنید؛ پیشرفت در درخت جمع می‌شود.',
-        'زمان‌بندی اختیاری روی هر گره: تقویم، کارکرد، یا تاریخ ثابت.',
-        'ثبت نگهداری در برابر به‌روزرسانی کارکرد (کیلومترشمار) بدون ریست چرخه.',
-        'هنگام افزودن زمان‌بندی مشخص کنید چقدر از دوره از قبل مصرف شده.',
-        'خروجی نسخه ۲ پیوند والد را نگه می‌دارد؛ پشتیبان‌های قدیمی هم وارد می‌شوند.',
+        'دستگاه‌ها را به‌صورت درختی مرتب کنید — قطعات را زیر خودرو، لوازم خانگی یا هر والد دیگری قرار دهید.',
+        'برای هر دستگاه زمان‌بندی اختیاری بگذارید: بر اساس تقویم، کارکرد (کیلومتر، ساعت یا سیکل)، یا یک تاریخ سررسید ثابت.',
+        'دو جور ثبت کنید: علامت‌گذاری نگهداری انجام‌شده، یا فقط به‌روزرسانی کارکرد. به‌روزرسانی کارکرد دیگر پیشرفت شما را صفر نمی‌کند.',
+        'هنگام افزودن زمان‌بندی می‌توانید بگویید چقدر از دورهٔ فعلی از قبل مصرف شده است.',
+        'خروجی‌ها پیوند والد و فرزند را نگه می‌دارند. پشتیبان‌های قدیمی همچنان بدون مشکل وارد می‌شوند.',
       ],
     ),
     ChangelogEntry(
       version: '1.0.0',
       en: [
-        'Track devices and maintenance schedules locally.',
-        'Log service history and see due status at a glance.',
-        'Export and import your data as JSON, CSV, or plain text.',
+        'Track your devices and maintenance schedules on this device — no account needed.',
+        'Log service history and see at a glance what is due soon or overdue.',
+        'Export or import your data as JSON, CSV, or plain text.',
       ],
       fa: [
-        'دستگاه‌ها و زمان‌بندی نگهداری را به‌صورت محلی پیگیری کنید.',
-        'تاریخچه سرویس را ثبت کنید و وضعیت سررسید را ببینید.',
+        'دستگاه‌ها و زمان‌بندی نگهداری را روی همین گوشی پیگیری کنید — بدون نیاز به حساب کاربری.',
+        'تاریخچه سرویس را ثبت کنید و ببینید چه چیزی به‌زودی سررسید می‌شود یا گذشته است.',
         'داده‌ها را به‌صورت JSON، CSV یا متن ساده خروجی بگیرید یا وارد کنید.',
       ],
     ),

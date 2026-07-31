@@ -33,7 +33,10 @@ CustomTransitionPage<T> appFadeSlidePage<T>({
       return FadeTransition(
         opacity: fade,
         child: SlideTransition(
-          position: Tween<Offset>(begin: begin, end: Offset.zero).animate(curved),
+          position: Tween<Offset>(
+            begin: begin,
+            end: Offset.zero,
+          ).animate(curved),
           child: child,
         ),
       );

@@ -25,11 +25,7 @@ void main() {
     db = AppDatabase(NativeDatabase.memory());
     final deviceDs = DeviceLocalDataSourceImpl(db.deviceDao);
     final logDs = DeviceLogLocalDataSourceImpl(db.deviceLogDao);
-    devices = DeviceRepositoryImpl(
-      db: db,
-      devices: deviceDs,
-      logs: logDs,
-    );
+    devices = DeviceRepositoryImpl(db: db, devices: deviceDs, logs: logDs);
     logs = DeviceLogRepositoryImpl(db: db, logs: logDs, devices: deviceDs);
   });
 
@@ -136,10 +132,7 @@ void main() {
   });
 
   test('createLog throws when device missing', () async {
-    expect(
-      () => logs.createLog(sampleLog()),
-      throwsA(isA<StateError>()),
-    );
+    expect(() => logs.createLog(sampleLog()), throwsA(isA<StateError>()));
   });
 
   test('watchLogsForDevice emits inserted logs', () async {
@@ -176,9 +169,10 @@ void main() {
       ),
     );
 
-    final summary = await devices.watchDeviceSummary('car').first.timeout(
-      const Duration(seconds: 2),
-    );
+    final summary = await devices
+        .watchDeviceSummary('car')
+        .first
+        .timeout(const Duration(seconds: 2));
     expect(summary?.children, hasLength(1));
     expect(summary?.children.first.device.id, 'oil');
 
@@ -187,65 +181,72 @@ void main() {
     expect(all.every((d) => d.status == DeviceStatus.archived), isTrue);
   });
 
-  test('createDevice bakes calendar initialElapsed into lastMaintainedAt', () async {
-    final before = DateTime.now();
-    await devices.createDevice(
-      sampleDevice(
-        id: 'washer',
-        name: 'Washer',
-        scheduleType: ScheduleType.calendarInterval,
-        intervalValue: 6,
-        intervalUnit: 'months',
-        lastMaintainedAt: null,
-        createdAt: before,
-      ),
-      initialElapsed: 2,
-    );
-    final after = DateTime.now();
-    final device = await devices.getDevice('washer');
-    expect(device?.lastMaintainedAt, isNotNull);
-    final anchor = device!.lastMaintainedAt!;
-    expect(anchor.isBefore(before.add(const Duration(days: 1))), isTrue);
-    expect(
-      anchor.isAfter(after.subtract(const Duration(days: 70))),
-      isTrue,
-    );
-    expect(anchor.isBefore(before.subtract(const Duration(days: 40))), isTrue);
-  });
+  test(
+    'createDevice bakes calendar initialElapsed into lastMaintainedAt',
+    () async {
+      final before = DateTime.now();
+      await devices.createDevice(
+        sampleDevice(
+          id: 'washer',
+          name: 'Washer',
+          scheduleType: ScheduleType.calendarInterval,
+          intervalValue: 6,
+          intervalUnit: 'months',
+          lastMaintainedAt: null,
+          createdAt: before,
+        ),
+        initialElapsed: 2,
+      );
+      final after = DateTime.now();
+      final device = await devices.getDevice('washer');
+      expect(device?.lastMaintainedAt, isNotNull);
+      final anchor = device!.lastMaintainedAt!;
+      expect(anchor.isBefore(before.add(const Duration(days: 1))), isTrue);
+      expect(anchor.isAfter(after.subtract(const Duration(days: 70))), isTrue);
+      expect(
+        anchor.isBefore(before.subtract(const Duration(days: 40))),
+        isTrue,
+      );
+    },
+  );
 
-  test('createDevice bakes usage initialElapsed from parent odometer', () async {
-    await devices.createDevice(
-      sampleDevice(
-        id: 'car',
-        name: 'Car',
-        usageUnit: UsageIntervalUnit.km,
-        currentUsage: 10000,
-        scheduleType: null,
-        intervalValue: null,
-        intervalUnit: null,
-      ),
-    );
-    await devices.createDevice(
-      sampleDevice(
-        id: 'oil',
-        parentId: 'car',
-        name: 'Oil',
-        scheduleType: ScheduleType.usageInterval,
-        intervalValue: 1000,
-        intervalUnit: 'km',
-        usageAtLastMaintenance: 0,
-      ),
-      initialElapsed: 300,
-    );
+  test(
+    'createDevice bakes usage initialElapsed from parent odometer',
+    () async {
+      await devices.createDevice(
+        sampleDevice(
+          id: 'car',
+          name: 'Car',
+          usageUnit: UsageIntervalUnit.km,
+          currentUsage: 10000,
+          scheduleType: null,
+          intervalValue: null,
+          intervalUnit: null,
+        ),
+      );
+      await devices.createDevice(
+        sampleDevice(
+          id: 'oil',
+          parentId: 'car',
+          name: 'Oil',
+          scheduleType: ScheduleType.usageInterval,
+          intervalValue: 1000,
+          intervalUnit: 'km',
+          usageAtLastMaintenance: 0,
+        ),
+        initialElapsed: 300,
+      );
 
-    final oil = await devices.getDevice('oil');
-    expect(oil?.usageAtLastMaintenance, 9700);
+      final oil = await devices.getDevice('oil');
+      expect(oil?.usageAtLastMaintenance, 9700);
 
-    final summary = await devices.watchDeviceSummary('oil').first.timeout(
-      const Duration(seconds: 2),
-    );
-    expect(summary?.progress, closeTo(0.3, 0.02));
-  });
+      final summary = await devices
+          .watchDeviceSummary('oil')
+          .first
+          .timeout(const Duration(seconds: 2));
+      expect(summary?.progress, closeTo(0.3, 0.02));
+    },
+  );
 
   test('root summary aggregates due child status', () async {
     await devices.createDevice(

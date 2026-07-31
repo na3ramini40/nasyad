@@ -48,9 +48,7 @@ final class DeviceLogUsageValueChanged extends DeviceLogEvent {
 }
 
 final class DeviceLogSubmitRequested extends DeviceLogEvent {
-  const DeviceLogSubmitRequested({
-    required this.usageReadingRequiredMessage,
-  });
+  const DeviceLogSubmitRequested({required this.usageReadingRequiredMessage});
 
   final String usageReadingRequiredMessage;
 

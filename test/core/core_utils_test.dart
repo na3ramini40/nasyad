@@ -24,9 +24,18 @@ void main() {
     });
 
     test('AppLocales.resolve uses device locale when supported', () {
-      expect(AppLocales.resolve(const Locale('fa'), AppLocales.supported), AppLocales.persian);
-      expect(AppLocales.resolve(const Locale('de'), AppLocales.supported), AppLocales.english);
-      expect(AppLocales.resolve(null, AppLocales.supported), AppLocales.english);
+      expect(
+        AppLocales.resolve(const Locale('fa'), AppLocales.supported),
+        AppLocales.persian,
+      );
+      expect(
+        AppLocales.resolve(const Locale('de'), AppLocales.supported),
+        AppLocales.english,
+      );
+      expect(
+        AppLocales.resolve(null, AppLocales.supported),
+        AppLocales.english,
+      );
     });
   });
 

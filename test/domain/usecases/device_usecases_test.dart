@@ -48,10 +48,7 @@ void main() {
   test('CreateDeviceUsecase rejects initialElapsed above interval', () {
     final usecase = CreateDeviceUsecase(repository);
     expect(
-      () => usecase(
-        sampleDevice(intervalValue: 1000),
-        initialElapsed: 1001,
-      ),
+      () => usecase(sampleDevice(intervalValue: 1000), initialElapsed: 1001),
       throwsA(isA<ArgumentError>()),
     );
   });
@@ -59,11 +56,7 @@ void main() {
   test('CreateDeviceUsecase allows container with no schedule', () async {
     final usecase = CreateDeviceUsecase(repository);
     await usecase(
-      sampleDevice(
-        scheduleType: null,
-        intervalValue: null,
-        intervalUnit: null,
-      ),
+      sampleDevice(scheduleType: null, intervalValue: null, intervalUnit: null),
     );
     expect(repository.createCalls, 1);
     expect(repository.devices.first.hasSchedule, isFalse);

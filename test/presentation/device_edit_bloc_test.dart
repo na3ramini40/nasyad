@@ -195,9 +195,7 @@ void main() {
     expect(bloc.state.parentId, 'car');
 
     bloc.add(const DeviceEditNameChanged('Oil'));
-    bloc.add(
-      const DeviceEditScheduleTypeChanged(ScheduleType.usageInterval),
-    );
+    bloc.add(const DeviceEditScheduleTypeChanged(ScheduleType.usageInterval));
     bloc.add(const DeviceEditIntervalUnitChanged('km'));
     bloc.add(const DeviceEditIntervalChanged('1000'));
     bloc.add(const DeviceEditInitialElapsedChanged('300'));

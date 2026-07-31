@@ -90,5 +90,19 @@ void main() {
       expect(AppChangelog.entriesSince('1.0.0').first.version, '1.1.0');
       expect(AppChangelog.entries.map((e) => e.version), contains('1.0.0'));
     });
+
+    test('every entry has end-user notes for all l10n languages', () {
+      expect(changelogLanguageCodes, ['en', 'fa']);
+      for (final entry in AppChangelog.entries) {
+        expect(
+          entry.hasNotesForAllLanguages,
+          isTrue,
+          reason: '${entry.version} missing notes for a language',
+        );
+        for (final code in changelogLanguageCodes) {
+          expect(entry.notesFor(code), isNotEmpty);
+        }
+      }
+    });
   });
 }

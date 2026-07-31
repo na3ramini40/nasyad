@@ -24,7 +24,10 @@ class DeviceScheduleBaseline {
       ScheduleType.usageInterval => () {
         final ownerUsage = usageOwner?.currentUsage ?? device.currentUsage;
         return device.copyWith(
-          usageAtLastMaintenance: (ownerUsage - initialElapsed).clamp(0, 1 << 30),
+          usageAtLastMaintenance: (ownerUsage - initialElapsed).clamp(
+            0,
+            1 << 30,
+          ),
           lastMaintainedAt: current,
         );
       }(),
