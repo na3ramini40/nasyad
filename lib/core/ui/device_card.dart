@@ -107,6 +107,16 @@ class _ListDeviceCard extends StatelessWidget {
                         ),
                       ),
                     ],
+                    if (data.progress != null) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: data.progress!.clamp(0.0, 1.0),
+                          minHeight: 6,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -7,6 +7,19 @@ sealed class DeviceLogEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+final class DeviceLogStarted extends DeviceLogEvent {
+  const DeviceLogStarted();
+}
+
+final class DeviceLogKindChanged extends DeviceLogEvent {
+  const DeviceLogKindChanged(this.kind);
+
+  final DeviceLogKind kind;
+
+  @override
+  List<Object?> get props => [kind];
+}
+
 final class DeviceLogNotesChanged extends DeviceLogEvent {
   const DeviceLogNotesChanged(this.notes);
 
@@ -25,29 +38,20 @@ final class DeviceLogDateChanged extends DeviceLogEvent {
   List<Object?> get props => [date];
 }
 
-final class DeviceLogUsageDeltaChanged extends DeviceLogEvent {
-  const DeviceLogUsageDeltaChanged(this.usageDelta);
+final class DeviceLogUsageValueChanged extends DeviceLogEvent {
+  const DeviceLogUsageValueChanged(this.usageValue);
 
-  final String usageDelta;
-
-  @override
-  List<Object?> get props => [usageDelta];
-}
-
-final class DeviceLogUsageUnitChanged extends DeviceLogEvent {
-  const DeviceLogUsageUnitChanged(this.usageUnit);
-
-  final UsageIntervalUnit usageUnit;
+  final String usageValue;
 
   @override
-  List<Object?> get props => [usageUnit];
+  List<Object?> get props => [usageValue];
 }
 
 final class DeviceLogSubmitRequested extends DeviceLogEvent {
-  const DeviceLogSubmitRequested({required this.usageUnitRequiredMessage});
+  const DeviceLogSubmitRequested({required this.usageReadingRequiredMessage});
 
-  final String usageUnitRequiredMessage;
+  final String usageReadingRequiredMessage;
 
   @override
-  List<Object?> get props => [usageUnitRequiredMessage];
+  List<Object?> get props => [usageReadingRequiredMessage];
 }

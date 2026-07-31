@@ -1,10 +1,12 @@
 # Drift in this project
 
-- Entry: `lib/data/local/db/app_database.dart` (`schemaVersion: 2`)
-- Tables: devices, maintenance_rules, device_logs
+- Entry: `lib/data/local/db/app_database.dart` (`schemaVersion: 3`)
+- Tables: `devices`, `device_logs` (maintenance rules folded into devices in v3)
 - Device `status`: `active` | `archived` | `deleted`
-- Rules: many per device (create UI requires one)
-- Logs are device-level and reset all rules; optional `usageDelta` + `usageUnit`
+- Devices form a tree via nullable `parent_id`
+- Optional schedule fields live on the device (`schedule_type`, `interval_*`, `fixed_due_at`, `last_maintained_at`)
+- Usage owner: nearest ancestor-or-self with `usage_unit`; shared `current_usage`
+- Logs: `kind` = `usageUpdate` | `maintenanceDone`; usage updates set absolute reading and do **not** reset baselines
 - Due status is computed (`MaintenanceStatusCalculator`), not stored
 - Tests: `AppDatabase(NativeDatabase.memory())`
 - Codegen: `flutter pub run build_runner build --delete-conflicting-outputs`

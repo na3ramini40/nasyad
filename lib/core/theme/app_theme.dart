@@ -7,7 +7,7 @@ import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/theme/app_status_colors.dart';
 
 abstract final class AppTheme {
-  static ThemeData get lightTheme => _build(
+  static ThemeData lightTheme({String? fontFamily}) => _build(
     brightness: Brightness.light,
     colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
@@ -17,7 +17,7 @@ abstract final class AppTheme {
       error: AppColors.error,
       onError: Colors.white,
       surface: AppColors.surfaceLight,
-      onSurface: AppColors.primary,
+      onSurface: AppColors.brandInk,
       onSurfaceVariant: AppColors.onSurfaceMutedLight,
       outline: Color(0xFFD1D5DB),
       outlineVariant: Color(0xFFE5E7EB),
@@ -26,15 +26,16 @@ abstract final class AppTheme {
     statusColors: AppStatusColors.light,
     cardElevation: 1.5,
     shadowColor: Colors.black.withValues(alpha: 0.08),
+    fontFamily: fontFamily,
   );
 
-  static ThemeData get darkTheme => _build(
+  static ThemeData darkTheme({String? fontFamily}) => _build(
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
       onPrimary: Colors.white,
       secondary: AppColors.secondaryDark,
-      onSecondary: Color(0xFF00332C),
+      onSecondary: Color(0xFF003910),
       error: AppColors.errorDark,
       onError: Color(0xFF3E0000),
       surface: AppColors.surfaceDark,
@@ -47,6 +48,7 @@ abstract final class AppTheme {
     statusColors: AppStatusColors.dark,
     cardElevation: 0,
     shadowColor: Colors.transparent,
+    fontFamily: fontFamily,
   );
 
   static ThemeData _build({
@@ -56,6 +58,7 @@ abstract final class AppTheme {
     required AppStatusColors statusColors,
     required double cardElevation,
     required Color shadowColor,
+    String? fontFamily,
   }) {
     final isDark = brightness == Brightness.dark;
     final base = ThemeData(
@@ -63,10 +66,11 @@ abstract final class AppTheme {
       brightness: brightness,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: scaffoldBackground,
+      fontFamily: fontFamily,
       extensions: [statusColors],
     );
 
-    final textTheme = _textTheme(colorScheme);
+    final textTheme = _textTheme(colorScheme, fontFamily: fontFamily);
 
     return base.copyWith(
       textTheme: textTheme,
@@ -232,75 +236,90 @@ abstract final class AppTheme {
     );
   }
 
-  static TextTheme _textTheme(ColorScheme scheme) {
+  static TextTheme _textTheme(ColorScheme scheme, {String? fontFamily}) {
+    TextStyle style({
+      required double fontSize,
+      required FontWeight fontWeight,
+      required double height,
+      required Color color,
+    }) {
+      return TextStyle(
+        fontFamily: fontFamily,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        height: height,
+        color: color,
+      );
+    }
+
     return TextTheme(
-      displayLarge: TextStyle(
+      displayLarge: style(
         fontSize: 32,
         fontWeight: FontWeight.w700,
         height: 1.2,
         color: scheme.onSurface,
       ),
-      headlineLarge: TextStyle(
+      headlineLarge: style(
         fontSize: 28,
         fontWeight: FontWeight.w700,
         height: 1.25,
         color: scheme.onSurface,
       ),
-      headlineMedium: TextStyle(
+      headlineMedium: style(
         fontSize: 24,
         fontWeight: FontWeight.w700,
         height: 1.3,
         color: scheme.onSurface,
       ),
-      titleLarge: TextStyle(
+      titleLarge: style(
         fontSize: 20,
         fontWeight: FontWeight.w700,
         height: 1.3,
         color: scheme.onSurface,
       ),
-      titleMedium: TextStyle(
+      titleMedium: style(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         height: 1.35,
         color: scheme.onSurface,
       ),
-      titleSmall: TextStyle(
+      titleSmall: style(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.35,
         color: scheme.onSurface,
       ),
-      bodyLarge: TextStyle(
+      bodyLarge: style(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         height: 1.45,
         color: scheme.onSurface,
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: style(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         height: 1.45,
         color: scheme.onSurface,
       ),
-      bodySmall: TextStyle(
+      bodySmall: style(
         fontSize: 12,
         fontWeight: FontWeight.w400,
         height: 1.4,
         color: scheme.onSurfaceVariant,
       ),
-      labelLarge: TextStyle(
+      labelLarge: style(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.3,
         color: scheme.onSurface,
       ),
-      labelMedium: TextStyle(
+      labelMedium: style(
         fontSize: 12,
         fontWeight: FontWeight.w600,
         height: 1.3,
         color: scheme.onSurface,
       ),
-      labelSmall: TextStyle(
+      labelSmall: style(
         fontSize: 11,
         fontWeight: FontWeight.w500,
         height: 1.3,

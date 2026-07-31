@@ -1,0 +1,26 @@
+---
+description: Run local CI Verify before creating or updating a pull request
+alwaysApply: true
+---
+
+# Local CI before PR
+
+Before **creating a pull request**, **pushing commits meant for an open PR**, or telling the user a PR is ready, you MUST run the full local Verify script and it MUST succeed:
+
+```bash
+./tool/ci_verify.sh
+```
+
+This mirrors `.github/workflows/ci.yml` Verify: `pub get`, version check, `dart format`, Drift `build_runner` + clean `lib/` diff, `flutter analyze`, `flutter test`.
+
+## Rules
+
+- Do **not** run `gh pr create` until `./tool/ci_verify.sh` exits 0.
+- Do **not** push “fix CI” commits until the script passes locally first.
+- If the script fails, fix the failures, re-run until green, then push / open the PR.
+- For release-tag checks only: `./tool/ci_verify.sh --tag vX.Y.Z`.
+
+## Do not
+
+- Skip the script because “analyze looked fine” or only a subset of checks ran.
+- Open a PR with known format, analyze, test, version, or codegen drift failures.

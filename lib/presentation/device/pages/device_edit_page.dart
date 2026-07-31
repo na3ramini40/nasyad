@@ -9,12 +9,13 @@ import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
-import 'package:nasyad/presentation/device/maintenance_rule_presets.dart';
+import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 class DeviceEditPage extends StatefulWidget {
   final String? deviceId;
+  final String? parentId;
 
-  const DeviceEditPage({super.key, this.deviceId});
+  const DeviceEditPage({super.key, this.deviceId, this.parentId});
 
   bool get isEdit => deviceId != null;
 
@@ -26,11 +27,13 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _intervalController = TextEditingController();
+  final _initialElapsedController = TextEditingController(text: '0');
 
   @override
   void dispose() {
     _nameController.dispose();
     _intervalController.dispose();
+    _initialElapsedController.dispose();
     super.dispose();
   }
 
@@ -40,6 +43,9 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
     }
     if (_intervalController.text != state.intervalValue) {
       _intervalController.text = state.intervalValue;
+    }
+    if (_initialElapsedController.text != state.initialElapsed) {
+      _initialElapsedController.text = state.initialElapsed;
     }
   }
 
@@ -70,18 +76,11 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
     };
   }
 
-  void _save(AppLocalizations l10n, DeviceEditState state) {
+  void _save(AppLocalizations l10n) {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-
-    final amount = int.tryParse(state.intervalValue.trim());
-    final unit = state.intervalUnit;
-    final ruleName = (amount != null && amount > 0 && unit != null)
-        ? ruleDisplayName(l10n: l10n, value: amount, unitStorage: unit)
-        : '';
 
     context.read<DeviceEditBloc>().add(
       DeviceEditSaveRequested(
-        ruleName: ruleName,
         nameRequiredMessage: l10n.deviceNameRequired,
         selectScheduleTypeMessage: l10n.selectScheduleType,
         selectIntervalUnitMessage: l10n.selectIntervalUnit,
@@ -94,7 +93,7 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isEdit = widget.isEdit;
-    final suggestions = maintenanceRuleSuggestions(l10n);
+    final suggestions = scheduleSuggestions(l10n);
     final theme = Theme.of(context);
     final muted = theme.textTheme.titleSmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
@@ -106,7 +105,8 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
           previous.status != current.status ||
           previous.errorMessage != current.errorMessage ||
           previous.name != current.name ||
-          previous.intervalValue != current.intervalValue,
+          previous.intervalValue != current.intervalValue ||
+          previous.initialElapsed != current.initialElapsed,
       listener: (context, state) {
         _syncControllers(state);
         if (state.status == DeviceEditStatus.saved) {
@@ -173,13 +173,20 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                     },
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text(l10n.maintenanceRule, style: muted),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(l10n.scheduleType, style: muted),
+                  Text(l10n.scheduleSection, style: muted),
+                  const SizedBox(height: AppSpacing.xs),
+                  SelectableOptionTile(
+                    label: l10n.noSchedule,
+                    selected: !state.scheduleEnabled,
+                    onTap: () => context.read<DeviceEditBloc>().add(
+                      const DeviceEditScheduleEnabledChanged(false),
+                    ),
+                  ),
                   const SizedBox(height: AppSpacing.xs),
                   SelectableOptionTile(
                     label: l10n.scheduleByTime,
                     selected:
+                        state.scheduleEnabled &&
                         state.scheduleType == ScheduleType.calendarInterval,
                     onTap: () => context.read<DeviceEditBloc>().add(
                       const DeviceEditScheduleTypeChanged(
@@ -190,70 +197,109 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                   const SizedBox(height: AppSpacing.xs),
                   SelectableOptionTile(
                     label: l10n.scheduleByUsage,
-                    selected: state.scheduleType == ScheduleType.usageInterval,
+                    selected:
+                        state.scheduleEnabled &&
+                        state.scheduleType == ScheduleType.usageInterval,
                     onTap: () => context.read<DeviceEditBloc>().add(
                       const DeviceEditScheduleTypeChanged(
                         ScheduleType.usageInterval,
                       ),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AppTextField(
-                    controller: _intervalController,
-                    label: l10n.intervalAmount,
-                    hintText: l10n.intervalAmountHint,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (value) => context.read<DeviceEditBloc>().add(
-                      DeviceEditIntervalChanged(value),
-                    ),
-                    validator: (value) {
-                      final amount = int.tryParse(value?.trim() ?? '');
-                      if (amount == null || amount <= 0) {
-                        return l10n.intervalAmountRequired;
-                      }
-                      return null;
-                    },
-                  ),
-                  if (state.scheduleType != null) ...[
+                  if (state.scheduleEnabled) ...[
                     const SizedBox(height: AppSpacing.lg),
-                    Text(l10n.intervalUnit, style: muted),
+                    AppTextField(
+                      controller: _intervalController,
+                      label: l10n.intervalAmount,
+                      hintText: l10n.intervalAmountHint,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: (value) => context.read<DeviceEditBloc>().add(
+                        DeviceEditIntervalChanged(value),
+                      ),
+                      validator: (value) {
+                        if (!state.scheduleEnabled) return null;
+                        final amount = int.tryParse(value?.trim() ?? '');
+                        if (amount == null || amount <= 0) {
+                          return l10n.intervalAmountRequired;
+                        }
+                        return null;
+                      },
+                    ),
+                    if (state.scheduleType != null) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(l10n.intervalUnit, style: muted),
+                      const SizedBox(height: AppSpacing.xs),
+                      for (final unit in _unitsFor(l10n, state.scheduleType!))
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                          child: SelectableOptionTile(
+                            label: unit.label,
+                            selected: state.intervalUnit == unit.storage,
+                            onTap: () => context.read<DeviceEditBloc>().add(
+                              DeviceEditIntervalUnitChanged(unit.storage),
+                            ),
+                          ),
+                        ),
+                    ],
+                    if (!isEdit) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      AppTextField(
+                        controller: _initialElapsedController,
+                        label: l10n.initialElapsed,
+                        hintText: l10n.initialElapsedHint,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (value) => context
+                            .read<DeviceEditBloc>()
+                            .add(DeviceEditInitialElapsedChanged(value)),
+                      ),
+                    ],
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(l10n.suggestions, style: muted),
                     const SizedBox(height: AppSpacing.xs),
-                    for (final unit in _unitsFor(l10n, state.scheduleType!))
+                    for (final suggestion in suggestions)
                       Padding(
                         padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                         child: SelectableOptionTile(
-                          label: unit.label,
-                          selected: state.intervalUnit == unit.storage,
+                          label: suggestion.label,
+                          selected:
+                              state.scheduleType == suggestion.scheduleType &&
+                              state.intervalUnit == suggestion.intervalUnit &&
+                              state.intervalValue.trim() ==
+                                  '${suggestion.intervalValue}',
                           onTap: () => context.read<DeviceEditBloc>().add(
-                            DeviceEditIntervalUnitChanged(unit.storage),
+                            DeviceEditSuggestionApplied(suggestion),
                           ),
                         ),
                       ),
                   ],
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(l10n.suggestions, style: muted),
-                  const SizedBox(height: AppSpacing.xs),
-                  for (final suggestion in suggestions)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                      child: SelectableOptionTile(
-                        label: suggestion.label,
-                        selected:
-                            state.scheduleType == suggestion.scheduleType &&
-                            state.intervalUnit == suggestion.intervalUnit &&
-                            state.intervalValue.trim() ==
-                                '${suggestion.intervalValue}',
-                        onTap: () => context.read<DeviceEditBloc>().add(
-                          DeviceEditSuggestionApplied(suggestion),
+                  if (state.parentId == null) ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(l10n.usageUnit, style: muted),
+                    const SizedBox(height: AppSpacing.xs),
+                    for (final unit in UsageIntervalUnit.values)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                        child: SelectableOptionTile(
+                          label: usageUnitLabel(l10n, unit),
+                          selected:
+                              state.usageUnit == unit ||
+                              (state.usageUnit == null &&
+                                  state.intervalUnit == unit.storageValue),
+                          onTap: () => context.read<DeviceEditBloc>().add(
+                            DeviceEditUsageUnitChanged(unit),
+                          ),
                         ),
                       ),
-                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xl),
                   AppButton(
                     label: l10n.save,
-                    onPressed: state.isBusy ? null : () => _save(l10n, state),
+                    onPressed: state.isBusy ? null : () => _save(l10n),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                 ],

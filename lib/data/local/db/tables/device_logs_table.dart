@@ -10,7 +10,10 @@ class DeviceLogsTable extends Table {
 
   TextColumn get notes => text().nullable()();
 
-  IntColumn get usageDelta => integer().nullable()();
+  TextColumn get kind =>
+      text().withDefault(const Constant('maintenanceDone'))();
+
+  IntColumn get usageValue => integer().nullable()();
 
   TextColumn get usageUnit => text().nullable()();
 

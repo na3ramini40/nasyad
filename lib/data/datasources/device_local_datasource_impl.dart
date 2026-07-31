@@ -14,6 +14,12 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   }
 
   @override
+  Future<List<DeviceModel>> getActiveRootDevices() async {
+    final rows = await _dao.getActiveRootDevices();
+    return rows.map(DeviceModel.fromTableData).toList();
+  }
+
+  @override
   Future<List<DeviceModel>> getAllDevices() async {
     final rows = await _dao.getAllDevices();
     return rows.map(DeviceModel.fromTableData).toList();
@@ -22,6 +28,12 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   @override
   Future<List<DeviceModel>> getDevicesByIds(List<String> ids) async {
     final rows = await _dao.getDevicesByIds(ids);
+    return rows.map(DeviceModel.fromTableData).toList();
+  }
+
+  @override
+  Future<List<DeviceModel>> getChildren(String parentId) async {
+    final rows = await _dao.getChildren(parentId);
     return rows.map(DeviceModel.fromTableData).toList();
   }
 
@@ -60,5 +72,14 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
     DateTime updatedAt,
   ) async {
     await _dao.setStatus(id, status, updatedAt);
+  }
+
+  @override
+  Future<void> setDeviceStatusForIds(
+    List<String> ids,
+    String status,
+    DateTime updatedAt,
+  ) async {
+    await _dao.setStatusForIds(ids, status, updatedAt);
   }
 }

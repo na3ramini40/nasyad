@@ -47,9 +47,8 @@ class ExportDataUsecase {
 
     final bundles = <ExportDeviceBundle>[];
     for (final device in devices) {
-      final rules = await _devices.getRulesForDevice(device.id);
       final logs = await _logs.getLogsForDevice(device.id);
-      bundles.add(ExportDeviceBundle(device: device, rules: rules, logs: logs));
+      bundles.add(ExportDeviceBundle(device: device, logs: logs));
     }
 
     final bundle = ExportBundle(

@@ -20,6 +20,15 @@ final class DeviceEditNameChanged extends DeviceEditEvent {
   List<Object?> get props => [name];
 }
 
+final class DeviceEditScheduleEnabledChanged extends DeviceEditEvent {
+  const DeviceEditScheduleEnabledChanged(this.enabled);
+
+  final bool enabled;
+
+  @override
+  List<Object?> get props => [enabled];
+}
+
 final class DeviceEditScheduleTypeChanged extends DeviceEditEvent {
   const DeviceEditScheduleTypeChanged(this.scheduleType);
 
@@ -47,10 +56,28 @@ final class DeviceEditIntervalUnitChanged extends DeviceEditEvent {
   List<Object?> get props => [intervalUnit];
 }
 
+final class DeviceEditInitialElapsedChanged extends DeviceEditEvent {
+  const DeviceEditInitialElapsedChanged(this.initialElapsed);
+
+  final String initialElapsed;
+
+  @override
+  List<Object?> get props => [initialElapsed];
+}
+
+final class DeviceEditUsageUnitChanged extends DeviceEditEvent {
+  const DeviceEditUsageUnitChanged(this.usageUnit);
+
+  final UsageIntervalUnit usageUnit;
+
+  @override
+  List<Object?> get props => [usageUnit];
+}
+
 final class DeviceEditSuggestionApplied extends DeviceEditEvent {
   const DeviceEditSuggestionApplied(this.suggestion);
 
-  final MaintenanceRuleSuggestion suggestion;
+  final ScheduleSuggestion suggestion;
 
   @override
   List<Object?> get props => [suggestion];
@@ -58,14 +85,12 @@ final class DeviceEditSuggestionApplied extends DeviceEditEvent {
 
 final class DeviceEditSaveRequested extends DeviceEditEvent {
   const DeviceEditSaveRequested({
-    required this.ruleName,
     required this.nameRequiredMessage,
     required this.selectScheduleTypeMessage,
     required this.selectIntervalUnitMessage,
     required this.intervalAmountRequiredMessage,
   });
 
-  final String ruleName;
   final String nameRequiredMessage;
   final String selectScheduleTypeMessage;
   final String selectIntervalUnitMessage;
@@ -73,7 +98,6 @@ final class DeviceEditSaveRequested extends DeviceEditEvent {
 
   @override
   List<Object?> get props => [
-    ruleName,
     nameRequiredMessage,
     selectScheduleTypeMessage,
     selectIntervalUnitMessage,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/app_services.dart';
+import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_log_bloc.dart';
@@ -83,15 +84,16 @@ GoRouter createAppRouter() {
         name: AppRoutes.deviceNew,
         builder: (context, state) {
           final services = AppServicesScope.of(context);
+          final parentId = state.uri.queryParameters['parentId'];
           return BlocProvider(
             create: (_) => DeviceEditBloc(
+              parentId: parentId,
               getDevice: services.getDevice,
-              getRulesForDevice: services.getRulesForDevice,
               createDevice: services.createDevice,
               updateDevice: services.updateDevice,
               deleteDevice: services.deleteDevice,
             )..add(const DeviceEditStarted()),
-            child: const DeviceEditPage(),
+            child: DeviceEditPage(parentId: parentId),
           );
         },
       ),
@@ -104,7 +106,7 @@ GoRouter createAppRouter() {
           return BlocProvider(
             create: (_) => DeviceDetailBloc(
               deviceId: id,
-              watchDeviceSummaries: services.watchDeviceSummaries,
+              watchDeviceSummary: services.watchDeviceSummary,
               watchLogsForDevice: services.watchLogsForDevice,
               archiveDevice: services.archiveDevice,
             )..add(const DeviceDetailStarted()),
@@ -122,7 +124,6 @@ GoRouter createAppRouter() {
                 create: (_) => DeviceEditBloc(
                   deviceId: id,
                   getDevice: services.getDevice,
-                  getRulesForDevice: services.getRulesForDevice,
                   createDevice: services.createDevice,
                   updateDevice: services.updateDevice,
                   deleteDevice: services.deleteDevice,
@@ -137,11 +138,17 @@ GoRouter createAppRouter() {
             builder: (context, state) {
               final id = state.pathParameters['id']!;
               final services = AppServicesScope.of(context);
+              final kindParam = state.uri.queryParameters['kind'];
+              final initialKind = kindParam == 'usage'
+                  ? DeviceLogKind.usageUpdate
+                  : DeviceLogKind.maintenanceDone;
               return BlocProvider(
                 create: (_) => DeviceLogBloc(
                   deviceId: id,
                   createDeviceLog: services.createDeviceLog,
-                ),
+                  getDevice: services.getDevice,
+                  initialKind: initialKind,
+                )..add(const DeviceLogStarted()),
                 child: DeviceLogPage(deviceId: id),
               );
             },

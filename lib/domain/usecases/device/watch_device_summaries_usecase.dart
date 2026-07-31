@@ -6,5 +6,5 @@ class WatchDeviceSummariesUsecase {
 
   WatchDeviceSummariesUsecase(this._repository);
 
-  Stream<List<DeviceSummary>> call() => _repository.watchDeviceSummaries();
+  Stream<List<DeviceSummary>> call() => _repository.watchRootDeviceSummaries();
 }

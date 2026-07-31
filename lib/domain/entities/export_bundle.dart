@@ -1,26 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
-import 'package:nasyad/domain/entities/maintenance_rule.dart';
 
 class ExportDeviceBundle extends Equatable {
   final Device device;
-  final List<MaintenanceRule> rules;
   final List<DeviceLog> logs;
 
-  const ExportDeviceBundle({
-    required this.device,
-    this.rules = const [],
-    this.logs = const [],
-  });
+  const ExportDeviceBundle({required this.device, this.logs = const []});
 
   @override
-  List<Object?> get props => [device, rules, logs];
+  List<Object?> get props => [device, logs];
 }
 
 class ExportBundle extends Equatable {
   static const formatName = 'nasyad';
-  static const currentVersion = 1;
+  static const currentVersion = 2;
 
   final String format;
   final int version;
@@ -35,8 +29,6 @@ class ExportBundle extends Equatable {
   });
 
   int get deviceCount => devices.length;
-
-  int get ruleCount => devices.fold(0, (sum, d) => sum + d.rules.length);
 
   int get logCount => devices.fold(0, (sum, d) => sum + d.logs.length);
 

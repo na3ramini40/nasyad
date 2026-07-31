@@ -10,6 +10,7 @@ Use these instructions only for this repository.
 - Prefer small, practical steps over full multi-file rewrites.
 - Keep docs in `docs/` short and easy to scan.
 - If the user says `save progress`, append one short line to `docs/ailogs.md`.
+- Before opening or updating a PR, run `./tool/ci_verify.sh` and fix failures first.
 
 ## Current Stack
 
@@ -23,6 +24,7 @@ Follow what is already active in `pubspec.yaml`:
 - `build_runner` + `drift_dev`
 - `flutter_localizations` + `intl` (en / fa)
 - `share_plus`, `path_provider`, `file_selector` (export / import)
+- `shared_preferences` (last-seen app version for What's New)
 
 Do not assume this repo already uses `get_it` or `injectable`.
 
@@ -36,6 +38,7 @@ lib/
     ui/
     l10n/
     utils/
+    version/
     app_services.dart
   l10n/
   data/

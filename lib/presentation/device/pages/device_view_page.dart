@@ -6,8 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/domain/entities/device_log_kind.dart';
+import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
+import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 class DevicePage extends StatelessWidget {
   final String deviceId;
@@ -83,24 +86,61 @@ class DevicePage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   _statusBadge(l10n, summary.status),
-                  SectionHeader(title: l10n.activeMaintenanceRules),
+                  const SizedBox(height: AppSpacing.md),
+                  if (summary.progress > 0 || summary.device.hasSchedule) ...[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: LinearProgressIndicator(
+                        value: summary.progress.clamp(0.0, 1.0),
+                        minHeight: 10,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  SectionHeader(title: l10n.scheduleSection),
                   Card(
-                    child: summary.rules.isEmpty
-                        ? ListTile(title: Text(l10n.selectMaintenanceRule))
-                        : Column(
-                            children: [
-                              for (
-                                var i = 0;
-                                i < summary.rules.length;
-                                i++
-                              ) ...[
-                                ListTile(title: Text(summary.rules[i].name)),
-                                if (i != summary.rules.length - 1)
-                                  const Divider(height: 1),
-                              ],
-                            ],
-                          ),
+                    child: ListTile(
+                      title: Text(_scheduleLabel(l10n, summary)),
+                      subtitle: summary.device.usageUnit != null
+                          ? Text(
+                              l10n.currentUsageLabel(
+                                summary.device.currentUsage,
+                                usageUnitLabel(l10n, summary.device.usageUnit!),
+                              ),
+                            )
+                          : null,
+                    ),
                   ),
+                  SectionHeader(title: l10n.childrenSection),
+                  if (summary.children.isEmpty)
+                    Card(
+                      child: ListTile(
+                        title: Text(l10n.addChild),
+                        trailing: const Icon(Icons.add),
+                        onTap: () =>
+                            context.push('/device/new?parentId=$deviceId'),
+                      ),
+                    )
+                  else ...[
+                    for (final child in summary.children)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: DeviceCard(
+                          name: child.device.name,
+                          status: _cardStatus(child.status),
+                          statusLabel: _statusLabel(l10n, child.status),
+                          progress: child.progress,
+                          onTap: () =>
+                              context.push('/device/${child.device.id}'),
+                        ),
+                      ),
+                    TextButton.icon(
+                      onPressed: () =>
+                          context.push('/device/new?parentId=$deviceId'),
+                      icon: const Icon(Icons.add),
+                      label: Text(l10n.addChild),
+                    ),
+                  ],
                   SectionHeader(title: l10n.logHistory),
                   Card(
                     child: logs.isEmpty
@@ -109,10 +149,11 @@ class DevicePage extends StatelessWidget {
                             children: [
                               for (var i = 0; i < logs.length; i++)
                                 LogListItem(
-                                  title:
-                                      logs[i].notes?.trim().isNotEmpty == true
-                                      ? logs[i].notes!.trim()
-                                      : l10n.addLog,
+                                  title: _logTitle(
+                                    l10n,
+                                    logs[i].kind,
+                                    logs[i].notes,
+                                  ),
                                   subtitle: DateFormat.yMMMd(
                                     locale.toString(),
                                   ).add_jm().format(logs[i].date),
@@ -131,6 +172,23 @@ class DevicePage extends StatelessWidget {
     );
   }
 
+  String _scheduleLabel(AppLocalizations l10n, DeviceSummary summary) {
+    final device = summary.device;
+    if (!device.hasSchedule) return l10n.noScheduleConfigured;
+    final value = device.intervalValue;
+    final unit = device.intervalUnit;
+    if (value == null || unit == null) return l10n.noScheduleConfigured;
+    return scheduleDisplayName(l10n: l10n, value: value, unitStorage: unit);
+  }
+
+  String _logTitle(AppLocalizations l10n, DeviceLogKind kind, String? notes) {
+    if (notes != null && notes.trim().isNotEmpty) return notes.trim();
+    return switch (kind) {
+      DeviceLogKind.maintenanceDone => l10n.markMaintained,
+      DeviceLogKind.usageUpdate => l10n.updateUsage,
+    };
+  }
+
   Widget _statusBadge(AppLocalizations l10n, MaintenanceStatus status) {
     return switch (status) {
       MaintenanceStatus.due => StatusBadge.warning(label: l10n.maintenanceDue),
@@ -138,4 +196,20 @@ class DevicePage extends StatelessWidget {
       MaintenanceStatus.upToDate => StatusBadge.success(label: l10n.upToDate),
     };
   }
+}
+
+DeviceMaintenanceStatus _cardStatus(MaintenanceStatus status) {
+  return switch (status) {
+    MaintenanceStatus.upToDate => DeviceMaintenanceStatus.upToDate,
+    MaintenanceStatus.soon => DeviceMaintenanceStatus.soon,
+    MaintenanceStatus.due => DeviceMaintenanceStatus.due,
+  };
+}
+
+String _statusLabel(AppLocalizations l10n, MaintenanceStatus status) {
+  return switch (status) {
+    MaintenanceStatus.upToDate => l10n.upToDate,
+    MaintenanceStatus.soon => l10n.maintenanceSoon,
+    MaintenanceStatus.due => l10n.maintenanceDue,
+  };
 }

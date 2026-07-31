@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasyad/core/utils/id_generator.dart';
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
-import 'package:nasyad/domain/entities/maintenance_rule.dart';
+import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
-import 'package:nasyad/domain/usecases/device/get_rules_for_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
-import 'package:nasyad/presentation/device/maintenance_rule_presets.dart';
+import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 part 'device_edit_event.dart';
 part 'device_edit_state.dart';
@@ -18,37 +17,37 @@ part 'device_edit_state.dart';
 class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
   DeviceEditBloc({
     this.deviceId,
+    this.parentId,
     required GetDeviceUsecase getDevice,
-    required GetRulesForDeviceUsecase getRulesForDevice,
     required CreateDeviceUsecase createDevice,
     required UpdateDeviceUsecase updateDevice,
     required DeleteDeviceUsecase deleteDevice,
   }) : _getDevice = getDevice,
-       _getRulesForDevice = getRulesForDevice,
        _createDevice = createDevice,
        _updateDevice = updateDevice,
        _deleteDevice = deleteDevice,
-       super(DeviceEditState(isEdit: deviceId != null)) {
+       super(DeviceEditState(isEdit: deviceId != null, parentId: parentId)) {
     on<DeviceEditStarted>(_onStarted);
     on<DeviceEditNameChanged>(_onNameChanged);
+    on<DeviceEditScheduleEnabledChanged>(_onScheduleEnabledChanged);
     on<DeviceEditScheduleTypeChanged>(_onScheduleTypeChanged);
     on<DeviceEditIntervalChanged>(_onIntervalChanged);
     on<DeviceEditIntervalUnitChanged>(_onIntervalUnitChanged);
+    on<DeviceEditInitialElapsedChanged>(_onInitialElapsedChanged);
+    on<DeviceEditUsageUnitChanged>(_onUsageUnitChanged);
     on<DeviceEditSuggestionApplied>(_onSuggestionApplied);
     on<DeviceEditSaveRequested>(_onSave);
     on<DeviceEditDeleteRequested>(_onDelete);
   }
 
   final String? deviceId;
+  final String? parentId;
   final GetDeviceUsecase _getDevice;
-  final GetRulesForDeviceUsecase _getRulesForDevice;
   final CreateDeviceUsecase _createDevice;
   final UpdateDeviceUsecase _updateDevice;
   final DeleteDeviceUsecase _deleteDevice;
 
   Device? _existing;
-  String? _existingRuleId;
-  DateTime? _existingRuleCreatedAt;
 
   Future<void> _onStarted(
     DeviceEditStarted event,
@@ -62,35 +61,21 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     emit(state.copyWith(status: DeviceEditStatus.loading));
     try {
       final device = await _getDevice(deviceId!);
-      final rules = await _getRulesForDevice(deviceId!);
       _existing = device;
-
-      ScheduleType? scheduleType;
-      String? intervalUnit;
-      var intervalValue = '';
-
-      if (rules.isNotEmpty) {
-        final rule = rules.first;
-        _existingRuleId = rule.id;
-        _existingRuleCreatedAt = rule.createdAt;
-        scheduleType = rule.scheduleType == ScheduleType.fixedDate
-            ? ScheduleType.calendarInterval
-            : rule.scheduleType;
-        intervalUnit = rule.intervalUnit;
-        if (rule.intervalValue != null) {
-          intervalValue = '${rule.intervalValue}';
-        }
-      }
 
       emit(
         state.copyWith(
           status: DeviceEditStatus.ready,
           name: device?.name ?? '',
-          scheduleType: scheduleType,
-          intervalUnit: intervalUnit,
-          intervalValue: intervalValue,
-          clearScheduleType: scheduleType == null,
-          clearIntervalUnit: intervalUnit == null,
+          parentId: device?.parentId ?? parentId,
+          scheduleEnabled: device?.hasSchedule ?? false,
+          scheduleType: device?.scheduleType,
+          intervalUnit: device?.intervalUnit,
+          intervalValue: device?.intervalValue?.toString() ?? '',
+          usageUnit: device?.usageUnit,
+          clearScheduleType: device?.scheduleType == null,
+          clearIntervalUnit: device?.intervalUnit == null,
+          clearUsageUnit: device?.usageUnit == null,
         ),
       );
     } catch (error) {
@@ -110,12 +95,39 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     emit(state.copyWith(name: event.name));
   }
 
+  void _onScheduleEnabledChanged(
+    DeviceEditScheduleEnabledChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    if (event.enabled) {
+      emit(
+        state.copyWith(
+          scheduleEnabled: true,
+          scheduleType: state.scheduleType ?? ScheduleType.calendarInterval,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          scheduleEnabled: false,
+          clearScheduleType: true,
+          clearIntervalUnit: true,
+          intervalValue: '',
+        ),
+      );
+    }
+  }
+
   void _onScheduleTypeChanged(
     DeviceEditScheduleTypeChanged event,
     Emitter<DeviceEditState> emit,
   ) {
     emit(
-      state.copyWith(scheduleType: event.scheduleType, clearIntervalUnit: true),
+      state.copyWith(
+        scheduleEnabled: true,
+        scheduleType: event.scheduleType,
+        clearIntervalUnit: true,
+      ),
     );
   }
 
@@ -133,6 +145,20 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     emit(state.copyWith(intervalUnit: event.intervalUnit));
   }
 
+  void _onInitialElapsedChanged(
+    DeviceEditInitialElapsedChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    emit(state.copyWith(initialElapsed: event.initialElapsed));
+  }
+
+  void _onUsageUnitChanged(
+    DeviceEditUsageUnitChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    emit(state.copyWith(usageUnit: event.usageUnit));
+  }
+
   void _onSuggestionApplied(
     DeviceEditSuggestionApplied event,
     Emitter<DeviceEditState> emit,
@@ -140,9 +166,13 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     final suggestion = event.suggestion;
     emit(
       state.copyWith(
+        scheduleEnabled: true,
         scheduleType: suggestion.scheduleType,
         intervalUnit: suggestion.intervalUnit,
         intervalValue: '${suggestion.intervalValue}',
+        usageUnit: suggestion.scheduleType == ScheduleType.usageInterval
+            ? UsageIntervalUnitX.fromStorage(suggestion.intervalUnit)
+            : state.usageUnit,
       ),
     );
   }
@@ -161,67 +191,76 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
       );
       return;
     }
-    if (state.scheduleType == null) {
-      emit(
-        state.copyWith(
-          status: DeviceEditStatus.failure,
-          errorMessage: event.selectScheduleTypeMessage,
-        ),
-      );
-      return;
-    }
-    if (state.intervalUnit == null) {
-      emit(
-        state.copyWith(
-          status: DeviceEditStatus.failure,
-          errorMessage: event.selectIntervalUnitMessage,
-        ),
-      );
-      return;
+
+    int? amount;
+    if (state.scheduleEnabled) {
+      if (state.scheduleType == null) {
+        emit(
+          state.copyWith(
+            status: DeviceEditStatus.failure,
+            errorMessage: event.selectScheduleTypeMessage,
+          ),
+        );
+        return;
+      }
+      if (state.intervalUnit == null) {
+        emit(
+          state.copyWith(
+            status: DeviceEditStatus.failure,
+            errorMessage: event.selectIntervalUnitMessage,
+          ),
+        );
+        return;
+      }
+      amount = int.tryParse(state.intervalValue.trim());
+      if (amount == null || amount <= 0) {
+        emit(
+          state.copyWith(
+            status: DeviceEditStatus.failure,
+            errorMessage: event.intervalAmountRequiredMessage,
+          ),
+        );
+        return;
+      }
     }
 
-    final amount = int.tryParse(state.intervalValue.trim());
-    if (amount == null || amount <= 0) {
-      emit(
-        state.copyWith(
-          status: DeviceEditStatus.failure,
-          errorMessage: event.intervalAmountRequiredMessage,
-        ),
-      );
-      return;
-    }
+    final initialElapsed = int.tryParse(state.initialElapsed.trim()) ?? 0;
+    if (initialElapsed < 0) return;
 
     emit(state.copyWith(status: DeviceEditStatus.saving, clearError: true));
 
     final now = DateTime.now();
     final id = deviceId ?? IdGenerator.newId();
+    final resolvedUsageUnit =
+        state.usageUnit ??
+        (state.scheduleType == ScheduleType.usageInterval &&
+                state.intervalUnit != null
+            ? UsageIntervalUnitX.fromStorage(state.intervalUnit!)
+            : null);
+
     final device = Device(
       id: id,
+      parentId: state.parentId ?? _existing?.parentId,
       name: name,
       description: _existing?.description,
       status: _existing?.status ?? DeviceStatus.active,
+      usageUnit: resolvedUsageUnit,
       currentUsage: _existing?.currentUsage ?? 0,
+      scheduleType: state.scheduleEnabled ? state.scheduleType : null,
+      intervalValue: state.scheduleEnabled ? amount : null,
+      intervalUnit: state.scheduleEnabled ? state.intervalUnit : null,
+      fixedDueAt: state.scheduleEnabled ? _existing?.fixedDueAt : null,
+      lastMaintainedAt: _existing?.lastMaintainedAt ?? now,
       usageAtLastMaintenance: _existing?.usageAtLastMaintenance ?? 0,
       createdAt: _existing?.createdAt ?? now,
       updatedAt: now,
     );
 
-    final rule = MaintenanceRule(
-      id: _existingRuleId ?? IdGenerator.newId(),
-      deviceId: id,
-      name: event.ruleName,
-      scheduleType: state.scheduleType!,
-      intervalValue: amount,
-      intervalUnit: state.intervalUnit,
-      createdAt: _existingRuleCreatedAt ?? now,
-      updatedAt: now,
-    );
-
     try {
       if (state.isEdit) {
-        await _updateDevice(device, rule);
+        await _updateDevice(device);
       } else {
-        await _createDevice(device, rule);
+        await _createDevice(device, initialElapsed: initialElapsed);
       }
       emit(state.copyWith(status: DeviceEditStatus.saved));
     } catch (error) {

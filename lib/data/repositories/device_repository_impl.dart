@@ -1,34 +1,30 @@
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
-import 'package:nasyad/data/datasources/maintenance_rule_local_datasource.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
-import 'package:nasyad/data/models/maintenance_rule_model.dart';
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
-import 'package:nasyad/domain/entities/maintenance_rule.dart';
+import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
+import 'package:nasyad/domain/services/device_schedule_baseline.dart';
 import 'package:nasyad/domain/services/maintenance_status_calculator.dart';
 
 class DeviceRepositoryImpl extends DeviceRepository {
   final AppDatabase _db;
   final DeviceLocalDataSource _devices;
-  final MaintenanceRuleLocalDataSource _rules;
   final DeviceLogLocalDataSource _logs;
   final MaintenanceStatusCalculator _calculator;
 
   DeviceRepositoryImpl({
     required AppDatabase db,
     required DeviceLocalDataSource devices,
-    required MaintenanceRuleLocalDataSource rules,
     required DeviceLogLocalDataSource logs,
     MaintenanceStatusCalculator? calculator,
   }) : _db = db,
        _devices = devices,
-       _rules = rules,
        _logs = logs,
        _calculator = calculator ?? MaintenanceStatusCalculator();
 
@@ -51,36 +47,21 @@ class DeviceRepositoryImpl extends DeviceRepository {
   }
 
   @override
-  Stream<List<DeviceSummary>> watchDeviceSummaries() {
+  Future<List<Device>> getChildren(String parentId) async {
+    final models = await _devices.getChildren(parentId);
+    return models.map((m) => m.toEntity()).toList();
+  }
+
+  @override
+  Stream<List<DeviceSummary>> watchRootDeviceSummaries() {
     return _devices.watchActiveDevices().asyncMap((deviceModels) async {
       final devices = deviceModels.map((m) => m.toEntity()).toList();
-      final ids = devices.map((d) => d.id).toList();
-      final ruleModels = await _rules.getRulesForDevices(ids);
-      final rulesByDevice = <String, List<MaintenanceRule>>{};
-      for (final rule in ruleModels) {
-        rulesByDevice.putIfAbsent(rule.deviceId, () => []).add(rule.toEntity());
-      }
-
+      final byId = {for (final d in devices) d.id: d};
+      final roots = devices.where((d) => d.parentId == null).toList();
       final summaries = <DeviceSummary>[];
-      for (final device in devices) {
-        final rules = rulesByDevice[device.id] ?? const [];
-        final latestLog = (await _logs.getLatestLogForDevice(
-          device.id,
-        ))?.toEntity();
-        final result = _calculator.evaluateDevice(
-          device: device,
-          rules: rules,
-          latestLog: latestLog,
-        );
-        summaries.add(
-          DeviceSummary(
-            device: device,
-            rules: rules,
-            latestLog: latestLog,
-            status: result.status,
-            progress: result.progress,
-          ),
-        );
+
+      for (final root in roots) {
+        summaries.add(await _buildSummaryTree(root, devices, byId));
       }
 
       summaries.sort((a, b) {
@@ -95,59 +76,111 @@ class DeviceRepositoryImpl extends DeviceRepository {
   }
 
   @override
+  Stream<DeviceSummary?> watchDeviceSummary(String deviceId) {
+    return _devices.watchActiveDevices().asyncMap((deviceModels) async {
+      final devices = deviceModels.map((m) => m.toEntity()).toList();
+      final byId = {for (final d in devices) d.id: d};
+      final device = byId[deviceId];
+      if (device == null) return null;
+      return _buildSummaryTree(device, devices, byId);
+    });
+  }
+
+  Future<DeviceSummary> _buildSummaryTree(
+    Device device,
+    List<Device> all,
+    Map<String, Device> byId,
+  ) async {
+    final children = all.where((d) => d.parentId == device.id).toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+    final childSummaries = <DeviceSummary>[];
+    for (final child in children) {
+      childSummaries.add(await _buildSummaryTree(child, all, byId));
+    }
+
+    final own = _ownResult(device, byId);
+    final aggregate = _calculator.aggregate([
+      if (device.hasSchedule) own,
+      ...childSummaries.map(
+        (c) => RuleStatusResult(status: c.status, progress: c.progress),
+      ),
+    ]);
+
+    final latestLog = (await _logs.getLatestLogForDevice(
+      device.id,
+    ))?.toEntity();
+
+    return DeviceSummary(
+      device: device,
+      latestLog: latestLog,
+      status: device.hasSchedule || childSummaries.isNotEmpty
+          ? aggregate.status
+          : MaintenanceStatus.upToDate,
+      progress: device.hasSchedule || childSummaries.isNotEmpty
+          ? aggregate.progress
+          : 0,
+      children: childSummaries,
+    );
+  }
+
+  RuleStatusResult _ownResult(Device device, Map<String, Device> byId) {
+    if (!device.hasSchedule) {
+      return const RuleStatusResult(
+        status: MaintenanceStatus.upToDate,
+        progress: 0,
+      );
+    }
+    final usageOwner = _calculator.resolveUsageOwner(device, byId);
+    return _calculator.evaluateDevice(device: device, usageOwner: usageOwner);
+  }
+
+  @override
   Future<Device?> getDevice(String id) async {
     final model = await _devices.getDevice(id);
     return model?.toEntity();
   }
 
   @override
-  Future<List<MaintenanceRule>> getRulesForDevice(String deviceId) async {
-    final models = await _rules.getRulesForDevice(deviceId);
-    return models.map((m) => m.toEntity()).toList();
-  }
-
-  @override
-  Stream<List<MaintenanceRule>> watchRulesForDevice(String deviceId) {
-    return _rules
-        .watchRulesForDevice(deviceId)
-        .map((models) => models.map((m) => m.toEntity()).toList());
-  }
-
-  @override
-  Future<void> createDevice(Device device, MaintenanceRule rule) async {
+  Future<void> createDevice(Device device, {int initialElapsed = 0}) async {
     await _db.transaction(() async {
-      await _devices.insertDevice(DeviceModel.fromEntity(device));
-      await _rules.insertRule(MaintenanceRuleModel.fromEntity(rule));
-    });
-  }
-
-  @override
-  Future<void> updateDevice(Device device, MaintenanceRule rule) async {
-    await _db.transaction(() async {
-      await _devices.updateDevice(DeviceModel.fromEntity(device));
-      final existing = await _rules.getRulesForDevice(device.id);
-      if (existing.isEmpty) {
-        await _rules.insertRule(MaintenanceRuleModel.fromEntity(rule));
-      } else {
-        final updated = MaintenanceRule(
-          id: existing.first.id,
-          deviceId: device.id,
-          name: rule.name,
-          scheduleType: rule.scheduleType,
-          intervalValue: rule.intervalValue,
-          intervalUnit: rule.intervalUnit,
-          fixedDueAt: rule.fixedDueAt,
-          createdAt: existing.first.createdAt,
-          updatedAt: rule.updatedAt,
-        );
-        await _rules.replaceRule(MaintenanceRuleModel.fromEntity(updated));
+      final all = (await _devices.getAllDevices())
+          .map((m) => m.toEntity())
+          .toList();
+      final byId = {for (final d in all) d.id: d};
+      if (device.parentId != null) {
+        byId[device.parentId!] = byId[device.parentId!] ?? device;
       }
+      byId[device.id] = device;
+      final usageOwner = _calculator.resolveUsageOwner(device, byId);
+      final prepared = DeviceScheduleBaseline.applyInitialElapsed(
+        device: device.copyWith(
+          lastMaintainedAt: device.lastMaintainedAt ?? device.createdAt,
+        ),
+        initialElapsed: initialElapsed,
+        usageOwner: usageOwner,
+      );
+      await _devices.insertDevice(DeviceModel.fromEntity(prepared));
     });
+  }
+
+  @override
+  Future<void> updateDevice(Device device) async {
+    await _devices.updateDevice(DeviceModel.fromEntity(device));
   }
 
   @override
   Future<void> setDeviceStatus(String id, DeviceStatus status) async {
-    await _devices.setDeviceStatus(id, status.storageValue, DateTime.now());
+    final all = (await _devices.getAllDevices())
+        .map((m) => m.toEntity())
+        .toList();
+    final descendants = _calculator.descendantsOf(id, all);
+    final ids = [id, ...descendants.map((d) => d.id)];
+    await _devices.setDeviceStatusForIds(
+      ids,
+      status.storageValue,
+      DateTime.now(),
+    );
   }
 
   @override
@@ -155,9 +188,6 @@ class DeviceRepositoryImpl extends DeviceRepository {
     await _db.transaction(() async {
       for (final item in bundle.devices) {
         await _devices.upsertDevice(DeviceModel.fromEntity(item.device));
-        for (final rule in item.rules) {
-          await _rules.upsertRule(MaintenanceRuleModel.fromEntity(rule));
-        }
         for (final log in item.logs) {
           await _logs.upsertDeviceLog(DeviceLogModel.fromEntity(log));
         }

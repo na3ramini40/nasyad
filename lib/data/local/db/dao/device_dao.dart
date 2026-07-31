@@ -15,6 +15,13 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
         .get();
   }
 
+  Future<List<DevicesTableData>> getActiveRootDevices() {
+    return (select(devicesTable)
+          ..where((t) => t.status.equals('active') & t.parentId.isNull())
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
+
   Future<List<DevicesTableData>> getAllDevices() {
     return (select(
       devicesTable,
@@ -25,6 +32,15 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
     if (ids.isEmpty) return Future.value(const []);
     return (select(devicesTable)
           ..where((t) => t.id.isIn(ids))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
+
+  Future<List<DevicesTableData>> getChildren(String parentId) {
+    return (select(devicesTable)
+          ..where(
+            (t) => t.parentId.equals(parentId) & t.status.equals('active'),
+          )
           ..orderBy([(t) => OrderingTerm.asc(t.name)]))
         .get();
   }
@@ -56,6 +72,17 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
 
   Future<int> setStatus(String id, String status, DateTime updatedAt) {
     return (update(devicesTable)..where((t) => t.id.equals(id))).write(
+      DevicesTableCompanion(status: Value(status), updatedAt: Value(updatedAt)),
+    );
+  }
+
+  Future<void> setStatusForIds(
+    List<String> ids,
+    String status,
+    DateTime updatedAt,
+  ) async {
+    if (ids.isEmpty) return;
+    await (update(devicesTable)..where((t) => t.id.isIn(ids))).write(
       DevicesTableCompanion(status: Value(status), updatedAt: Value(updatedAt)),
     );
   }

@@ -199,7 +199,6 @@ class TransferPage extends StatelessWidget {
                   Text(
                     l10n.importPreview(
                       state.importPreview!.deviceCount,
-                      state.importPreview!.ruleCount,
                       state.importPreview!.logCount,
                     ),
                   ),
