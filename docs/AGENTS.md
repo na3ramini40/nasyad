@@ -10,6 +10,7 @@ Use these instructions only for this repository.
 - Prefer small, practical steps over full multi-file rewrites.
 - Keep docs in `docs/` short and easy to scan.
 - If the user says `save progress`, append one short line to `docs/ailogs.md`.
+- Before opening or updating a PR, run `./tool/ci_verify.sh` and fix failures first.
 
 ## Current Stack
 

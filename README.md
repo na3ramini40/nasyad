@@ -24,6 +24,16 @@ dart run build_runner build
 
 More project rules: [`docs/AGENTS.md`](docs/AGENTS.md).
 
+## Local CI (before a PR)
+
+Run the same checks as GitHub **Verify** before opening or updating a PR:
+
+```bash
+./tool/ci_verify.sh
+```
+
+Agents and contributors must not create a PR until this script passes.
+
 ## CI / CD (GitHub Actions)
 
 Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Flutter pinned to **3.35.6**.
