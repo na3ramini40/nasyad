@@ -39,6 +39,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Check version consistency
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            dart run tool/check_version.dart --tag "${{ github.ref_name }}"
+          else
+            dart run tool/check_version.dart
+          fi
+
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
 
@@ -62,6 +70,9 @@ jobs:
       (github.event_name == 'push' &&
         (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
     runs-on: ubuntu-latest
+    outputs:
+      app_version: ${{ steps.app_version.outputs.full }}
+      app_version_name: ${{ steps.app_version.outputs.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -82,13 +93,22 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Read app version
+        id: app_version
+        run: |
+          FULL="$(sed -nE 's/^version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+(\+[0-9]+)?)/\1/p' pubspec.yaml | head -n1)"
+          NAME="${FULL%%+*}"
+          echo "full=$FULL" >> "$GITHUB_OUTPUT"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "Using app version $FULL"
+
       - name: Build release APK
         run: flutter build apk --release
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nasyad-apk-${{ github.ref_name }}-${{ github.sha }}
+          name: nasyad-apk-v${{ steps.app_version.outputs.name }}-${{ github.sha }}
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
@@ -104,14 +124,15 @@ jobs:
       - name: Download APK artifact
         uses: actions/download-artifact@v4
         with:
-          name: nasyad-apk-${{ github.ref_name }}-${{ github.sha }}
+          name: nasyad-apk-v${{ needs.build_apk.outputs.app_version_name }}-${{ github.sha }}
           path: dist
 
       - name: Rename APK for release
-        run: mv dist/app-release.apk "dist/nasyad-${{ github.ref_name }}.apk"
+        run: mv dist/app-release.apk "dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}.apk"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          name: Nasyad ${{ needs.build_apk.outputs.app_version_name }}
           files: dist/nasyad-*.apk
           generate_release_notes: true

@@ -2,7 +2,6 @@ import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
-import 'package:nasyad/domain/entities/maintenance_rule.dart';
 
 abstract class DeviceRepository {
   Future<List<Device>> getDevices();
@@ -11,17 +10,17 @@ abstract class DeviceRepository {
 
   Future<List<Device>> getDevicesByIds(List<String> ids);
 
-  Stream<List<DeviceSummary>> watchDeviceSummaries();
+  Future<List<Device>> getChildren(String parentId);
+
+  Stream<List<DeviceSummary>> watchRootDeviceSummaries();
+
+  Stream<DeviceSummary?> watchDeviceSummary(String deviceId);
 
   Future<Device?> getDevice(String id);
 
-  Future<List<MaintenanceRule>> getRulesForDevice(String deviceId);
+  Future<void> createDevice(Device device, {int initialElapsed = 0});
 
-  Stream<List<MaintenanceRule>> watchRulesForDevice(String deviceId);
-
-  Future<void> createDevice(Device device, MaintenanceRule rule);
-
-  Future<void> updateDevice(Device device, MaintenanceRule rule);
+  Future<void> updateDevice(Device device);
 
   Future<void> setDeviceStatus(String id, DeviceStatus status);
 

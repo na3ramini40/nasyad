@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nasyad/core/version/last_seen_version_store.dart';
 import 'package:nasyad/data/datasources/device_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource_impl.dart';
-import 'package:nasyad/data/datasources/maintenance_rule_local_datasource_impl.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
@@ -12,9 +12,9 @@ import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_all_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
-import 'package:nasyad/domain/usecases/device/get_rules_for_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
+import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/create_device_log_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/delete_device_log_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/watch_logs_for_device_usecase.dart';
@@ -22,11 +22,11 @@ import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
 
 class AppServices {
-  AppServices(this.database)
-    : deviceRepository = DeviceRepositoryImpl(
+  AppServices(this.database, {LastSeenVersionStore? lastSeenVersionStore})
+    : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
+      deviceRepository = DeviceRepositoryImpl(
         db: database,
         devices: DeviceLocalDataSourceImpl(database.deviceDao),
-        rules: MaintenanceRuleLocalDataSourceImpl(database.maintenanceRuleDao),
         logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
       ),
       deviceLogRepository = DeviceLogRepositoryImpl(
@@ -35,9 +35,9 @@ class AppServices {
         devices: DeviceLocalDataSourceImpl(database.deviceDao),
       ) {
     watchDeviceSummaries = WatchDeviceSummariesUsecase(deviceRepository);
+    watchDeviceSummary = WatchDeviceSummaryUsecase(deviceRepository);
     getDevice = GetDeviceUsecase(deviceRepository);
     getAllDevices = GetAllDevicesUsecase(deviceRepository);
-    getRulesForDevice = GetRulesForDeviceUsecase(deviceRepository);
     createDevice = CreateDeviceUsecase(deviceRepository);
     updateDevice = UpdateDeviceUsecase(deviceRepository);
     deleteDevice = DeleteDeviceUsecase(deviceRepository);
@@ -50,13 +50,14 @@ class AppServices {
   }
 
   final AppDatabase database;
+  final LastSeenVersionStore lastSeenVersionStore;
   final DeviceRepository deviceRepository;
   final DeviceLogRepository deviceLogRepository;
 
   late final WatchDeviceSummariesUsecase watchDeviceSummaries;
+  late final WatchDeviceSummaryUsecase watchDeviceSummary;
   late final GetDeviceUsecase getDevice;
   late final GetAllDevicesUsecase getAllDevices;
-  late final GetRulesForDeviceUsecase getRulesForDevice;
   late final CreateDeviceUsecase createDevice;
   late final UpdateDeviceUsecase updateDevice;
   late final DeleteDeviceUsecase deleteDevice;

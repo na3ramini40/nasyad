@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/usecases/device/archive_device_usecase.dart';
-import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
+import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/watch_logs_for_device_usecase.dart';
 
 part 'device_detail_event.dart';
@@ -14,10 +14,10 @@ part 'device_detail_state.dart';
 class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
   DeviceDetailBloc({
     required this.deviceId,
-    required WatchDeviceSummariesUsecase watchDeviceSummaries,
+    required WatchDeviceSummaryUsecase watchDeviceSummary,
     required WatchLogsForDeviceUsecase watchLogsForDevice,
     required ArchiveDeviceUsecase archiveDevice,
-  }) : _watchDeviceSummaries = watchDeviceSummaries,
+  }) : _watchDeviceSummary = watchDeviceSummary,
        _watchLogsForDevice = watchLogsForDevice,
        _archiveDevice = archiveDevice,
        super(const DeviceDetailLoading()) {
@@ -29,11 +29,11 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
   }
 
   final String deviceId;
-  final WatchDeviceSummariesUsecase _watchDeviceSummaries;
+  final WatchDeviceSummaryUsecase _watchDeviceSummary;
   final WatchLogsForDeviceUsecase _watchLogsForDevice;
   final ArchiveDeviceUsecase _archiveDevice;
 
-  StreamSubscription<List<DeviceSummary>>? _summarySub;
+  StreamSubscription<DeviceSummary?>? _summarySub;
   StreamSubscription<List<DeviceLog>>? _logsSub;
   DeviceSummary? _summary;
   List<DeviceLog> _logs = const [];
@@ -50,11 +50,8 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
     _logs = const [];
     _summaryReceived = false;
 
-    _summarySub = _watchDeviceSummaries().listen(
-      (items) {
-        final match = items.where((item) => item.device.id == deviceId);
-        add(_DeviceDetailSummaryUpdated(match.isEmpty ? null : match.first));
-      },
+    _summarySub = _watchDeviceSummary(deviceId).listen(
+      (summary) => add(_DeviceDetailSummaryUpdated(summary)),
       onError: (Object error, StackTrace _) =>
           add(_DeviceDetailWatchFailed(error)),
     );

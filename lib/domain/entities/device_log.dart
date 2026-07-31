@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
 
 class DeviceLog extends Equatable {
@@ -6,7 +7,8 @@ class DeviceLog extends Equatable {
   final String deviceId;
   final DateTime date;
   final String? notes;
-  final int? usageDelta;
+  final DeviceLogKind kind;
+  final int? usageValue;
   final UsageIntervalUnit? usageUnit;
   final DateTime createdAt;
 
@@ -15,7 +17,8 @@ class DeviceLog extends Equatable {
     required this.deviceId,
     required this.date,
     this.notes,
-    this.usageDelta,
+    this.kind = DeviceLogKind.maintenanceDone,
+    this.usageValue,
     this.usageUnit,
     required this.createdAt,
   });
@@ -26,7 +29,8 @@ class DeviceLog extends Equatable {
     deviceId,
     date,
     notes,
-    usageDelta,
+    kind,
+    usageValue,
     usageUnit,
     createdAt,
   ];

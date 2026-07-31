@@ -144,16 +144,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noDevicesHint =>
-      'Add a device and choose one maintenance rule to start tracking.';
+      'Add a device to start tracking. You can nest parts under it later.';
 
   @override
   String get noLogsYet => 'No logs yet';
 
   @override
-  String get usageDelta => 'Usage since last log';
+  String get usageReading => 'Current usage reading';
 
   @override
-  String get usageDeltaHint => 'Optional, e.g. 120';
+  String get usageReadingHint => 'e.g. 12450';
+
+  @override
+  String get usageReadingRequired => 'Enter the current usage reading';
 
   @override
   String get usageUnit => 'Usage unit';
@@ -171,10 +174,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archive => 'Archive';
 
   @override
-  String get activeMaintenanceRules => 'Active Maintenance Rules';
+  String get scheduleSection => 'Schedule';
+
+  @override
+  String get noSchedule => 'No schedule (container only)';
+
+  @override
+  String get initialElapsed => 'Already used toward this cycle';
+
+  @override
+  String get initialElapsedHint => 'Default 0';
+
+  @override
+  String get childrenSection => 'Parts & children';
+
+  @override
+  String get addChild => 'Add child';
+
+  @override
+  String get markMaintained => 'Mark maintained';
+
+  @override
+  String get updateUsage => 'Update usage';
+
+  @override
+  String get logKind => 'Log type';
+
+  @override
+  String get logKindMaintenance => 'Maintenance done';
+
+  @override
+  String get logKindUsage => 'Usage update';
+
+  @override
+  String currentUsageLabel(int value, String unit) {
+    return 'Current usage: $value $unit';
+  }
+
+  @override
+  String scheduleSummary(int value, String unit) {
+    return 'Every $value $unit';
+  }
+
+  @override
+  String get noScheduleConfigured => 'No schedule on this device';
 
   @override
   String get logHistory => 'Log History';
+
+  @override
+  String get usageDelta => 'Usage since last log';
+
+  @override
+  String get usageDeltaHint => 'Optional, e.g. 120';
+
+  @override
+  String get activeMaintenanceRules => 'Active Maintenance Rules';
 
   @override
   String get notes => 'Notes';
@@ -242,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportImport => 'Export & Import';
 
   @override
-  String get exportImportHint => 'Back up or restore devices, rules, and logs.';
+  String get exportImportHint => 'Back up or restore devices and logs.';
 
   @override
   String get exportSection => 'Export';
@@ -290,9 +345,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importAction => 'Import';
 
   @override
-  String importPreview(int devices, int rules, int logs) {
-    return 'Ready to import: $devices devices, $rules rules, $logs logs';
+  String importPreview(int devices, int logs) {
+    return 'Ready to import: $devices devices, $logs logs';
   }
+
+  @override
+  String get ruleEvery1000Km => 'Every 1000 Kilometers';
 
   @override
   String get exportSuccess => 'Export ready';
@@ -319,4 +377,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noDevicesForExport => 'No devices available to export';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get whatsNew => 'What\'s New';
+
+  @override
+  String get whatsNewHint => 'See what\'s new in this version';
+
+  @override
+  String appVersionLabel(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get gotIt => 'Got it';
 }

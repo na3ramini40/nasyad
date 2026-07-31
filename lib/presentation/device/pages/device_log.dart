@@ -8,8 +8,9 @@ import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_radius.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/ui/ui.dart';
-import 'package:nasyad/domain/entities/interval_unit.dart';
+import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/presentation/device/bloc/device_log_bloc.dart';
+import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 class DeviceLogPage extends StatefulWidget {
   const DeviceLogPage({super.key, required this.deviceId});
@@ -56,9 +57,18 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
+    final muted = Theme.of(context).textTheme.titleSmall?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      fontWeight: FontWeight.w500,
+    );
 
     return BlocConsumer<DeviceLogBloc, DeviceLogFormState>(
       listener: (context, state) {
+        if (state.usageValue.isNotEmpty &&
+            _usageController.text != state.usageValue &&
+            state.status == DeviceLogStatus.ready) {
+          _usageController.text = state.usageValue;
+        }
         if (state.status == DeviceLogStatus.saved) {
           context.pop();
         } else if (state.status == DeviceLogStatus.failure &&
@@ -69,6 +79,16 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
         }
       },
       builder: (context, state) {
+        if (state.status == DeviceLogStatus.loading) {
+          return Scaffold(
+            appBar: AppBar(title: Text(l10n.addLog)),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final owner = state.usageOwner;
+        final unit = owner?.usageUnit;
+
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -83,6 +103,26 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
               key: _formKey,
               child: ListView(
                 children: [
+                  Text(l10n.logKind, style: muted),
+                  const SizedBox(height: AppSpacing.xs),
+                  SelectableOptionTile(
+                    label: l10n.logKindMaintenance,
+                    selected: state.kind == DeviceLogKind.maintenanceDone,
+                    onTap: () => context.read<DeviceLogBloc>().add(
+                      const DeviceLogKindChanged(DeviceLogKind.maintenanceDone),
+                    ),
+                  ),
+                  if (owner != null) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    SelectableOptionTile(
+                      label: l10n.logKindUsage,
+                      selected: state.kind == DeviceLogKind.usageUpdate,
+                      onTap: () => context.read<DeviceLogBloc>().add(
+                        const DeviceLogKindChanged(DeviceLogKind.usageUpdate),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: AppSpacing.lg),
                   AppTextField(
                     controller: _notesController,
                     label: l10n.notes,
@@ -95,13 +135,7 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    l10n.date,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  Text(l10n.date, style: muted),
                   const SizedBox(height: AppSpacing.xs),
                   InkWell(
                     onTap: () => _pickDate(state.date),
@@ -116,44 +150,47 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AppTextField(
-                    controller: _usageController,
-                    label: l10n.usageDelta,
-                    hintText: l10n.usageDeltaHint,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (value) => context.read<DeviceLogBloc>().add(
-                      DeviceLogUsageDeltaChanged(value),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    l10n.usageUnit,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  for (final unit in UsageIntervalUnit.values)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                      child: SelectableOptionTile(
-                        label: switch (unit) {
-                          UsageIntervalUnit.hours => l10n.unitHours,
-                          UsageIntervalUnit.km => l10n.unitKm,
-                          UsageIntervalUnit.cycles => l10n.unitCycles,
-                        },
-                        selected: state.usageUnit == unit,
-                        onTap: () => context.read<DeviceLogBloc>().add(
-                          DeviceLogUsageUnitChanged(unit),
+                  if (state.kind == DeviceLogKind.usageUpdate &&
+                      owner != null) ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    if (unit != null)
+                      Text(
+                        l10n.currentUsageLabel(
+                          owner.currentUsage,
+                          usageUnitLabel(l10n, unit),
                         ),
+                        style: muted,
                       ),
+                    const SizedBox(height: AppSpacing.sm),
+                    AppTextField(
+                      controller: _usageController,
+                      label: unit == null
+                          ? l10n.usageReading
+                          : '${l10n.usageReading} (${usageUnitLabel(l10n, unit)})',
+                      hintText: l10n.usageReadingHint,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      onChanged: (value) => context.read<DeviceLogBloc>().add(
+                        DeviceLogUsageValueChanged(value),
+                      ),
+                      validator: (value) {
+                        if (state.kind != DeviceLogKind.usageUpdate) {
+                          return null;
+                        }
+                        if (value == null || int.tryParse(value.trim()) == null) {
+                          return l10n.usageReadingRequired;
+                        }
+                        return null;
+                      },
                     ),
+                  ],
                   const SizedBox(height: AppSpacing.xl),
                   AppButton(
-                    label: l10n.submitLog,
+                    label: state.kind == DeviceLogKind.maintenanceDone
+                        ? l10n.markMaintained
+                        : l10n.updateUsage,
                     onPressed: state.isSaving
                         ? null
                         : () {
@@ -162,7 +199,8 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                             }
                             context.read<DeviceLogBloc>().add(
                               DeviceLogSubmitRequested(
-                                usageUnitRequiredMessage: l10n.usageUnit,
+                                usageReadingRequiredMessage:
+                                    l10n.usageReadingRequired,
                               ),
                             );
                           },

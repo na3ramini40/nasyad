@@ -27,6 +27,8 @@ From `pubspec.yaml` — use these, nothing else by default:
 | Local DB | `drift_flutter` + `drift_dev` |
 | State | `flutter_bloc` |
 | Models | `equatable`, `json_annotation` |
+| Transfer | `share_plus`, `path_provider`, `file_selector` |
+| Prefs | `shared_preferences` (last-seen version / What's New) |
 | Codegen | `build_runner` |
 | i18n | `flutter_localizations` + `intl` (`en`, `fa`) |
 

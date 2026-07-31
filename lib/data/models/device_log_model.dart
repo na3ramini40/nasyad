@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
+import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
 
 class DeviceLogModel {
@@ -8,7 +9,8 @@ class DeviceLogModel {
   final String deviceId;
   final DateTime date;
   final String? notes;
-  final int? usageDelta;
+  final DeviceLogKind kind;
+  final int? usageValue;
   final UsageIntervalUnit? usageUnit;
   final DateTime createdAt;
 
@@ -17,7 +19,8 @@ class DeviceLogModel {
     required this.deviceId,
     required this.date,
     this.notes,
-    this.usageDelta,
+    required this.kind,
+    this.usageValue,
     this.usageUnit,
     required this.createdAt,
   });
@@ -28,7 +31,8 @@ class DeviceLogModel {
       deviceId: deviceId,
       date: date,
       notes: notes,
-      usageDelta: usageDelta,
+      kind: kind,
+      usageValue: usageValue,
       usageUnit: usageUnit,
       createdAt: createdAt,
     );
@@ -40,7 +44,8 @@ class DeviceLogModel {
       deviceId: log.deviceId,
       date: log.date,
       notes: log.notes,
-      usageDelta: log.usageDelta,
+      kind: log.kind,
+      usageValue: log.usageValue,
       usageUnit: log.usageUnit,
       createdAt: log.createdAt,
     );
@@ -52,7 +57,8 @@ class DeviceLogModel {
       deviceId: log.deviceId,
       date: log.date,
       notes: log.notes,
-      usageDelta: log.usageDelta,
+      kind: DeviceLogKindX.fromStorage(log.kind),
+      usageValue: log.usageValue,
       usageUnit: log.usageUnit == null
           ? null
           : UsageIntervalUnitX.fromStorage(log.usageUnit!),
@@ -66,7 +72,8 @@ class DeviceLogModel {
       deviceId: deviceId,
       date: date,
       notes: Value(notes),
-      usageDelta: Value(usageDelta),
+      kind: Value(kind.storageValue),
+      usageValue: Value(usageValue),
       usageUnit: Value(usageUnit?.storageValue),
       createdAt: createdAt,
     );

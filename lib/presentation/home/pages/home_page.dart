@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:nasyad/core/app_services.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
@@ -10,8 +11,33 @@ import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var _whatsNewChecked = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_whatsNewChecked) return;
+    _whatsNewChecked = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkWhatsNew());
+  }
+
+  Future<void> _checkWhatsNew() async {
+    if (!mounted) return;
+    final store = AppServicesScope.of(context).lastSeenVersionStore;
+    await maybeShowWhatsNewOnLaunch(
+      context,
+      readLastSeen: store.read,
+      writeLastSeen: store.write,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +45,13 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.appTitle),
+        title: Row(
+          children: [
+            const AppLogo.mark(height: 28),
+            const SizedBox(width: AppSpacing.sm),
+            Flexible(child: Text(l10n.appTitle)),
+          ],
+        ),
         actions: [
           IconButton(
             onPressed: () => context.push('/preferences'),
@@ -60,6 +92,7 @@ class HomePage extends StatelessWidget {
                           status: _cardStatus(item.status),
                           statusLabel: _statusLabel(l10n, item.status),
                           lastLogText: _lastLogText(l10n, item.latestLog),
+                          progress: item.progress,
                           onTap: () =>
                               context.push('/device/${item.device.id}'),
                         );
@@ -117,11 +150,7 @@ class _EmptyDevices extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.devices_other_outlined,
-              size: 48,
-              color: theme.colorScheme.secondary,
-            ),
+            const AppLogo.mark(height: 56),
             const SizedBox(height: AppSpacing.md),
             Text(
               l10n.noDevicesTitle,

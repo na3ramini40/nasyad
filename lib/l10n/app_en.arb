@@ -54,17 +54,46 @@
   "maintenanceDue": "Maintenance Due",
   "maintenanceSoon": "Due Soon",
   "noDevicesTitle": "No devices yet",
-  "noDevicesHint": "Add a device and choose one maintenance rule to start tracking.",
+  "noDevicesHint": "Add a device to start tracking. You can nest parts under it later.",
   "noLogsYet": "No logs yet",
-  "usageDelta": "Usage since last log",
-  "usageDeltaHint": "Optional, e.g. 120",
+  "usageReading": "Current usage reading",
+  "usageReadingHint": "e.g. 12450",
+  "usageReadingRequired": "Enter the current usage reading",
   "usageUnit": "Usage unit",
   "unitHours": "Hours",
   "unitKm": "Kilometers",
   "unitCycles": "Cycles",
   "archive": "Archive",
-  "activeMaintenanceRules": "Active Maintenance Rules",
+  "scheduleSection": "Schedule",
+  "noSchedule": "No schedule (container only)",
+  "initialElapsed": "Already used toward this cycle",
+  "initialElapsedHint": "Default 0",
+  "childrenSection": "Parts & children",
+  "addChild": "Add child",
+  "markMaintained": "Mark maintained",
+  "updateUsage": "Update usage",
+  "logKind": "Log type",
+  "logKindMaintenance": "Maintenance done",
+  "logKindUsage": "Usage update",
+  "currentUsageLabel": "Current usage: {value} {unit}",
+  "@currentUsageLabel": {
+    "placeholders": {
+      "value": { "type": "int" },
+      "unit": { "type": "String" }
+    }
+  },
+  "scheduleSummary": "Every {value} {unit}",
+  "@scheduleSummary": {
+    "placeholders": {
+      "value": { "type": "int" },
+      "unit": { "type": "String" }
+    }
+  },
+  "noScheduleConfigured": "No schedule on this device",
   "logHistory": "Log History",
+  "usageDelta": "Usage since last log",
+  "usageDeltaHint": "Optional, e.g. 120",
+  "activeMaintenanceRules": "Active Maintenance Rules",
   "notes": "Notes",
   "notesHint": "Enter maintenance notes...",
   "notesRequired": "Notes are required",
@@ -112,7 +141,7 @@
   "sampleLogGeneralCheck": "General check",
   "data": "Data",
   "exportImport": "Export & Import",
-  "exportImportHint": "Back up or restore devices, rules, and logs.",
+  "exportImportHint": "Back up or restore devices and logs.",
   "exportSection": "Export",
   "importSection": "Import",
   "exportScope": "What to export",
@@ -128,14 +157,14 @@
   "saveFile": "Save",
   "chooseFile": "Choose file",
   "importAction": "Import",
-  "importPreview": "Ready to import: {devices} devices, {rules} rules, {logs} logs",
+  "importPreview": "Ready to import: {devices} devices, {logs} logs",
   "@importPreview": {
     "placeholders": {
       "devices": { "type": "int" },
-      "rules": { "type": "int" },
       "logs": { "type": "int" }
     }
   },
+  "ruleEvery1000Km": "Every 1000 Kilometers",
   "exportSuccess": "Export ready",
   "exportSaved": "Saved to {path}",
   "@exportSaved": {
@@ -152,5 +181,15 @@
   },
   "exportNoDevices": "No devices selected to export",
   "importInvalid": "Could not read this file",
-  "noDevicesForExport": "No devices available to export"
+  "noDevicesForExport": "No devices available to export",
+  "about": "About",
+  "whatsNew": "What's New",
+  "whatsNewHint": "See what's new in this version",
+  "appVersionLabel": "Version {version}",
+  "@appVersionLabel": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "gotIt": "Got it"
 }

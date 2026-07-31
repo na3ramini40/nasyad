@@ -6,6 +6,7 @@ import 'package:nasyad/core/l10n/locale_cubit.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/core/version/app_version.dart';
 import 'package:nasyad/l10n/app_localizations.dart';
 
 class PreferencesPage extends StatelessWidget {
@@ -101,6 +102,26 @@ class PreferencesPage extends StatelessWidget {
                 subtitle: Text(l10n.exportImportHint),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push('/preferences/transfer'),
+              ),
+            ),
+            SectionHeader(title: l10n.about),
+            Card(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const AppLogo.mark(height: 36),
+                    title: Text(l10n.appTitle),
+                    subtitle: Text(AppVersion.full),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.new_releases_outlined),
+                    title: Text(l10n.whatsNew),
+                    subtitle: Text(l10n.whatsNewHint),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => showWhatsNewDialog(context),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: AppSpacing.xl),

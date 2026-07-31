@@ -144,16 +144,19 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get noDevicesHint =>
-      'یک دستگاه اضافه کنید و یک قانون نگهداری انتخاب کنید.';
+      'یک دستگاه اضافه کنید. بعداً می‌توانید قطعات را زیر آن قرار دهید.';
 
   @override
   String get noLogsYet => 'هنوز گزارشی نیست';
 
   @override
-  String get usageDelta => 'مصرف از آخرین گزارش';
+  String get usageReading => 'مقدار مصرف فعلی';
 
   @override
-  String get usageDeltaHint => 'اختیاری، مثلاً ۱۲۰';
+  String get usageReadingHint => 'مثلاً ۱۲۴۵۰';
+
+  @override
+  String get usageReadingRequired => 'مقدار مصرف فعلی را وارد کنید';
 
   @override
   String get usageUnit => 'واحد مصرف';
@@ -171,10 +174,62 @@ class AppLocalizationsFa extends AppLocalizations {
   String get archive => 'بایگانی';
 
   @override
-  String get activeMaintenanceRules => 'قوانین نگهداری فعال';
+  String get scheduleSection => 'زمان‌بندی';
+
+  @override
+  String get noSchedule => 'بدون زمان‌بندی (فقط ظرف)';
+
+  @override
+  String get initialElapsed => 'از این دوره قبلاً گذشته';
+
+  @override
+  String get initialElapsedHint => 'پیش‌فرض ۰';
+
+  @override
+  String get childrenSection => 'قطعات و زیرمجموعه‌ها';
+
+  @override
+  String get addChild => 'افزودن زیرمجموعه';
+
+  @override
+  String get markMaintained => 'ثبت سرویس';
+
+  @override
+  String get updateUsage => 'به‌روزرسانی مصرف';
+
+  @override
+  String get logKind => 'نوع گزارش';
+
+  @override
+  String get logKindMaintenance => 'سرویس انجام شد';
+
+  @override
+  String get logKindUsage => 'به‌روزرسانی مصرف';
+
+  @override
+  String currentUsageLabel(int value, String unit) {
+    return 'مصرف فعلی: $value $unit';
+  }
+
+  @override
+  String scheduleSummary(int value, String unit) {
+    return 'هر $value $unit';
+  }
+
+  @override
+  String get noScheduleConfigured => 'برای این دستگاه زمان‌بندی تعریف نشده';
 
   @override
   String get logHistory => 'تاریخچه گزارش‌ها';
+
+  @override
+  String get usageDelta => 'مصرف از آخرین گزارش';
+
+  @override
+  String get usageDeltaHint => 'اختیاری، مثلاً ۱۲۰';
+
+  @override
+  String get activeMaintenanceRules => 'قوانین نگهداری فعال';
 
   @override
   String get notes => 'یادداشت‌ها';
@@ -243,7 +298,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get exportImportHint =>
-      'پشتیبان‌گیری یا بازیابی دستگاه‌ها، قوانین و گزارش‌ها.';
+      'پشتیبان‌گیری یا بازیابی دستگاه‌ها و گزارش‌ها.';
 
   @override
   String get exportSection => 'خروجی';
@@ -291,9 +346,12 @@ class AppLocalizationsFa extends AppLocalizations {
   String get importAction => 'وارد کردن';
 
   @override
-  String importPreview(int devices, int rules, int logs) {
-    return 'آماده برای وارد کردن: $devices دستگاه، $rules قانون، $logs گزارش';
+  String importPreview(int devices, int logs) {
+    return 'آماده برای وارد کردن: $devices دستگاه، $logs گزارش';
   }
+
+  @override
+  String get ruleEvery1000Km => 'هر ۱۰۰۰ کیلومتر';
 
   @override
   String get exportSuccess => 'خروجی آماده است';
@@ -320,4 +378,21 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get noDevicesForExport => 'دستگاهی برای خروجی وجود ندارد';
+
+  @override
+  String get about => 'درباره';
+
+  @override
+  String get whatsNew => 'تازه‌ها';
+
+  @override
+  String get whatsNewHint => 'تغییرات این نسخه را ببینید';
+
+  @override
+  String appVersionLabel(String version) {
+    return 'نسخه $version';
+  }
+
+  @override
+  String get gotIt => 'متوجه شدم';
 }

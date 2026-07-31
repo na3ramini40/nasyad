@@ -8,6 +8,7 @@ import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/core/version/last_seen_version_store.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/main.dart';
 import 'package:nasyad/presentation/splash/bloc/splash_cubit.dart';
@@ -24,15 +25,18 @@ Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
       locale: locale,
       supportedLocales: AppLocales.supported,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme(),
+      darkTheme: AppTheme.darkTheme(),
       home: child,
     ),
   );
 }
 
 AppServices _testServices() {
-  return AppServices(AppDatabase(NativeDatabase.memory()));
+  return AppServices(
+    AppDatabase(NativeDatabase.memory()),
+    lastSeenVersionStore: LastSeenVersionStore.memory(),
+  );
 }
 
 Future<void> _pumpPastSplash(WidgetTester tester) async {

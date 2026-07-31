@@ -365,7 +365,7 @@ abstract class AppLocalizations {
   /// No description provided for @noDevicesHint.
   ///
   /// In en, this message translates to:
-  /// **'Add a device and choose one maintenance rule to start tracking.'**
+  /// **'Add a device to start tracking. You can nest parts under it later.'**
   String get noDevicesHint;
 
   /// No description provided for @noLogsYet.
@@ -374,17 +374,23 @@ abstract class AppLocalizations {
   /// **'No logs yet'**
   String get noLogsYet;
 
-  /// No description provided for @usageDelta.
+  /// No description provided for @usageReading.
   ///
   /// In en, this message translates to:
-  /// **'Usage since last log'**
-  String get usageDelta;
+  /// **'Current usage reading'**
+  String get usageReading;
 
-  /// No description provided for @usageDeltaHint.
+  /// No description provided for @usageReadingHint.
   ///
   /// In en, this message translates to:
-  /// **'Optional, e.g. 120'**
-  String get usageDeltaHint;
+  /// **'e.g. 12450'**
+  String get usageReadingHint;
+
+  /// No description provided for @usageReadingRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the current usage reading'**
+  String get usageReadingRequired;
 
   /// No description provided for @usageUnit.
   ///
@@ -416,17 +422,113 @@ abstract class AppLocalizations {
   /// **'Archive'**
   String get archive;
 
-  /// No description provided for @activeMaintenanceRules.
+  /// No description provided for @scheduleSection.
   ///
   /// In en, this message translates to:
-  /// **'Active Maintenance Rules'**
-  String get activeMaintenanceRules;
+  /// **'Schedule'**
+  String get scheduleSection;
+
+  /// No description provided for @noSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedule (container only)'**
+  String get noSchedule;
+
+  /// No description provided for @initialElapsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Already used toward this cycle'**
+  String get initialElapsed;
+
+  /// No description provided for @initialElapsedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Default 0'**
+  String get initialElapsedHint;
+
+  /// No description provided for @childrenSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Parts & children'**
+  String get childrenSection;
+
+  /// No description provided for @addChild.
+  ///
+  /// In en, this message translates to:
+  /// **'Add child'**
+  String get addChild;
+
+  /// No description provided for @markMaintained.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark maintained'**
+  String get markMaintained;
+
+  /// No description provided for @updateUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Update usage'**
+  String get updateUsage;
+
+  /// No description provided for @logKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Log type'**
+  String get logKind;
+
+  /// No description provided for @logKindMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance done'**
+  String get logKindMaintenance;
+
+  /// No description provided for @logKindUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage update'**
+  String get logKindUsage;
+
+  /// No description provided for @currentUsageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current usage: {value} {unit}'**
+  String currentUsageLabel(int value, String unit);
+
+  /// No description provided for @scheduleSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {value} {unit}'**
+  String scheduleSummary(int value, String unit);
+
+  /// No description provided for @noScheduleConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedule on this device'**
+  String get noScheduleConfigured;
 
   /// No description provided for @logHistory.
   ///
   /// In en, this message translates to:
   /// **'Log History'**
   String get logHistory;
+
+  /// No description provided for @usageDelta.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage since last log'**
+  String get usageDelta;
+
+  /// No description provided for @usageDeltaHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional, e.g. 120'**
+  String get usageDeltaHint;
+
+  /// No description provided for @activeMaintenanceRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Maintenance Rules'**
+  String get activeMaintenanceRules;
 
   /// No description provided for @notes.
   ///
@@ -545,7 +647,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportImportHint.
   ///
   /// In en, this message translates to:
-  /// **'Back up or restore devices, rules, and logs.'**
+  /// **'Back up or restore devices and logs.'**
   String get exportImportHint;
 
   /// No description provided for @exportSection.
@@ -641,8 +743,14 @@ abstract class AppLocalizations {
   /// No description provided for @importPreview.
   ///
   /// In en, this message translates to:
-  /// **'Ready to import: {devices} devices, {rules} rules, {logs} logs'**
-  String importPreview(int devices, int rules, int logs);
+  /// **'Ready to import: {devices} devices, {logs} logs'**
+  String importPreview(int devices, int logs);
+
+  /// No description provided for @ruleEvery1000Km.
+  ///
+  /// In en, this message translates to:
+  /// **'Every 1000 Kilometers'**
+  String get ruleEvery1000Km;
 
   /// No description provided for @exportSuccess.
   ///
@@ -685,6 +793,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No devices available to export'**
   String get noDevicesForExport;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @whatsNew.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s New'**
+  String get whatsNew;
+
+  /// No description provided for @whatsNewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'See what\'s new in this version'**
+  String get whatsNewHint;
+
+  /// No description provided for @appVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersionLabel(String version);
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotIt;
 }
 
 class _AppLocalizationsDelegate

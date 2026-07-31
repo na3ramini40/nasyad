@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/app_services.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/router/app_router.dart';
+import 'package:nasyad/core/theme/app_fonts.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
@@ -47,11 +48,12 @@ class _MyAppState extends State<MyApp> {
           builder: (context, locale) {
             return BlocBuilder<ThemeModeCubit, ThemeMode>(
               builder: (context, themeMode) {
+                final fontFamily = AppFonts.familyForLocale(locale);
                 return MaterialApp.router(
                   onGenerateTitle: (context) =>
                       AppLocalizations.of(context).appTitle,
-                  theme: AppTheme.lightTheme,
-                  darkTheme: AppTheme.darkTheme,
+                  theme: AppTheme.lightTheme(fontFamily: fontFamily),
+                  darkTheme: AppTheme.darkTheme(fontFamily: fontFamily),
                   themeMode: themeMode,
                   locale: locale,
                   supportedLocales: AppLocales.supported,
