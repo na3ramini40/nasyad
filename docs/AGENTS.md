@@ -24,7 +24,8 @@ Follow what is already active in `pubspec.yaml`:
 - `build_runner` + `drift_dev`
 - `flutter_localizations` + `intl` (en / fa)
 - `share_plus`, `path_provider`, `file_selector` (export / import)
-- `shared_preferences` (last-seen app version for What's New)
+- `shared_preferences` (last-seen app version, calendar preference)
+- `shamsi_date` (Persian calendar month/day conversion)
 
 Do not assume this repo already uses `get_it` or `injectable`.
 
@@ -39,6 +40,7 @@ lib/
     l10n/
     utils/
     version/
+    calendar/
     app_services.dart
   l10n/
   data/
@@ -54,6 +56,7 @@ lib/
       device/
       device_log/
       transfer/
+      birthday/
   presentation/
     splash/
       bloc/
@@ -66,6 +69,9 @@ lib/
       pages/
     preferences/pages/
     transfer/
+      bloc/
+      pages/
+    birthday/
       bloc/
       pages/
   main.dart
@@ -81,6 +87,7 @@ lib/
 - Keep UI strings in `lib/l10n/` ARB files (`app_en.arb`, `app_fa.arb`). Use `AppLocalizations.of(context)`; do not hard-code user-facing English/Persian text in widgets.
 - Supported locales: English (`en`) and Persian (`fa`, RTL). Switch via `LocaleCubit` on Preferences.
 - Theme mode (system / light / dark) via `ThemeModeCubit` on Preferences.
+- Calendar system (Gregorian / Persian) via `CalendarSystemCubit` on Preferences — independent of language.
 - Feature state lives in `presentation/<feature>/bloc/` using `flutter_bloc` (Bloc or Cubit). Pages listen/build from blocs; do not call use cases directly from widgets.
 - Keep Drift schema and database setup in `lib/data/local/db/`.
 - Keep data models and repository implementations in the data layer.

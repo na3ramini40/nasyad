@@ -395,4 +395,73 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get gotIt => 'متوجه شدم';
+
+  @override
+  String get cancel => 'لغو';
+
+  @override
+  String get confirm => 'تأیید';
+
+  @override
+  String get birthdays => 'تولدها';
+
+  @override
+  String get addBirthday => 'افزودن تولد';
+
+  @override
+  String get editBirthday => 'ویرایش تولد';
+
+  @override
+  String get personName => 'نام';
+
+  @override
+  String get personNameHint => 'نام فرد...';
+
+  @override
+  String get personNameRequired => 'نام الزامی است';
+
+  @override
+  String get birthMonthDay => 'تاریخ تولد';
+
+  @override
+  String get birthMonthDayHint => 'ماه و روز';
+
+  @override
+  String get birthMonthDayRequired => 'ماه و روز را انتخاب کنید';
+
+  @override
+  String get pickMonthDay => 'انتخاب ماه و روز';
+
+  @override
+  String get month => 'ماه';
+
+  @override
+  String get day => 'روز';
+
+  @override
+  String get noBirthdaysTitle => 'هنوز تولدی ثبت نشده';
+
+  @override
+  String get noBirthdaysHint =>
+      'کسی را اضافه کنید تا تولدش را به خاطر بسپارید.';
+
+  @override
+  String get deleteBirthdayTitle => 'حذف تولد؟';
+
+  @override
+  String deleteBirthdayBody(String name) {
+    return '$name از این دستگاه حذف می‌شود.';
+  }
+
+  @override
+  String get calendarSystem => 'تقویم تاریخ';
+
+  @override
+  String get calendarGregorian => 'میلادی';
+
+  @override
+  String get calendarPersian => 'شمسی';
+
+  @override
+  String get calendarSystemHint => 'برای تاریخ تولد. مستقل از زبان برنامه.';
 }

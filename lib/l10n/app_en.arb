@@ -191,5 +191,32 @@
       "version": { "type": "String" }
     }
   },
-  "gotIt": "Got it"
+  "gotIt": "Got it",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "birthdays": "Birthdays",
+  "addBirthday": "Add birthday",
+  "editBirthday": "Edit birthday",
+  "personName": "Name",
+  "personNameHint": "Person's name...",
+  "personNameRequired": "Name is required",
+  "birthMonthDay": "Birthday",
+  "birthMonthDayHint": "Month and day",
+  "birthMonthDayRequired": "Choose a month and day",
+  "pickMonthDay": "Choose month and day",
+  "month": "Month",
+  "day": "Day",
+  "noBirthdaysTitle": "No birthdays yet",
+  "noBirthdaysHint": "Add someone to remember their birthday.",
+  "deleteBirthdayTitle": "Delete birthday?",
+  "deleteBirthdayBody": "{name} will be removed from this device.",
+  "@deleteBirthdayBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "calendarSystem": "Date calendar",
+  "calendarGregorian": "Gregorian",
+  "calendarPersian": "Persian (Shamsi)",
+  "calendarSystemHint": "Used for birthday dates. Independent of language."
 }

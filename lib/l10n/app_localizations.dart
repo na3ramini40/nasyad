@@ -823,6 +823,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it'**
   String get gotIt;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @birthdays.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays'**
+  String get birthdays;
+
+  /// No description provided for @addBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Add birthday'**
+  String get addBirthday;
+
+  /// No description provided for @editBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit birthday'**
+  String get editBirthday;
+
+  /// No description provided for @personName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get personName;
+
+  /// No description provided for @personNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Person\'s name...'**
+  String get personNameHint;
+
+  /// No description provided for @personNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get personNameRequired;
+
+  /// No description provided for @birthMonthDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get birthMonthDay;
+
+  /// No description provided for @birthMonthDayHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Month and day'**
+  String get birthMonthDayHint;
+
+  /// No description provided for @birthMonthDayRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a month and day'**
+  String get birthMonthDayRequired;
+
+  /// No description provided for @pickMonthDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose month and day'**
+  String get pickMonthDay;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @noBirthdaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No birthdays yet'**
+  String get noBirthdaysTitle;
+
+  /// No description provided for @noBirthdaysHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add someone to remember their birthday.'**
+  String get noBirthdaysHint;
+
+  /// No description provided for @deleteBirthdayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete birthday?'**
+  String get deleteBirthdayTitle;
+
+  /// No description provided for @deleteBirthdayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will be removed from this device.'**
+  String deleteBirthdayBody(String name);
+
+  /// No description provided for @calendarSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Date calendar'**
+  String get calendarSystem;
+
+  /// No description provided for @calendarGregorian.
+  ///
+  /// In en, this message translates to:
+  /// **'Gregorian'**
+  String get calendarGregorian;
+
+  /// No description provided for @calendarPersian.
+  ///
+  /// In en, this message translates to:
+  /// **'Persian (Shamsi)'**
+  String get calendarPersian;
+
+  /// No description provided for @calendarSystemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for birthday dates. Independent of language.'**
+  String get calendarSystemHint;
 }
 
 class _AppLocalizationsDelegate

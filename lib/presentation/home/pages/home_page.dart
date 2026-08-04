@@ -54,6 +54,11 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
+            onPressed: () => context.push('/birthdays'),
+            icon: const Icon(Icons.cake_outlined),
+            tooltip: l10n.birthdays,
+          ),
+          IconButton(
             onPressed: () => context.push('/preferences'),
             icon: const Icon(Icons.settings_outlined),
             tooltip: l10n.preferences,

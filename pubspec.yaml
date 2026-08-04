@@ -41,6 +41,7 @@ dependencies:
   file_selector: ^1.0.3
   # prefs (last-seen app version)
   shared_preferences: ^2.5.3
+  shamsi_date: ^1.1.1
 
 dev_dependencies:
   flutter_test:

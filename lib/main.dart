@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/app_services.dart';
+import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/router/app_router.dart';
 import 'package:nasyad/core/theme/app_fonts.dart';
@@ -43,6 +44,11 @@ class _MyAppState extends State<MyApp> {
         providers: [
           BlocProvider(create: (_) => LocaleCubit()),
           BlocProvider(create: (_) => ThemeModeCubit()),
+          BlocProvider(
+            create: (_) => CalendarSystemCubit(
+              store: widget.services.calendarPreferenceStore,
+            ),
+          ),
         ],
         child: BlocBuilder<LocaleCubit, Locale>(
           builder: (context, locale) {

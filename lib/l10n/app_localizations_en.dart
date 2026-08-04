@@ -394,4 +394,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gotIt => 'Got it';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get birthdays => 'Birthdays';
+
+  @override
+  String get addBirthday => 'Add birthday';
+
+  @override
+  String get editBirthday => 'Edit birthday';
+
+  @override
+  String get personName => 'Name';
+
+  @override
+  String get personNameHint => 'Person\'s name...';
+
+  @override
+  String get personNameRequired => 'Name is required';
+
+  @override
+  String get birthMonthDay => 'Birthday';
+
+  @override
+  String get birthMonthDayHint => 'Month and day';
+
+  @override
+  String get birthMonthDayRequired => 'Choose a month and day';
+
+  @override
+  String get pickMonthDay => 'Choose month and day';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get noBirthdaysTitle => 'No birthdays yet';
+
+  @override
+  String get noBirthdaysHint => 'Add someone to remember their birthday.';
+
+  @override
+  String get deleteBirthdayTitle => 'Delete birthday?';
+
+  @override
+  String deleteBirthdayBody(String name) {
+    return '$name will be removed from this device.';
+  }
+
+  @override
+  String get calendarSystem => 'Date calendar';
+
+  @override
+  String get calendarGregorian => 'Gregorian';
+
+  @override
+  String get calendarPersian => 'Persian (Shamsi)';
+
+  @override
+  String get calendarSystemHint =>
+      'Used for birthday dates. Independent of language.';
 }

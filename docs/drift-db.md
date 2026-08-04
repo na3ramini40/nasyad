@@ -1,7 +1,7 @@
 # Drift in this project
 
-- Entry: `lib/data/local/db/app_database.dart` (`schemaVersion: 3`)
-- Tables: `devices`, `device_logs` (maintenance rules folded into devices in v3)
+- Entry: `lib/data/local/db/app_database.dart` (`schemaVersion: 4`)
+- Tables: `devices`, `device_logs` (maintenance rules folded into devices in v3), `birthdays` (v4)
 - Device `status`: `active` | `archived` | `deleted`
 - Devices form a tree via nullable `parent_id`
 - Optional schedule fields live on the device (`schedule_type`, `interval_*`, `fixed_due_at`, `last_maintained_at`)
