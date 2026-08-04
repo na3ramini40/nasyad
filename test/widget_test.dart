@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/core/app_services.dart';
+import 'package:nasyad/core/calendar/calendar_preference_store.dart';
+import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
@@ -20,6 +22,10 @@ Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
     providers: [
       BlocProvider(create: (_) => LocaleCubit(initialLocale: locale)),
       BlocProvider(create: (_) => ThemeModeCubit()),
+      BlocProvider(
+        create: (_) =>
+            CalendarSystemCubit(store: CalendarPreferenceStore.memory()),
+      ),
     ],
     child: MaterialApp(
       locale: locale,
@@ -36,6 +42,7 @@ AppServices _testServices() {
   return AppServices(
     AppDatabase(NativeDatabase.memory()),
     lastSeenVersionStore: LastSeenVersionStore.memory(),
+    calendarPreferenceStore: CalendarPreferenceStore.memory(),
   );
 }
 
@@ -101,7 +108,10 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Dark'));
+    final dark = find.text('Dark');
+    await tester.ensureVisible(dark);
+    await tester.pumpAndSettle();
+    await tester.tap(dark);
     await tester.pumpAndSettle();
 
     final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));

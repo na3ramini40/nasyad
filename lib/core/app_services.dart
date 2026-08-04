@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:nasyad/core/calendar/calendar_preference_store.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
+import 'package:nasyad/data/datasources/birthday_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource_impl.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
+import 'package:nasyad/data/repositories/birthday_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
+import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
+import 'package:nasyad/domain/usecases/birthday/create_birthday_usecase.dart';
+import 'package:nasyad/domain/usecases/birthday/delete_birthday_usecase.dart';
+import 'package:nasyad/domain/usecases/birthday/get_birthday_usecase.dart';
+import 'package:nasyad/domain/usecases/birthday/update_birthday_usecase.dart';
+import 'package:nasyad/domain/usecases/birthday/watch_birthdays_usecase.dart';
 import 'package:nasyad/domain/usecases/device/archive_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
@@ -22,18 +31,26 @@ import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
 
 class AppServices {
-  AppServices(this.database, {LastSeenVersionStore? lastSeenVersionStore})
-    : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
-      deviceRepository = DeviceRepositoryImpl(
-        db: database,
-        devices: DeviceLocalDataSourceImpl(database.deviceDao),
-        logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
-      ),
-      deviceLogRepository = DeviceLogRepositoryImpl(
-        db: database,
-        logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
-        devices: DeviceLocalDataSourceImpl(database.deviceDao),
-      ) {
+  AppServices(
+    this.database, {
+    LastSeenVersionStore? lastSeenVersionStore,
+    CalendarPreferenceStore? calendarPreferenceStore,
+  }) : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
+       calendarPreferenceStore =
+           calendarPreferenceStore ?? CalendarPreferenceStore(),
+       deviceRepository = DeviceRepositoryImpl(
+         db: database,
+         devices: DeviceLocalDataSourceImpl(database.deviceDao),
+         logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
+       ),
+       deviceLogRepository = DeviceLogRepositoryImpl(
+         db: database,
+         logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
+         devices: DeviceLocalDataSourceImpl(database.deviceDao),
+       ),
+       birthdayRepository = BirthdayRepositoryImpl(
+         BirthdayLocalDataSourceImpl(database.birthdayDao),
+       ) {
     watchDeviceSummaries = WatchDeviceSummariesUsecase(deviceRepository);
     watchDeviceSummary = WatchDeviceSummaryUsecase(deviceRepository);
     getDevice = GetDeviceUsecase(deviceRepository);
@@ -47,12 +64,19 @@ class AppServices {
     deleteDeviceLog = DeleteDeviceLogUsecase(deviceLogRepository);
     exportData = ExportDataUsecase(deviceRepository, deviceLogRepository);
     importData = ImportDataUsecase(deviceRepository);
+    watchBirthdays = WatchBirthdaysUsecase(birthdayRepository);
+    getBirthday = GetBirthdayUsecase(birthdayRepository);
+    createBirthday = CreateBirthdayUsecase(birthdayRepository);
+    updateBirthday = UpdateBirthdayUsecase(birthdayRepository);
+    deleteBirthday = DeleteBirthdayUsecase(birthdayRepository);
   }
 
   final AppDatabase database;
   final LastSeenVersionStore lastSeenVersionStore;
+  final CalendarPreferenceStore calendarPreferenceStore;
   final DeviceRepository deviceRepository;
   final DeviceLogRepository deviceLogRepository;
+  final BirthdayRepository birthdayRepository;
 
   late final WatchDeviceSummariesUsecase watchDeviceSummaries;
   late final WatchDeviceSummaryUsecase watchDeviceSummary;
@@ -67,6 +91,11 @@ class AppServices {
   late final DeleteDeviceLogUsecase deleteDeviceLog;
   late final ExportDataUsecase exportData;
   late final ImportDataUsecase importData;
+  late final WatchBirthdaysUsecase watchBirthdays;
+  late final GetBirthdayUsecase getBirthday;
+  late final CreateBirthdayUsecase createBirthday;
+  late final UpdateBirthdayUsecase updateBirthday;
+  late final DeleteBirthdayUsecase deleteBirthday;
 
   Future<void> dispose() => database.close();
 }

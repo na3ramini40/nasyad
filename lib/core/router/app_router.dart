@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/app_services.dart';
+import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
+import 'package:nasyad/presentation/birthday/bloc/birthday_edit_bloc.dart';
+import 'package:nasyad/presentation/birthday/bloc/birthday_list_bloc.dart';
+import 'package:nasyad/presentation/birthday/pages/birthday_edit_page.dart';
+import 'package:nasyad/presentation/birthday/pages/birthday_list_page.dart';
 import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_log_bloc.dart';
@@ -22,6 +27,9 @@ abstract final class AppRoutes {
   static const home = 'home';
   static const preferences = 'preferences';
   static const transfer = 'transfer';
+  static const birthdays = 'birthdays';
+  static const birthdayNew = 'birthday_new';
+  static const birthdayEdit = 'birthday_edit';
   static const deviceNew = 'device_new';
   static const deviceView = 'device_view';
   static const deviceEdit = 'device_edit';
@@ -72,6 +80,60 @@ GoRouter createAppRouter() {
                       importData: services.importData,
                     )..add(const TransferStarted()),
                     child: const TransferPage(),
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'birthdays',
+            name: AppRoutes.birthdays,
+            builder: (context, state) {
+              final services = AppServicesScope.of(context);
+              return BlocProvider(
+                create: (_) => BirthdayListBloc(
+                  watchBirthdays: services.watchBirthdays,
+                  deleteBirthday: services.deleteBirthday,
+                )..add(const BirthdayListStarted()),
+                child: const BirthdayListPage(),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: 'new',
+                name: AppRoutes.birthdayNew,
+                builder: (context, state) {
+                  final services = AppServicesScope.of(context);
+                  final preferred = context.read<CalendarSystemCubit>().state;
+                  return BlocProvider(
+                    create: (_) => BirthdayEditBloc(
+                      getBirthday: services.getBirthday,
+                      createBirthday: services.createBirthday,
+                      updateBirthday: services.updateBirthday,
+                      deleteBirthday: services.deleteBirthday,
+                      preferredCalendar: preferred,
+                    )..add(BirthdayEditStarted(preferredCalendar: preferred)),
+                    child: const BirthdayEditPage(),
+                  );
+                },
+              ),
+              GoRoute(
+                path: ':id/edit',
+                name: AppRoutes.birthdayEdit,
+                builder: (context, state) {
+                  final id = state.pathParameters['id']!;
+                  final services = AppServicesScope.of(context);
+                  final preferred = context.read<CalendarSystemCubit>().state;
+                  return BlocProvider(
+                    create: (_) => BirthdayEditBloc(
+                      birthdayId: id,
+                      getBirthday: services.getBirthday,
+                      createBirthday: services.createBirthday,
+                      updateBirthday: services.updateBirthday,
+                      deleteBirthday: services.deleteBirthday,
+                      preferredCalendar: preferred,
+                    )..add(BirthdayEditStarted(preferredCalendar: preferred)),
+                    child: BirthdayEditPage(birthdayId: id),
                   );
                 },
               ),

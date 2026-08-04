@@ -191,5 +191,32 @@
       "version": { "type": "String" }
     }
   },
-  "gotIt": "متوجه شدم"
+  "gotIt": "متوجه شدم",
+  "cancel": "لغو",
+  "confirm": "تأیید",
+  "birthdays": "تولدها",
+  "addBirthday": "افزودن تولد",
+  "editBirthday": "ویرایش تولد",
+  "personName": "نام",
+  "personNameHint": "نام فرد...",
+  "personNameRequired": "نام الزامی است",
+  "birthMonthDay": "تاریخ تولد",
+  "birthMonthDayHint": "ماه و روز",
+  "birthMonthDayRequired": "ماه و روز را انتخاب کنید",
+  "pickMonthDay": "انتخاب ماه و روز",
+  "month": "ماه",
+  "day": "روز",
+  "noBirthdaysTitle": "هنوز تولدی ثبت نشده",
+  "noBirthdaysHint": "کسی را اضافه کنید تا تولدش را به خاطر بسپارید.",
+  "deleteBirthdayTitle": "حذف تولد؟",
+  "deleteBirthdayBody": "{name} از این دستگاه حذف می‌شود.",
+  "@deleteBirthdayBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "calendarSystem": "تقویم تاریخ",
+  "calendarGregorian": "میلادی",
+  "calendarPersian": "شمسی",
+  "calendarSystemHint": "برای تاریخ تولد. مستقل از زبان برنامه."
 }

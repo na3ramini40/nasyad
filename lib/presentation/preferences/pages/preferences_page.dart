@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/locale_cubit.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
 import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/core/version/app_version.dart';
+import 'package:nasyad/domain/entities/calendar_system.dart';
 import 'package:nasyad/l10n/app_localizations.dart';
 
 class PreferencesPage extends StatelessWidget {
@@ -58,6 +60,39 @@ class PreferencesPage extends StatelessWidget {
                 },
               ),
             ),
+            SectionHeader(title: l10n.calendarSystem),
+            Card(
+              child: BlocBuilder<CalendarSystemCubit, CalendarSystem>(
+                builder: (context, calendar) {
+                  return RadioGroup<CalendarSystem>(
+                    groupValue: calendar,
+                    onChanged: (value) {
+                      if (value != null) {
+                        context.read<CalendarSystemCubit>().setCalendarSystem(
+                          value,
+                        );
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        RadioListTile<CalendarSystem>(
+                          value: CalendarSystem.gregorian,
+                          title: Text(l10n.calendarGregorian),
+                          subtitle: Text(l10n.calendarSystemHint),
+                          secondary: const Icon(Icons.calendar_month_outlined),
+                        ),
+                        const Divider(height: 1),
+                        RadioListTile<CalendarSystem>(
+                          value: CalendarSystem.persian,
+                          title: Text(l10n.calendarPersian),
+                          secondary: const Icon(Icons.calendar_today_outlined),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
             SectionHeader(title: l10n.appearance),
             Card(
               child: BlocBuilder<ThemeModeCubit, ThemeMode>(
@@ -96,12 +131,23 @@ class PreferencesPage extends StatelessWidget {
             ),
             SectionHeader(title: l10n.data),
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.import_export_outlined),
-                title: Text(l10n.exportImport),
-                subtitle: Text(l10n.exportImportHint),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.push('/preferences/transfer'),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.cake_outlined),
+                    title: Text(l10n.birthdays),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/birthdays'),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.import_export_outlined),
+                    title: Text(l10n.exportImport),
+                    subtitle: Text(l10n.exportImportHint),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/preferences/transfer'),
+                  ),
+                ],
               ),
             ),
             SectionHeader(title: l10n.about),
