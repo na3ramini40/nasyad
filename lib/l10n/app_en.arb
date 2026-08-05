@@ -218,5 +218,28 @@
   "calendarSystem": "Date calendar",
   "calendarGregorian": "Gregorian",
   "calendarPersian": "Persian (Shamsi)",
-  "calendarSystemHint": "Used for birthday dates. Independent of language."
+  "calendarSystemHint": "Used for birthday dates. Independent of language.",
+  "remindersSection": "Reminders",
+  "featuresSection": "Features",
+  "deviceManagement": "Device management",
+  "deviceManagementHint": "Track devices, parts, and maintenance schedules.",
+  "birthdaysFeatureHint": "Remember birthdays for people you care about.",
+  "reminderFilterAll": "All",
+  "reminderFilterDevices": "Devices",
+  "reminderFilterBirthdays": "Birthdays",
+  "noRemindersTitle": "Nothing needs attention",
+  "noRemindersHint": "Due maintenance and upcoming birthdays will show up here.",
+  "reminderDeviceDue": "Maintenance is due",
+  "reminderDeviceSoon": "Maintenance due soon",
+  "reminderBirthdayToday": "Birthday is today",
+  "reminderBirthdayTomorrow": "Birthday is tomorrow",
+  "reminderBirthdayInDays": "Birthday in {days} days",
+  "@reminderBirthdayInDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "reminderBadgeDue": "Due",
+  "reminderBadgeSoon": "Soon",
+  "reminderBadgeUpcoming": "Upcoming"
 }

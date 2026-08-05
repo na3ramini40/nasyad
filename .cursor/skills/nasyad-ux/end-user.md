@@ -16,10 +16,11 @@ Update when facts are stated or proven. Short bullets only.
 4. Trust local data; export/import to move/backup.
 5. Add a birthday (name + month/day) so it can be remembered later.
 6. Pick dates in Persian (Shamsi) or Gregorian independently of app language.
+7. Open Home for a cross-feature queue (due maintenance + upcoming birthdays) and jump to feature areas from the menu.
 
 ## Model
 
-- Home = roots. Detail = node + children + logs.
+- Home = reminders queue + feature menu. Device list lives under Device management.
 - Schedule optional (container OK). Usage on nearest usage-owner ancestor.
 - Archive/delete = whole subtree → high stakes.
 - Birthday = name + birth month + birth day (no year required). Calendar preference is for pickers/display, not language.

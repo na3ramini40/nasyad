@@ -36,6 +36,21 @@ abstract final class AppChangelog {
   /// Newest first. Notes are written for end users in every `lib/l10n` language.
   static const List<ChangelogEntry> entries = [
     ChangelogEntry(
+      version: '1.2.0',
+      en: [
+        'Home is now a hub: see due maintenance and upcoming birthdays in one reminders list.',
+        'Filter reminders by all items, devices only, or birthdays only.',
+        'Open device management and birthdays from a feature menu on Home.',
+        'The full device list moved to Device management — tap it from Home.',
+      ],
+      fa: [
+        'صفحهٔ اصلی حالا یک مرکز است: نگهداری سررسید و تولدهای نزدیک را در یک فهرست یادآور ببینید.',
+        'یادآورها را بر اساس همه، فقط دستگاه‌ها یا فقط تولدها فیلتر کنید.',
+        'مدیریت دستگاه‌ها و تولدها را از منوی بخش‌ها در صفحهٔ اصلی باز کنید.',
+        'فهرست کامل دستگاه‌ها به «مدیریت دستگاه‌ها» منتقل شد — از صفحهٔ اصلی آن را باز کنید.',
+      ],
+    ),
+    ChangelogEntry(
       version: '1.1.0',
       en: [
         'Organize devices in a tree — nest parts under a car, appliance, or any parent.',

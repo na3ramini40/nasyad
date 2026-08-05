@@ -60,6 +60,7 @@ Future<void> _pumpApp(WidgetTester tester, AppServices services) async {
 Future<void> _disposeApp(WidgetTester tester, AppServices services) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pump(const Duration(milliseconds: 50));
+  await tester.pump(const Duration(milliseconds: 50));
   await services.dispose();
 }
 
@@ -71,7 +72,9 @@ void main() {
 
     await _pumpApp(tester, services);
 
-    expect(find.text('No devices yet'), findsOneWidget);
+    expect(find.text('Nothing needs attention'), findsOneWidget);
+    expect(find.text('Features'), findsOneWidget);
+    expect(find.text('Device management'), findsOneWidget);
     expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
 
     await _disposeApp(tester, services);
@@ -96,7 +99,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('نصیاد'), findsOneWidget);
-    expect(find.text('هنوز دستگاهی نیست'), findsOneWidget);
+    expect(find.text('مورد فوری نیست'), findsOneWidget);
 
     await _disposeApp(tester, services);
   });

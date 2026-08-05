@@ -60,6 +60,7 @@ When the user states a preference, constraint, or process change, treat them as 
 | Stakeholder signal (examples) | Likely scope | Land in | You do |
 |-------------------------------|--------------|---------|--------|
 | Always / never before PR, MR, push, tag, release | Process gate for all agents | `.cursor/rules/*.mdc` (`alwaysApply` when global) | Create/update rule; add Policies link; enforce immediately |
+| New/changed screen, section, menu, or navigation | Product structure | `.cursor/skills/nasyad-product/app-map.md` | Update map in same delivery; read before intake |
 | How this feature / UX / copy / calendar should feel | Product / UX | `.cursor/skills/nasyad-ux/` (+ `end-user.md` for durable facts) | Update skill or end-user facts; use on next UX phase |
 | Architecture, Drift, BLoC, stack, folders | Engineering craft | `.cursor/skills/nasyad-flutter/` and/or `docs/AGENTS.md` | Update skill/docs; do not bury in this agent |
 | Widgets, theme, Atomic Design, a11y | UI craft | `.cursor/skills/flutter-ui-engineer/` | Update that skill |
@@ -94,6 +95,7 @@ Scan `.cursor/skills/*/SKILL.md` and `.cursor/rules/*.mdc` when starting work. K
 
 | Asset | Path | Owns | Does not own |
 |-------|------|------|--------------|
+| **nasyad-product** | `.cursor/skills/nasyad-product/` | Living app map — screens, sections, navigation, visible states; `app-map.md` is source of truth | Copy tone, widget APIs, Drift, CI |
 | **nasyad-ux** | `.cursor/skills/nasyad-ux/` | Jobs, happy path ≤3 steps, copy, empty/error/confirm, CTAs, tone; `end-user.md` | Widget APIs, Drift, BLoC, CI |
 | **nasyad-flutter** | `.cursor/skills/nasyad-flutter/` | Clean architecture, active stack, domain/data/presentation, Drift, routing, BLoC, use cases, naming, codegen | Atomic Design polish, end-user copy strategy |
 | **flutter-ui-engineer** | `.cursor/skills/flutter-ui-engineer/` | Component-driven UI, Atomic Design, design system, theme-aligned widgets, a11y, thin pages | Domain/data layers, release tagging |
@@ -109,6 +111,7 @@ Unknown new skills/rules discovered on disk: assign by `description` / name; add
 Append durable do/don’t here and keep the authoritative detail in the linked rule/skill.
 
 - **CI before every GitHub PR/MR:** Always run local CI and require green before creating, updating, or declaring ready any pull request or merge request on GitHub. Authoritative detail: `.cursor/rules/ci-before-pr.mdc`. Command: `./tool/ci_verify.sh` (must exit 0). Same gate for “PR ready” claims and for pushes meant for an open PR. No exceptions for “analyze looked fine” or partial checks.
+- **Automatic versioning:** Infer patch / minor / major from change scope and apply bump + en/fa changelog without asking — unless the user explicitly overrides. Authoritative detail: `.cursor/rules/github-tag-release.mdc`. Phase 7 owns tag push; version/changelog belong in the delivery commit when release-bound.
 
 ---
 
@@ -116,9 +119,10 @@ Append durable do/don’t here and keep the authoritative detail in the linked r
 
 ### Phase 0 — Intake
 
+- **Read** `.cursor/skills/nasyad-product/app-map.md` — restate goal against current screens.
 - Clarify outcome, scope, and done criteria (PR/MR vs merge vs tag `vX.Y.Z`).
 - Check git status/branch; prefer a feature branch off `main`/`master`.
-- Note version/changelog impact if release-bound.
+- Decide semver bump from scope (patch/minor/major) per `github-tag-release`; apply unless user overrides.
 - Apply any new stakeholder do/don’t via **Stakeholder routing**.
 
 ### Phase 1 — UX (`nasyad-ux`)
@@ -148,6 +152,8 @@ Gate: no monolithic pages; no styles bypassing theme.
 ### Phase 4 — Integrate & self-check
 
 Wire UX + architecture + UI. Smallest surface that solves the request. Fix gaps before CI.
+
+If user-visible structure changed, **update** `.cursor/skills/nasyad-product/app-map.md` before Phase 5.
 
 ### Phase 5 — Local CI gate (`ci-before-pr`) — hard stop before GitHub PR/MR
 

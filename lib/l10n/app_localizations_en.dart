@@ -463,4 +463,63 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get calendarSystemHint =>
       'Used for birthday dates. Independent of language.';
+
+  @override
+  String get remindersSection => 'Reminders';
+
+  @override
+  String get featuresSection => 'Features';
+
+  @override
+  String get deviceManagement => 'Device management';
+
+  @override
+  String get deviceManagementHint =>
+      'Track devices, parts, and maintenance schedules.';
+
+  @override
+  String get birthdaysFeatureHint =>
+      'Remember birthdays for people you care about.';
+
+  @override
+  String get reminderFilterAll => 'All';
+
+  @override
+  String get reminderFilterDevices => 'Devices';
+
+  @override
+  String get reminderFilterBirthdays => 'Birthdays';
+
+  @override
+  String get noRemindersTitle => 'Nothing needs attention';
+
+  @override
+  String get noRemindersHint =>
+      'Due maintenance and upcoming birthdays will show up here.';
+
+  @override
+  String get reminderDeviceDue => 'Maintenance is due';
+
+  @override
+  String get reminderDeviceSoon => 'Maintenance due soon';
+
+  @override
+  String get reminderBirthdayToday => 'Birthday is today';
+
+  @override
+  String get reminderBirthdayTomorrow => 'Birthday is tomorrow';
+
+  @override
+  String reminderBirthdayInDays(int days) {
+    return 'Birthday in $days days';
+  }
+
+  @override
+  String get reminderBadgeDue => 'Due';
+
+  @override
+  String get reminderBadgeSoon => 'Soon';
+
+  @override
+  String get reminderBadgeUpcoming => 'Upcoming';
 }

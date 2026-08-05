@@ -218,5 +218,28 @@
   "calendarSystem": "تقویم تاریخ",
   "calendarGregorian": "میلادی",
   "calendarPersian": "شمسی",
-  "calendarSystemHint": "برای تاریخ تولد. مستقل از زبان برنامه."
+  "calendarSystemHint": "برای تاریخ تولد. مستقل از زبان برنامه.",
+  "remindersSection": "یادآورها",
+  "featuresSection": "بخش‌ها",
+  "deviceManagement": "مدیریت دستگاه‌ها",
+  "deviceManagementHint": "دستگاه‌ها، قطعات و برنامه نگهداری را پیگیری کنید.",
+  "birthdaysFeatureHint": "تولد افراد مهم را به خاطر بسپارید.",
+  "reminderFilterAll": "همه",
+  "reminderFilterDevices": "دستگاه‌ها",
+  "reminderFilterBirthdays": "تولدها",
+  "noRemindersTitle": "مورد فوری نیست",
+  "noRemindersHint": "نگهداری سررسید و تولدهای نزدیک اینجا نمایش داده می‌شوند.",
+  "reminderDeviceDue": "نگهداری سررسید شده",
+  "reminderDeviceSoon": "نگهداری به زودی",
+  "reminderBirthdayToday": "امروز تولد است",
+  "reminderBirthdayTomorrow": "فردا تولد است",
+  "reminderBirthdayInDays": "تولد تا {days} روز دیگر",
+  "@reminderBirthdayInDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "reminderBadgeDue": "سررسید",
+  "reminderBadgeSoon": "به زودی",
+  "reminderBadgeUpcoming": "نزدیک"
 }
