@@ -1,30 +1,32 @@
 ---
-description: Use Runflare mirror for all Flutter/Dart package and SDK downloads
+description: Use Runflare mirror for local Flutter/Dart builds only (not GitHub CI)
 alwaysApply: true
 ---
 
-# Pub mirror (Runflare)
+# Pub mirror (Runflare — local only)
 
-Always use the **Runflare** mirror for `flutter` / `dart pub` in this repo. **Do not** use `pub-azs.ir` or other mirrors unless the user explicitly overrides.
+Use the **Runflare** mirror for **local** `flutter` / `dart pub` in this repo. **Do not** use `pub-azs.ir` or other mirrors unless the user explicitly overrides.
 
-## Env (before any flutter/dart command)
+**GitHub Actions and other remote CI** use default `pub.dev` / Google storage hosts — do **not** set Runflare env vars in `.github/workflows/`.
+
+## Local env (before any flutter/dart command)
 
 ```bash
 source tool/pub_env.sh
 ```
 
-Defaults (forced — overrides shell pub-azs or other mirrors):
+Defaults (forced locally — overrides shell pub-azs or other mirrors):
 
 - `PUB_HOSTED_URL=https://mirror-flutter.runflare.com`
 - `FLUTTER_STORAGE_BASE_URL=https://mirror-gcs.runflare.com`
 
 ## Agents & scripts
 
-- `./tool/ci_verify.sh` sources `tool/pub_env.sh` automatically.
-- CI sets the same vars in `.github/workflows/ci.yml`.
-- After `pub get`, `pubspec.lock` hosted URLs should be `mirror-flutter.runflare.com`.
+- `./tool/ci_verify.sh` sources `tool/pub_env.sh` automatically (local verify only).
+- Local `pubspec.lock` may show Runflare URLs after `pub get`; CI resolves from `pub.dev` without mirror env.
 
 ## Do not
 
-- Switch mirrors to pub-azs or pub.dev without user request.
-- Commit machine-specific mirror config that overrides Runflare for the whole team.
+- Add Runflare mirror env to GitHub Actions or other remote CI.
+- Switch local mirrors to pub-azs or pub.dev without user request.
+- Commit machine-specific mirror config that overrides Runflare for the whole team locally.

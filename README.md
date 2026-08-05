@@ -5,15 +5,17 @@ Local-first maintenance tracker for devices, assets, and recurring follow-ups. D
 ## Run locally
 
 ```bash
+source tool/pub_env.sh   # Runflare mirror — local only
 flutter pub get
 flutter run
 ```
 
-Pub packages use the **Runflare** mirror (`source tool/pub_env.sh` or see `.cursor/rules/pub-mirror.mdc`). Do not use `pub-azs.ir` for this repo.
+Local pub packages use the **Runflare** mirror via `tool/pub_env.sh` (see `.cursor/rules/pub-mirror.mdc`). GitHub CI uses default `pub.dev`. Do not use `pub-azs.ir` for this repo.
 
 Tests and analysis:
 
 ```bash
+source tool/pub_env.sh
 flutter analyze
 flutter test
 ```
@@ -21,6 +23,7 @@ flutter test
 After Drift / codegen changes:
 
 ```bash
+source tool/pub_env.sh
 dart run build_runner build
 ```
 
