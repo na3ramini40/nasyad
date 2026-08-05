@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-# Runflare mirror (see .cursor/rules/pub-mirror.mdc)
+# Runflare mirror for local verify only (see .cursor/rules/pub-mirror.mdc)
 # shellcheck source=pub_env.sh
 source "$ROOT/tool/pub_env.sh"
 

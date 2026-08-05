@@ -33,7 +33,7 @@ Local-first maintenance + birthdays. No cloud/sync. See [docs/app-description.md
 ## Workflow
 
 1. Read relevant shard + existing code in the touched layer.
-2. **`source tool/pub_env.sh`** before `flutter` / `dart pub` (Runflare mirror — never pub-azs unless user overrides).
+2. **`source tool/pub_env.sh`** before local `flutter` / `dart pub` (Runflare mirror — never pub-azs unless user overrides). GitHub CI uses default `pub.dev`.
 3. Change the smallest surface; keep layers and naming intact.
 4. Run codegen after Drift/annotation changes (see `stack.md`).
 5. Handle loading / empty / error at boundaries.

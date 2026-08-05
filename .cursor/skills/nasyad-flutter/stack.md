@@ -30,9 +30,9 @@ Never hand-edit `*.g.dart`.
 
 Release-bound work: `/bump-release` command + `rules/github-tag-release.mdc`.
 
-## Pub mirror (Runflare)
+## Pub mirror (Runflare — local only)
 
-**Always** use Runflare — not `pub-azs.ir` or default Google hosts.
+**Locally**, use Runflare — not `pub-azs.ir`. GitHub Actions uses default `pub.dev` hosts.
 
 ```bash
 source tool/pub_env.sh   # sets PUB_HOSTED_URL + FLUTTER_STORAGE_BASE_URL
@@ -44,7 +44,7 @@ flutter pub get
 | `PUB_HOSTED_URL` | `https://mirror-flutter.runflare.com` |
 | `FLUTTER_STORAGE_BASE_URL` | `https://mirror-gcs.runflare.com` |
 
-`./tool/ci_verify.sh` and CI apply this automatically. Rule: `.cursor/rules/pub-mirror.mdc`.
+`./tool/ci_verify.sh` sources this for local verify. Rule: `.cursor/rules/pub-mirror.mdc`.
 
 ## Android signing
 

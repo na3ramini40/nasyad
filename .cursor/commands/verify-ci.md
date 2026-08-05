@@ -6,7 +6,7 @@ Run local Verify before any GitHub PR/MR, push meant for an open PR, or “PR re
 ./tool/ci_verify.sh
 ```
 
-Sources `tool/pub_env.sh` (Runflare mirror) and `tool/check_no_release_secrets.sh` automatically.
+Sources `tool/pub_env.sh` (Runflare mirror — local only) and `tool/check_no_release_secrets.sh` automatically. GitHub CI uses default `pub.dev` hosts.
 
 Must exit **0**. On failure: fix → re-run until green.
 
