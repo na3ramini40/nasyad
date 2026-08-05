@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/core/theme/app_fonts.dart';
 import 'package:nasyad/core/theme/app_status_colors.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
+import 'package:nasyad/core/theme/season_theme_palette.dart';
+import 'package:nasyad/domain/entities/season_theme.dart';
 import 'package:nasyad/l10n/app_localizations.dart';
 import 'package:nasyad/presentation/device/schedule_presets.dart';
 
@@ -46,9 +48,31 @@ void main() {
     );
   });
 
-  test('AppTheme exposes light and dark', () {
-    expect(AppTheme.lightTheme().brightness, Brightness.light);
-    expect(AppTheme.darkTheme().brightness, Brightness.dark);
+  test('AppTheme exposes light and dark for each season', () {
+    for (final season in SeasonTheme.selectable) {
+      expect(AppTheme.lightTheme(season: season).brightness, Brightness.light);
+      expect(AppTheme.darkTheme(season: season).brightness, Brightness.dark);
+    }
+  });
+
+  test('SeasonTheme round-trips storage', () {
+    for (final season in SeasonTheme.selectable) {
+      expect(SeasonTheme.fromStorage(season.storageValue), season);
+    }
+    expect(SeasonTheme.fromStorage(null), SeasonTheme.classic);
+    expect(SeasonTheme.fromStorage('unknown'), SeasonTheme.classic);
+  });
+
+  test('SeasonThemePalette differs between seasons', () {
+    final spring = SeasonThemePalette.forSeason(
+      SeasonTheme.spring,
+      Brightness.light,
+    );
+    final winter = SeasonThemePalette.forSeason(
+      SeasonTheme.winter,
+      Brightness.light,
+    );
+    expect(spring.primary, isNot(winter.primary));
   });
 
   test('Persian locale uses Vazir font family', () {

@@ -17,6 +17,14 @@
   "themeSystem": "System default",
   "themeLight": "Light",
   "themeDark": "Dark",
+  "seasonTheme": "Season theme",
+  "seasonThemeHint": "Accent colors inspired by the seasons",
+  "seasonClassic": "Default",
+  "seasonSpring": "Spring",
+  "seasonSummer": "Summer",
+  "seasonAutumn": "Autumn",
+  "seasonWinter": "Winter",
+  "brightness": "Brightness",
   "deviceName": "Device Name",
   "deviceNameHint": "Enter device name...",
   "deviceNameRequired": "Device name is required",
@@ -241,5 +249,48 @@
   },
   "reminderBadgeDue": "Due",
   "reminderBadgeSoon": "Soon",
-  "reminderBadgeUpcoming": "Upcoming"
+  "reminderBadgeUpcoming": "Upcoming",
+  "checkForUpdates": "Check for updates",
+  "checkForUpdatesHint": "Download the latest release from GitHub",
+  "updateChecking": "Checking for updates…",
+  "updateUpToDate": "You're on the latest version",
+  "updateUnsupportedPlatform": "In-app updates aren't available on this platform",
+  "updateAvailableTitle": "Update available",
+  "updateAvailableBody": "Version {version} is ready ({size}).",
+  "@updateAvailableBody": {
+    "placeholders": {
+      "version": { "type": "String" },
+      "size": { "type": "String" }
+    }
+  },
+  "updateReleaseNotes": "Release notes",
+  "updateDownload": "Download",
+  "updateInstall": "Install update",
+  "updateDownloadProgress": "Downloading… {percent}%",
+  "@updateDownloadProgress": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "updateReadyToInstall": "Download complete. Install to finish updating.",
+  "updateBannerMessage": "Version {version} is available",
+  "@updateBannerMessage": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateErrorOffline": "Couldn't reach GitHub. Check your connection and try again.",
+  "updateSizeKb": "{size} KB",
+  "@updateSizeKb": {
+    "placeholders": {
+      "size": { "type": "int" }
+    }
+  },
+  "updateSizeMb": "{size} MB",
+  "@updateSizeMb": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "dismiss": "Dismiss"
 }

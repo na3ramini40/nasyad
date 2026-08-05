@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasyad/core/calendar/calendar_preference_store.dart';
+import 'package:nasyad/core/theme/season_theme_preference_store.dart';
+import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
 import 'package:nasyad/data/datasources/birthday_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_local_datasource_impl.dart';
@@ -8,9 +10,11 @@ import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/repositories/birthday_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
+import 'package:nasyad/data/services/app_update_service_impl.dart';
 import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
+import 'package:nasyad/domain/services/app_update_service.dart';
 import 'package:nasyad/domain/usecases/birthday/create_birthday_usecase.dart';
 import 'package:nasyad/domain/usecases/birthday/delete_birthday_usecase.dart';
 import 'package:nasyad/domain/usecases/birthday/get_birthday_usecase.dart';
@@ -36,9 +40,17 @@ class AppServices {
     this.database, {
     LastSeenVersionStore? lastSeenVersionStore,
     CalendarPreferenceStore? calendarPreferenceStore,
+    SeasonThemePreferenceStore? seasonThemePreferenceStore,
+    ThemeModePreferenceStore? themeModePreferenceStore,
+    AppUpdateService? appUpdateService,
   }) : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
        calendarPreferenceStore =
            calendarPreferenceStore ?? CalendarPreferenceStore(),
+       seasonThemePreferenceStore =
+           seasonThemePreferenceStore ?? SeasonThemePreferenceStore(),
+       themeModePreferenceStore =
+           themeModePreferenceStore ?? ThemeModePreferenceStore(),
+       appUpdateService = appUpdateService ?? AppUpdateServiceImpl(),
        deviceRepository = DeviceRepositoryImpl(
          db: database,
          devices: DeviceLocalDataSourceImpl(database.deviceDao),
@@ -79,6 +91,9 @@ class AppServices {
   final AppDatabase database;
   final LastSeenVersionStore lastSeenVersionStore;
   final CalendarPreferenceStore calendarPreferenceStore;
+  final SeasonThemePreferenceStore seasonThemePreferenceStore;
+  final ThemeModePreferenceStore themeModePreferenceStore;
+  final AppUpdateService appUpdateService;
   final DeviceRepository deviceRepository;
   final DeviceLogRepository deviceLogRepository;
   final BirthdayRepository birthdayRepository;

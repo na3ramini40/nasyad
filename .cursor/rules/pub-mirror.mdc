@@ -1,0 +1,30 @@
+---
+description: Use Runflare mirror for all Flutter/Dart package and SDK downloads
+alwaysApply: true
+---
+
+# Pub mirror (Runflare)
+
+Always use the **Runflare** mirror for `flutter` / `dart pub` in this repo. **Do not** use `pub-azs.ir` or other mirrors unless the user explicitly overrides.
+
+## Env (before any flutter/dart command)
+
+```bash
+source tool/pub_env.sh
+```
+
+Defaults (forced — overrides shell pub-azs or other mirrors):
+
+- `PUB_HOSTED_URL=https://mirror-flutter.runflare.com`
+- `FLUTTER_STORAGE_BASE_URL=https://mirror-gcs.runflare.com`
+
+## Agents & scripts
+
+- `./tool/ci_verify.sh` sources `tool/pub_env.sh` automatically.
+- CI sets the same vars in `.github/workflows/ci.yml`.
+- After `pub get`, `pubspec.lock` hosted URLs should be `mirror-flutter.runflare.com`.
+
+## Do not
+
+- Switch mirrors to pub-azs or pub.dev without user request.
+- Commit machine-specific mirror config that overrides Runflare for the whole team.

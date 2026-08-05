@@ -8,7 +8,10 @@ import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
+import 'package:nasyad/core/theme/season_theme_cubit.dart';
+import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
+import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
 import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
@@ -21,7 +24,13 @@ Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
   return MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => LocaleCubit(initialLocale: locale)),
-      BlocProvider(create: (_) => ThemeModeCubit()),
+      BlocProvider(
+        create: (_) => ThemeModeCubit(store: ThemeModePreferenceStore.memory()),
+      ),
+      BlocProvider(
+        create: (_) =>
+            SeasonThemeCubit(store: SeasonThemePreferenceStore.memory()),
+      ),
       BlocProvider(
         create: (_) =>
             CalendarSystemCubit(store: CalendarPreferenceStore.memory()),
@@ -43,6 +52,8 @@ AppServices _testServices() {
     AppDatabase(NativeDatabase.memory()),
     lastSeenVersionStore: LastSeenVersionStore.memory(),
     calendarPreferenceStore: CalendarPreferenceStore.memory(),
+    seasonThemePreferenceStore: SeasonThemePreferenceStore.memory(),
+    themeModePreferenceStore: ThemeModePreferenceStore.memory(),
   );
 }
 
@@ -112,7 +123,11 @@ void main() {
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
     final dark = find.text('Dark');
-    await tester.ensureVisible(dark);
+    await tester.scrollUntilVisible(
+      dark,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(dark);
     await tester.pumpAndSettle();

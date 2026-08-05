@@ -4,8 +4,12 @@ import 'package:nasyad/core/l10n/locale_cubit.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_radius.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
+import 'package:nasyad/core/theme/season_theme_cubit.dart';
+import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
+import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
 import 'package:nasyad/core/utils/id_generator.dart';
+import 'package:nasyad/domain/entities/season_theme.dart';
 
 void main() {
   group('LocaleCubit', () {
@@ -40,14 +44,28 @@ void main() {
   });
 
   group('ThemeModeCubit', () {
-    test('updates theme mode and ignores duplicates', () {
-      final cubit = ThemeModeCubit();
+    test('updates theme mode and ignores duplicates', () async {
+      final cubit = ThemeModeCubit(store: ThemeModePreferenceStore.memory());
       expect(cubit.state, ThemeMode.system);
-      cubit.setThemeMode(ThemeMode.dark);
+      await cubit.setThemeMode(ThemeMode.dark);
       expect(cubit.state, ThemeMode.dark);
-      cubit.setThemeMode(ThemeMode.dark);
+      await cubit.setThemeMode(ThemeMode.dark);
       expect(cubit.state, ThemeMode.dark);
-      cubit.close();
+      await cubit.close();
+    });
+  });
+
+  group('SeasonThemeCubit', () {
+    test('updates season theme and ignores duplicates', () async {
+      final cubit = SeasonThemeCubit(
+        store: SeasonThemePreferenceStore.memory(),
+      );
+      expect(cubit.state, SeasonTheme.classic);
+      await cubit.setSeasonTheme(SeasonTheme.winter);
+      expect(cubit.state, SeasonTheme.winter);
+      await cubit.setSeasonTheme(SeasonTheme.winter);
+      expect(cubit.state, SeasonTheme.winter);
+      await cubit.close();
     });
   });
 

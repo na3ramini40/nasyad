@@ -1,0 +1,6 @@
+# Copy to android/key.properties (gitignored) for local release builds.
+# CI uses GitHub Actions secrets instead — see docs/release-install.md.
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=nasyad
+storeFile=keystore/nasyad-release.jks

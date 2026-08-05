@@ -36,6 +36,19 @@ abstract final class AppChangelog {
   /// Newest first. Notes are written for end users in every `lib/l10n` language.
   static const List<ChangelogEntry> entries = [
     ChangelogEntry(
+      version: '1.3.0',
+      en: [
+        'Check for app updates from GitHub — a banner on Home or manual check in Preferences downloads and installs the latest release.',
+        'Pick a season theme (spring, summer, autumn, winter) with matching light and dark accents.',
+        'Open specific screens from links — devices, birthdays, preferences, and more via nasyad:// URLs.',
+      ],
+      fa: [
+        'به‌روزرسانی برنامه را از GitHub بررسی کنید — بنر در صفحهٔ اصلی یا بررسی دستی در تنظیمات، آخرین نسخه را دانلود و نصب می‌کند.',
+        'تم فصلی (بهار، تابستان، پاییز، زمستان) با رنگ‌های متناسب در حالت روشن و تاریک انتخاب کنید.',
+        'صفحات مشخص را با پیوند nasyad:// باز کنید — دستگاه‌ها، تولدها، تنظیمات و بیشتر.',
+      ],
+    ),
+    ChangelogEntry(
       version: '1.2.0',
       en: [
         'Home is now a hub: see due maintenance and upcoming birthdays in one reminders list.',

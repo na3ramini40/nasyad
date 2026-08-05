@@ -100,6 +100,19 @@ void main() {
       expect(reminders.single.kind, HomeReminderKind.device);
     });
 
+    test('birthday today uses due urgency', () {
+      final reminders = HomeReminderAggregator.build(
+        deviceSummaries: const [],
+        birthdays: [sampleBirthday(birthMonth: 6, birthDay: 10)],
+        filter: HomeReminderFilter.all,
+        now: DateTime(2024, 6, 10),
+      );
+
+      expect(reminders, hasLength(1));
+      expect(reminders.single.urgency, HomeReminderUrgency.due);
+      expect(reminders.single.daysUntilBirthday, 0);
+    });
+
     test('skips up to date devices', () {
       final reminders = HomeReminderAggregator.build(
         deviceSummaries: [sampleSummary(status: MaintenanceStatus.upToDate)],
