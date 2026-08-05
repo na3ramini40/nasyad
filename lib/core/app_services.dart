@@ -23,6 +23,7 @@ import 'package:nasyad/domain/usecases/device/get_all_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
+import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/create_device_log_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/delete_device_log_usecase.dart';
@@ -69,6 +70,10 @@ class AppServices {
     createBirthday = CreateBirthdayUsecase(birthdayRepository);
     updateBirthday = UpdateBirthdayUsecase(birthdayRepository);
     deleteBirthday = DeleteBirthdayUsecase(birthdayRepository);
+    watchHomeReminders = WatchHomeRemindersUsecase(
+      watchDeviceSummaries,
+      watchBirthdays,
+    );
   }
 
   final AppDatabase database;
@@ -96,6 +101,7 @@ class AppServices {
   late final CreateBirthdayUsecase createBirthday;
   late final UpdateBirthdayUsecase updateBirthday;
   late final DeleteBirthdayUsecase deleteBirthday;
+  late final WatchHomeRemindersUsecase watchHomeReminders;
 
   Future<void> dispose() => database.close();
 }

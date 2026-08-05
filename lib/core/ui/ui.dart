@@ -5,6 +5,8 @@ export 'package:nasyad/core/ui/app_text_field.dart';
 export 'package:nasyad/core/ui/device_card.dart';
 export 'package:nasyad/core/ui/log_list_item.dart';
 export 'package:nasyad/core/ui/month_day_picker_field.dart';
+export 'package:nasyad/core/ui/feature_menu_tile.dart';
+export 'package:nasyad/core/ui/reminder_list_item.dart';
 export 'package:nasyad/core/ui/responsive.dart';
 export 'package:nasyad/core/ui/section_header.dart';
 export 'package:nasyad/core/ui/selectable_option_tile.dart';

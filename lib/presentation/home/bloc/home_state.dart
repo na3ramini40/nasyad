@@ -16,12 +16,27 @@ final class HomeLoading extends HomeState {
 }
 
 final class HomeLoaded extends HomeState {
-  const HomeLoaded(this.summaries);
+  const HomeLoaded({required this.allReminders, required this.filter});
 
-  final List<DeviceSummary> summaries;
+  final List<HomeReminder> allReminders;
+  final HomeReminderFilter filter;
+
+  List<HomeReminder> get visibleReminders {
+    return switch (filter) {
+      HomeReminderFilter.all => allReminders,
+      HomeReminderFilter.devices =>
+        allReminders
+            .where((item) => item.kind == HomeReminderKind.device)
+            .toList(growable: false),
+      HomeReminderFilter.birthdays =>
+        allReminders
+            .where((item) => item.kind == HomeReminderKind.birthday)
+            .toList(growable: false),
+    };
+  }
 
   @override
-  List<Object?> get props => [summaries];
+  List<Object?> get props => [allReminders, filter];
 }
 
 final class HomeError extends HomeState {

@@ -11,7 +11,9 @@ import 'package:nasyad/presentation/birthday/pages/birthday_list_page.dart';
 import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_log_bloc.dart';
+import 'package:nasyad/presentation/device/bloc/device_list_bloc.dart';
 import 'package:nasyad/presentation/device/pages/device_edit_page.dart';
+import 'package:nasyad/presentation/device/pages/device_list_page.dart';
 import 'package:nasyad/presentation/device/pages/device_log.dart';
 import 'package:nasyad/presentation/device/pages/device_view_page.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
@@ -25,6 +27,7 @@ import 'package:nasyad/presentation/transfer/pages/transfer_page.dart';
 abstract final class AppRoutes {
   static const splash = 'splash';
   static const home = 'home';
+  static const devices = 'devices';
   static const preferences = 'preferences';
   static const transfer = 'transfer';
   static const birthdays = 'birthdays';
@@ -57,12 +60,24 @@ GoRouter createAppRouter() {
           final services = AppServicesScope.of(context);
           return BlocProvider(
             create: (_) =>
-                HomeBloc(services.watchDeviceSummaries)
-                  ..add(const HomeStarted()),
+                HomeBloc(services.watchHomeReminders)..add(const HomeStarted()),
             child: const HomePage(),
           );
         },
         routes: [
+          GoRoute(
+            path: 'devices',
+            name: AppRoutes.devices,
+            builder: (context, state) {
+              final services = AppServicesScope.of(context);
+              return BlocProvider(
+                create: (_) =>
+                    DeviceListBloc(services.watchDeviceSummaries)
+                      ..add(const DeviceListStarted()),
+                child: const DeviceListPage(),
+              );
+            },
+          ),
           GoRoute(
             path: 'preferences',
             name: AppRoutes.preferences,

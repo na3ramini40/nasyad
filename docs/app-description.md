@@ -15,7 +15,8 @@ This application is a local-first maintenance tracking system for devices, asset
 
 ## Pages
 
-- Home page: root devices with latest log and aggregate due status + progress.
+- Home page: reminders queue (due maintenance, upcoming birthdays) with filters, plus a feature menu (device management, birthdays, more later).
+- Device list: root devices with latest log and aggregate due status + progress.
 - Add / edit device: name, optional schedule, initial elapsed, optional usage unit (roots).
 - Device details: status bar, schedule, children, logs; add child; add log.
 - Add log: maintenance done or usage update.

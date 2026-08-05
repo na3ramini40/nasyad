@@ -955,6 +955,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Used for birthday dates. Independent of language.'**
   String get calendarSystemHint;
+
+  /// No description provided for @remindersSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get remindersSection;
+
+  /// No description provided for @featuresSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Features'**
+  String get featuresSection;
+
+  /// No description provided for @deviceManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Device management'**
+  String get deviceManagement;
+
+  /// No description provided for @deviceManagementHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Track devices, parts, and maintenance schedules.'**
+  String get deviceManagementHint;
+
+  /// No description provided for @birthdaysFeatureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember birthdays for people you care about.'**
+  String get birthdaysFeatureHint;
+
+  /// No description provided for @reminderFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get reminderFilterAll;
+
+  /// No description provided for @reminderFilterDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get reminderFilterDevices;
+
+  /// No description provided for @reminderFilterBirthdays.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays'**
+  String get reminderFilterBirthdays;
+
+  /// No description provided for @noRemindersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs attention'**
+  String get noRemindersTitle;
+
+  /// No description provided for @noRemindersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Due maintenance and upcoming birthdays will show up here.'**
+  String get noRemindersHint;
+
+  /// No description provided for @reminderDeviceDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance is due'**
+  String get reminderDeviceDue;
+
+  /// No description provided for @reminderDeviceSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance due soon'**
+  String get reminderDeviceSoon;
+
+  /// No description provided for @reminderBirthdayToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday is today'**
+  String get reminderBirthdayToday;
+
+  /// No description provided for @reminderBirthdayTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday is tomorrow'**
+  String get reminderBirthdayTomorrow;
+
+  /// No description provided for @reminderBirthdayInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday in {days} days'**
+  String reminderBirthdayInDays(int days);
+
+  /// No description provided for @reminderBadgeDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due'**
+  String get reminderBadgeDue;
+
+  /// No description provided for @reminderBadgeSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon'**
+  String get reminderBadgeSoon;
+
+  /// No description provided for @reminderBadgeUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get reminderBadgeUpcoming;
 }
 
 class _AppLocalizationsDelegate

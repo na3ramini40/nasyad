@@ -11,13 +11,22 @@ final class HomeStarted extends HomeEvent {
   const HomeStarted();
 }
 
-final class _HomeSummariesUpdated extends HomeEvent {
-  const _HomeSummariesUpdated(this.summaries);
+final class HomeFilterChanged extends HomeEvent {
+  const HomeFilterChanged(this.filter);
 
-  final List<DeviceSummary> summaries;
+  final HomeReminderFilter filter;
 
   @override
-  List<Object?> get props => [summaries];
+  List<Object?> get props => [filter];
+}
+
+final class _HomeRemindersUpdated extends HomeEvent {
+  const _HomeRemindersUpdated(this.reminders);
+
+  final List<HomeReminder> reminders;
+
+  @override
+  List<Object?> get props => [reminders];
 }
 
 final class _HomeWatchFailed extends HomeEvent {

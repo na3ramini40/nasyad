@@ -464,4 +464,62 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get calendarSystemHint => 'برای تاریخ تولد. مستقل از زبان برنامه.';
+
+  @override
+  String get remindersSection => 'یادآورها';
+
+  @override
+  String get featuresSection => 'بخش‌ها';
+
+  @override
+  String get deviceManagement => 'مدیریت دستگاه‌ها';
+
+  @override
+  String get deviceManagementHint =>
+      'دستگاه‌ها، قطعات و برنامه نگهداری را پیگیری کنید.';
+
+  @override
+  String get birthdaysFeatureHint => 'تولد افراد مهم را به خاطر بسپارید.';
+
+  @override
+  String get reminderFilterAll => 'همه';
+
+  @override
+  String get reminderFilterDevices => 'دستگاه‌ها';
+
+  @override
+  String get reminderFilterBirthdays => 'تولدها';
+
+  @override
+  String get noRemindersTitle => 'مورد فوری نیست';
+
+  @override
+  String get noRemindersHint =>
+      'نگهداری سررسید و تولدهای نزدیک اینجا نمایش داده می‌شوند.';
+
+  @override
+  String get reminderDeviceDue => 'نگهداری سررسید شده';
+
+  @override
+  String get reminderDeviceSoon => 'نگهداری به زودی';
+
+  @override
+  String get reminderBirthdayToday => 'امروز تولد است';
+
+  @override
+  String get reminderBirthdayTomorrow => 'فردا تولد است';
+
+  @override
+  String reminderBirthdayInDays(int days) {
+    return 'تولد تا $days روز دیگر';
+  }
+
+  @override
+  String get reminderBadgeDue => 'سررسید';
+
+  @override
+  String get reminderBadgeSoon => 'به زودی';
+
+  @override
+  String get reminderBadgeUpcoming => 'نزدیک';
 }
