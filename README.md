@@ -9,6 +9,8 @@ flutter pub get
 flutter run
 ```
 
+Pub packages use the **Runflare** mirror (`source tool/pub_env.sh` or see `.cursor/rules/pub-mirror.mdc`). Do not use `pub-azs.ir` for this repo.
+
 Tests and analysis:
 
 ```bash
@@ -22,17 +24,15 @@ After Drift / codegen changes:
 dart run build_runner build
 ```
 
-More project rules: [`docs/AGENTS.md`](docs/AGENTS.md).
+Agent entry: [`.cursor/AGENTS.md`](.cursor/AGENTS.md). Engineering rules: [`docs/AGENTS.md`](docs/AGENTS.md).
 
 ## Local CI (before a PR)
 
-Run the same checks as GitHub **Verify** before opening or updating a PR:
+See [`.cursor/commands/verify-ci.md`](.cursor/commands/verify-ci.md) and [`.cursor/rules/ci-before-pr.mdc`](.cursor/rules/ci-before-pr.mdc). Quick run:
 
 ```bash
 ./tool/ci_verify.sh
 ```
-
-Agents and contributors must not create a PR until this script passes.
 
 ## CI / CD (GitHub Actions)
 
@@ -42,7 +42,9 @@ Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Flutter pinned
 |-----|------|------|
 | **Verify** | version consistency, format, Drift codegen freshness, `analyze`, `test` | Every push/PR/tag + manual run |
 | **Build APK** | release APK artifact named from `pubspec.yaml` version (30 days) | Auto on `main`/`master` & `v*` tags; manual via **Run workflow** |
-| **GitHub Release** | attaches `nasyad-vX.Y.Z.apk` | Auto on tags like `v1.1.0` (must match app version) |
+| **Build Linux** | `nasyad-vX.Y.Z-linux-x64.tar.gz` | Same triggers as APK |
+| **Build Windows** | `nasyad-vX.Y.Z-windows-x64.zip` | Same triggers as APK |
+| **GitHub Release** | APK + Linux + Windows assets | Auto on tags like `v1.1.0` (must match app version) |
 
 ### Versioning
 
@@ -69,5 +71,6 @@ Release tags must match the name: `git tag v1.1.0` when the app is `1.1.0+…`.
 
 ### Notes
 
-- Android release currently uses the **debug keystore** (see `android/app/build.gradle.kts`). Fine for sideloading; Play Store needs a real signing key.
-- Only APK is built for now; other platforms can be added later.
+- **Install & update:** [docs/release-install.md](docs/release-install.md) — sideload signing, in-place upgrades, desktop updates, data migrations.
+- Release APKs require Android signing secrets in GitHub Actions (see doc). Without them, tag builds fail; main-branch builds use debug signing for artifacts only.
+- macOS is not built in CI yet; use `flutter build macos --release` locally.

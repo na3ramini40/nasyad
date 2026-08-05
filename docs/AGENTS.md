@@ -9,8 +9,9 @@ Use these instructions only for this repository.
 - Be brief and teaching-first.
 - Prefer small, practical steps over full multi-file rewrites.
 - Keep docs in `docs/` short and easy to scan.
-- If the user says `save progress`, append one short line to `docs/ailogs.md`.
-- Before opening or updating a PR, run `./tool/ci_verify.sh` and fix failures first.
+- Feature delivery: [`.cursor/AGENTS.md`](../.cursor/AGENTS.md) → Feature Delivery Manager.
+- Save progress: [`.cursor/commands/save-progress.md`](../.cursor/commands/save-progress.md).
+- CI before PR: [`.cursor/rules/ci-before-pr.mdc`](../.cursor/rules/ci-before-pr.mdc).
 
 ## Current Stack
 
@@ -26,6 +27,8 @@ Follow what is already active in `pubspec.yaml`:
 - `share_plus`, `path_provider`, `file_selector` (export / import)
 - `shared_preferences` (last-seen app version, calendar preference)
 - `shamsi_date` (Persian calendar month/day conversion)
+- `http`, `crypto` (GitHub release checks and in-app updates only)
+- `firebase_core`, `firebase_messaging`, `flutter_local_notifications` (push notifications; Android/iOS/macOS only — skipped on Linux)
 
 Do not assume this repo already uses `get_it` or `injectable`.
 
@@ -68,6 +71,9 @@ lib/
       bloc/
       pages/
     preferences/pages/
+    app_update/
+      bloc/
+      widgets/
     transfer/
       bloc/
       pages/

@@ -17,6 +17,14 @@
   "themeSystem": "پیش‌فرض سیستم",
   "themeLight": "روشن",
   "themeDark": "تاریک",
+  "seasonTheme": "تم فصلی",
+  "seasonThemeHint": "رنگ‌های الهام‌گرفته از فصل‌های سال",
+  "seasonClassic": "پیش‌فرض",
+  "seasonSpring": "بهار",
+  "seasonSummer": "تابستان",
+  "seasonAutumn": "پاییز",
+  "seasonWinter": "زمستان",
+  "brightness": "روشنایی",
   "deviceName": "نام دستگاه",
   "deviceNameHint": "نام دستگاه را وارد کنید...",
   "deviceNameRequired": "نام دستگاه الزامی است",
@@ -241,5 +249,48 @@
   },
   "reminderBadgeDue": "سررسید",
   "reminderBadgeSoon": "به زودی",
-  "reminderBadgeUpcoming": "نزدیک"
+  "reminderBadgeUpcoming": "نزدیک",
+  "checkForUpdates": "بررسی به‌روزرسانی",
+  "checkForUpdatesHint": "آخرین نسخه را از گیت‌هاب دریافت کنید",
+  "updateChecking": "در حال بررسی به‌روزرسانی…",
+  "updateUpToDate": "آخرین نسخه را دارید",
+  "updateUnsupportedPlatform": "به‌روزرسانی درون‌برنامه‌ای روی این پلتفرم پشتیبانی نمی‌شود",
+  "updateAvailableTitle": "به‌روزرسانی موجود است",
+  "updateAvailableBody": "نسخه {version} آماده است ({size}).",
+  "@updateAvailableBody": {
+    "placeholders": {
+      "version": { "type": "String" },
+      "size": { "type": "String" }
+    }
+  },
+  "updateReleaseNotes": "یادداشت انتشار",
+  "updateDownload": "دانلود",
+  "updateInstall": "نصب به‌روزرسانی",
+  "updateDownloadProgress": "در حال دانلود… {percent}٪",
+  "@updateDownloadProgress": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "updateReadyToInstall": "دانلود کامل شد. برای پایان به‌روزرسانی نصب کنید.",
+  "updateBannerMessage": "نسخه {version} موجود است",
+  "@updateBannerMessage": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateErrorOffline": "اتصال به گیت‌هاب برقرار نشد. اینترنت را بررسی کنید و دوباره تلاش کنید.",
+  "updateSizeKb": "{size} کیلوبایت",
+  "@updateSizeKb": {
+    "placeholders": {
+      "size": { "type": "int" }
+    }
+  },
+  "updateSizeMb": "{size} مگابایت",
+  "@updateSizeMb": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "dismiss": "بستن"
 }

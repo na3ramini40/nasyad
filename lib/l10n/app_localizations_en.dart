@@ -60,6 +60,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeDark => 'Dark';
 
   @override
+  String get seasonTheme => 'Season theme';
+
+  @override
+  String get seasonThemeHint => 'Accent colors inspired by the seasons';
+
+  @override
+  String get seasonClassic => 'Default';
+
+  @override
+  String get seasonSpring => 'Spring';
+
+  @override
+  String get seasonSummer => 'Summer';
+
+  @override
+  String get seasonAutumn => 'Autumn';
+
+  @override
+  String get seasonWinter => 'Winter';
+
+  @override
+  String get brightness => 'Brightness';
+
+  @override
   String get deviceName => 'Device Name';
 
   @override
@@ -522,4 +546,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reminderBadgeUpcoming => 'Upcoming';
+
+  @override
+  String get checkForUpdates => 'Check for updates';
+
+  @override
+  String get checkForUpdatesHint => 'Download the latest release from GitHub';
+
+  @override
+  String get updateChecking => 'Checking for updates…';
+
+  @override
+  String get updateUpToDate => 'You\'re on the latest version';
+
+  @override
+  String get updateUnsupportedPlatform =>
+      'In-app updates aren\'t available on this platform';
+
+  @override
+  String get updateAvailableTitle => 'Update available';
+
+  @override
+  String updateAvailableBody(String version, String size) {
+    return 'Version $version is ready ($size).';
+  }
+
+  @override
+  String get updateReleaseNotes => 'Release notes';
+
+  @override
+  String get updateDownload => 'Download';
+
+  @override
+  String get updateInstall => 'Install update';
+
+  @override
+  String updateDownloadProgress(int percent) {
+    return 'Downloading… $percent%';
+  }
+
+  @override
+  String get updateReadyToInstall =>
+      'Download complete. Install to finish updating.';
+
+  @override
+  String updateBannerMessage(String version) {
+    return 'Version $version is available';
+  }
+
+  @override
+  String get updateErrorOffline =>
+      'Couldn\'t reach GitHub. Check your connection and try again.';
+
+  @override
+  String updateSizeKb(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String updateSizeMb(String size) {
+    return '$size MB';
+  }
+
+  @override
+  String get dismiss => 'Dismiss';
 }

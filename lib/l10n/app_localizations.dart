@@ -200,6 +200,54 @@ abstract class AppLocalizations {
   /// **'Dark'**
   String get themeDark;
 
+  /// No description provided for @seasonTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Season theme'**
+  String get seasonTheme;
+
+  /// No description provided for @seasonThemeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent colors inspired by the seasons'**
+  String get seasonThemeHint;
+
+  /// No description provided for @seasonClassic.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get seasonClassic;
+
+  /// No description provided for @seasonSpring.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring'**
+  String get seasonSpring;
+
+  /// No description provided for @seasonSummer.
+  ///
+  /// In en, this message translates to:
+  /// **'Summer'**
+  String get seasonSummer;
+
+  /// No description provided for @seasonAutumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Autumn'**
+  String get seasonAutumn;
+
+  /// No description provided for @seasonWinter.
+  ///
+  /// In en, this message translates to:
+  /// **'Winter'**
+  String get seasonWinter;
+
+  /// No description provided for @brightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get brightness;
+
   /// No description provided for @deviceName.
   ///
   /// In en, this message translates to:
@@ -1063,6 +1111,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upcoming'**
   String get reminderBadgeUpcoming;
+
+  /// No description provided for @checkForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get checkForUpdates;
+
+  /// No description provided for @checkForUpdatesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Download the latest release from GitHub'**
+  String get checkForUpdatesHint;
+
+  /// No description provided for @updateChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates…'**
+  String get updateChecking;
+
+  /// No description provided for @updateUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on the latest version'**
+  String get updateUpToDate;
+
+  /// No description provided for @updateUnsupportedPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'In-app updates aren\'t available on this platform'**
+  String get updateUnsupportedPlatform;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} is ready ({size}).'**
+  String updateAvailableBody(String version, String size);
+
+  /// No description provided for @updateReleaseNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Release notes'**
+  String get updateReleaseNotes;
+
+  /// No description provided for @updateDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get updateDownload;
+
+  /// No description provided for @updateInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Install update'**
+  String get updateInstall;
+
+  /// No description provided for @updateDownloadProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading… {percent}%'**
+  String updateDownloadProgress(int percent);
+
+  /// No description provided for @updateReadyToInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Download complete. Install to finish updating.'**
+  String get updateReadyToInstall;
+
+  /// No description provided for @updateBannerMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} is available'**
+  String updateBannerMessage(String version);
+
+  /// No description provided for @updateErrorOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach GitHub. Check your connection and try again.'**
+  String get updateErrorOffline;
+
+  /// No description provided for @updateSizeKb.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} KB'**
+  String updateSizeKb(int size);
+
+  /// No description provided for @updateSizeMb.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} MB'**
+  String updateSizeMb(String size);
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
 }
 
 class _AppLocalizationsDelegate

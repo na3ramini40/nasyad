@@ -6,6 +6,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# Runflare mirror (see .cursor/rules/pub-mirror.mdc)
+# shellcheck source=pub_env.sh
+source "$ROOT/tool/pub_env.sh"
+
 TAG=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -36,6 +40,9 @@ fail() {
   echo "ci_verify FAILED: $*" >&2
   exit 1
 }
+
+step "check no release signing secrets in git"
+"$ROOT/tool/check_no_release_secrets.sh" || fail "release signing material in git"
 
 step "flutter pub get"
 flutter pub get || fail "flutter pub get"

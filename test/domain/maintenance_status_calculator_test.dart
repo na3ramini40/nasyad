@@ -118,6 +118,23 @@ void main() {
       expect(result.progress, 0);
     });
 
+    test('marks soon near fixed due date', () {
+      final due = DateTime.utc(2024, 6, 10);
+      final result = calculator.evaluateDevice(
+        device: sampleDevice(
+          scheduleType: ScheduleType.fixedDate,
+          intervalValue: 1,
+          intervalUnit: 'days',
+          fixedDueAt: due,
+          lastMaintainedAt: null,
+          createdAt: DateTime.utc(2024, 5, 11),
+        ),
+        now: DateTime.utc(2024, 6, 4),
+      );
+      expect(result.status, MaintenanceStatus.soon);
+      expect(result.progress, closeTo(0.8, 0.02));
+    });
+
     test('due when now is past due date', () {
       final due = DateTime.utc(2024, 5, 1);
       final result = calculator.evaluateDevice(

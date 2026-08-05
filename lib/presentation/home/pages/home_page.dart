@@ -7,9 +7,11 @@ import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_radius.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/presentation/app_update/widgets/app_update_banner.dart';
 import 'package:nasyad/domain/entities/home_reminder.dart';
 import 'package:nasyad/domain/entities/home_reminder_filter.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
+import 'package:nasyad/presentation/app_update/bloc/app_update_bloc.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,13 +23,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _whatsNewChecked = false;
+  var _updateCheckStarted = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_whatsNewChecked) return;
     _whatsNewChecked = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkWhatsNew());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onFirstFrame());
+  }
+
+  Future<void> _onFirstFrame() async {
+    if (!mounted) return;
+    await _checkWhatsNew();
+    if (!mounted) return;
+    _startBackgroundUpdateCheck();
+  }
+
+  void _startBackgroundUpdateCheck() {
+    if (_updateCheckStarted) return;
+    _updateCheckStarted = true;
+    context.read<AppUpdateBloc>().add(
+      const AppUpdateCheckRequested(background: true),
+    );
   }
 
   Future<void> _checkWhatsNew() async {
@@ -96,6 +114,7 @@ class _HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        const AppUpdateBanner(),
         SectionHeader(title: l10n.remindersSection),
         _ReminderFilters(l10n: l10n, selected: filter),
         const SizedBox(height: AppSpacing.sm),

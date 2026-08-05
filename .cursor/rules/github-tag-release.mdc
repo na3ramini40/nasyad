@@ -41,7 +41,7 @@ Only after green CI on `main`:
 git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 
-CI on `v*` tags: Verify → Build APK → GitHub Release with `nasyad-vX.Y.Z.apk`.
+CI on `v*` tags: Verify → Build APK (signed) + Linux + Windows → GitHub Release with platform assets. Tag builds require Android signing secrets — see `docs/release-install.md`.
 
 ## Tell the user (one line)
 

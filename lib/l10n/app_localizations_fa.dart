@@ -60,6 +60,30 @@ class AppLocalizationsFa extends AppLocalizations {
   String get themeDark => 'تاریک';
 
   @override
+  String get seasonTheme => 'تم فصلی';
+
+  @override
+  String get seasonThemeHint => 'رنگ‌های الهام‌گرفته از فصل‌های سال';
+
+  @override
+  String get seasonClassic => 'پیش‌فرض';
+
+  @override
+  String get seasonSpring => 'بهار';
+
+  @override
+  String get seasonSummer => 'تابستان';
+
+  @override
+  String get seasonAutumn => 'پاییز';
+
+  @override
+  String get seasonWinter => 'زمستان';
+
+  @override
+  String get brightness => 'روشنایی';
+
+  @override
   String get deviceName => 'نام دستگاه';
 
   @override
@@ -522,4 +546,68 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get reminderBadgeUpcoming => 'نزدیک';
+
+  @override
+  String get checkForUpdates => 'بررسی به‌روزرسانی';
+
+  @override
+  String get checkForUpdatesHint => 'آخرین نسخه را از گیت‌هاب دریافت کنید';
+
+  @override
+  String get updateChecking => 'در حال بررسی به‌روزرسانی…';
+
+  @override
+  String get updateUpToDate => 'آخرین نسخه را دارید';
+
+  @override
+  String get updateUnsupportedPlatform =>
+      'به‌روزرسانی درون‌برنامه‌ای روی این پلتفرم پشتیبانی نمی‌شود';
+
+  @override
+  String get updateAvailableTitle => 'به‌روزرسانی موجود است';
+
+  @override
+  String updateAvailableBody(String version, String size) {
+    return 'نسخه $version آماده است ($size).';
+  }
+
+  @override
+  String get updateReleaseNotes => 'یادداشت انتشار';
+
+  @override
+  String get updateDownload => 'دانلود';
+
+  @override
+  String get updateInstall => 'نصب به‌روزرسانی';
+
+  @override
+  String updateDownloadProgress(int percent) {
+    return 'در حال دانلود… $percent٪';
+  }
+
+  @override
+  String get updateReadyToInstall =>
+      'دانلود کامل شد. برای پایان به‌روزرسانی نصب کنید.';
+
+  @override
+  String updateBannerMessage(String version) {
+    return 'نسخه $version موجود است';
+  }
+
+  @override
+  String get updateErrorOffline =>
+      'اتصال به گیت‌هاب برقرار نشد. اینترنت را بررسی کنید و دوباره تلاش کنید.';
+
+  @override
+  String updateSizeKb(int size) {
+    return '$size کیلوبایت';
+  }
+
+  @override
+  String updateSizeMb(String size) {
+    return '$size مگابایت';
+  }
+
+  @override
+  String get dismiss => 'بستن';
 }

@@ -9,7 +9,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ### Splash
 **Entry:** App cold start  
 **Shows:** Logo, app name, app version, loading indicator on dark background  
-**Actions:** None — automatic  
+**Actions:** None — automatic (background update check runs after Home loads)  
 **Leaves to:** Home when ready (~1s minimum)
 
 ### What's new (modal)
@@ -26,6 +26,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 **Shows:**
 - App bar: logo mark, app title, settings icon
 - **Reminders** section: filter chips (All / Devices / Birthdays)
+- Optional **update available** banner when a newer GitHub release exists (tap → update dialog)
 - Reminder rows: title, subtitle (due/soon/today/tomorrow/in N days), urgency badge (Due / Soon / Upcoming), kind icon
 - Empty reminders: check icon, “nothing due” title + hint
 - **Features** section: menu tiles
@@ -89,9 +90,9 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ## Preferences
 
 **Entry:** Home settings icon  
-**Shows:** Language (en/fa); calendar system (Gregorian/Persian); theme (system/light/dark); data links (birthdays, export/import); about (app name + version, what's new)  
-**Actions:** Change settings; open birthdays; open export/import; open what's new dialog  
-**Leaves to:** Birthday list, export/import, what's new modal
+**Shows:** Language (en/fa); calendar system (Gregorian/Persian); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); data links (birthdays, export/import); about (app name + version, what's new, check for updates with status)  
+**Actions:** Change settings; open birthdays; open export/import; open what's new dialog; check for updates (manual)  
+**Leaves to:** Birthday list, export/import, what's new modal, update download/install dialog
 
 ### Export & import
 **Entry:** Preferences → Export & import  

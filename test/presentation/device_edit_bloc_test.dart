@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
@@ -184,6 +185,41 @@ void main() {
     );
     expect(repository.devices.single.hasSchedule, isFalse);
     expect(repository.devices.single.name, 'Car');
+  });
+
+  test('creates usage-interval root with explicit usage unit', () async {
+    final bloc = _build(repository);
+    addTearDown(bloc.close);
+
+    bloc.add(const DeviceEditStarted());
+    await Future<void>.delayed(Duration.zero);
+    bloc.add(const DeviceEditNameChanged('Bike'));
+    bloc.add(const DeviceEditScheduleTypeChanged(ScheduleType.usageInterval));
+    bloc.add(const DeviceEditIntervalUnitChanged('km'));
+    bloc.add(const DeviceEditIntervalChanged('500'));
+    bloc.add(const DeviceEditUsageUnitChanged(UsageIntervalUnit.km));
+    bloc.add(
+      const DeviceEditSaveRequested(
+        nameRequiredMessage: 'name',
+        selectScheduleTypeMessage: 'schedule',
+        selectIntervalUnitMessage: 'unit',
+        intervalAmountRequiredMessage: 'amount',
+      ),
+    );
+
+    await expectLater(
+      bloc.stream,
+      emitsThrough(
+        isA<DeviceEditState>().having(
+          (s) => s.status,
+          'status',
+          DeviceEditStatus.saved,
+        ),
+      ),
+    );
+    expect(repository.devices.single.scheduleType, ScheduleType.usageInterval);
+    expect(repository.devices.single.usageUnit, UsageIntervalUnit.km);
+    expect(repository.devices.single.intervalValue, 500);
   });
 
   test('create child keeps parentId and initialElapsed', () async {

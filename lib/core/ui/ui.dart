@@ -10,5 +10,6 @@ export 'package:nasyad/core/ui/reminder_list_item.dart';
 export 'package:nasyad/core/ui/responsive.dart';
 export 'package:nasyad/core/ui/section_header.dart';
 export 'package:nasyad/core/ui/selectable_option_tile.dart';
+export 'package:nasyad/core/ui/season_theme_swatch.dart';
 export 'package:nasyad/core/ui/status_badge.dart';
 export 'package:nasyad/core/ui/whats_new_dialog.dart';

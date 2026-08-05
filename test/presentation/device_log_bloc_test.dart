@@ -113,6 +113,33 @@ void main() {
     expect(logs.created.first.usageValue, 1200);
   });
 
+  test('submits maintenance done log without notes', () async {
+    bloc.add(const DeviceLogStarted());
+    await Future<void>.delayed(Duration.zero);
+
+    bloc.add(DeviceLogDateChanged(DateTime(2024, 1, 10)));
+    bloc.add(
+      const DeviceLogSubmitRequested(
+        usageReadingRequiredMessage: 'reading required',
+      ),
+    );
+
+    await expectLater(
+      bloc.stream,
+      emitsThrough(
+        isA<DeviceLogFormState>().having(
+          (s) => s.status,
+          'status',
+          DeviceLogStatus.saved,
+        ),
+      ),
+    );
+
+    expect(logs.created.single.kind, DeviceLogKind.maintenanceDone);
+    expect(logs.created.single.notes, isNull);
+    expect(logs.created.single.date, DateTime(2024, 1, 10));
+  });
+
   test('resolves usage owner from parent for child device', () async {
     await devices.dispose();
     await logs.dispose();

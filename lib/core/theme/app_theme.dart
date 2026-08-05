@@ -1,55 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:nasyad/core/theme/app_colors.dart';
 import 'package:nasyad/core/theme/app_radius.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/theme/app_status_colors.dart';
+import 'package:nasyad/core/theme/season_theme_palette.dart';
+import 'package:nasyad/domain/entities/season_theme.dart';
 
 abstract final class AppTheme {
-  static ThemeData lightTheme({String? fontFamily}) => _build(
-    brightness: Brightness.light,
-    colorScheme: const ColorScheme.light(
-      primary: AppColors.primary,
-      onPrimary: Colors.white,
-      secondary: AppColors.secondary,
-      onSecondary: Colors.white,
-      error: AppColors.error,
-      onError: Colors.white,
-      surface: AppColors.surfaceLight,
-      onSurface: AppColors.brandInk,
-      onSurfaceVariant: AppColors.onSurfaceMutedLight,
-      outline: Color(0xFFD1D5DB),
-      outlineVariant: Color(0xFFE5E7EB),
-    ),
-    scaffoldBackground: AppColors.backgroundLight,
-    statusColors: AppStatusColors.light,
-    cardElevation: 1.5,
-    shadowColor: Colors.black.withValues(alpha: 0.08),
-    fontFamily: fontFamily,
-  );
+  static ThemeData lightTheme({
+    SeasonTheme season = SeasonTheme.classic,
+    String? fontFamily,
+  }) {
+    final palette = SeasonThemePalette.forSeason(season, Brightness.light);
+    return _build(
+      brightness: Brightness.light,
+      colorScheme: ColorScheme.light(
+        primary: palette.primary,
+        onPrimary: palette.onPrimary,
+        secondary: palette.secondary,
+        onSecondary: palette.onSecondary,
+        error: palette.error,
+        onError: palette.onError,
+        surface: palette.surface,
+        onSurface: palette.onSurface,
+        onSurfaceVariant: palette.onSurfaceVariant,
+        outline: palette.outline,
+        outlineVariant: palette.outlineVariant,
+      ),
+      scaffoldBackground: palette.scaffoldBackground,
+      statusColors: palette.statusColors,
+      cardElevation: palette.cardElevation,
+      shadowColor: palette.shadowColor,
+      fontFamily: fontFamily,
+    );
+  }
 
-  static ThemeData darkTheme({String? fontFamily}) => _build(
-    brightness: Brightness.dark,
-    colorScheme: const ColorScheme.dark(
-      primary: AppColors.primary,
-      onPrimary: Colors.white,
-      secondary: AppColors.secondaryDark,
-      onSecondary: Color(0xFF003910),
-      error: AppColors.errorDark,
-      onError: Color(0xFF3E0000),
-      surface: AppColors.surfaceDark,
-      onSurface: Color(0xFFE8EAED),
-      onSurfaceVariant: AppColors.onSurfaceMutedDark,
-      outline: Color(0xFF3F3F46),
-      outlineVariant: Color(0xFF2A2A2E),
-    ),
-    scaffoldBackground: AppColors.backgroundDark,
-    statusColors: AppStatusColors.dark,
-    cardElevation: 0,
-    shadowColor: Colors.transparent,
-    fontFamily: fontFamily,
-  );
+  static ThemeData darkTheme({
+    SeasonTheme season = SeasonTheme.classic,
+    String? fontFamily,
+  }) {
+    final palette = SeasonThemePalette.forSeason(season, Brightness.dark);
+    return _build(
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.dark(
+        primary: palette.primary,
+        onPrimary: palette.onPrimary,
+        secondary: palette.secondary,
+        onSecondary: palette.onSecondary,
+        error: palette.error,
+        onError: palette.onError,
+        surface: palette.surface,
+        onSurface: palette.onSurface,
+        onSurfaceVariant: palette.onSurfaceVariant,
+        outline: palette.outline,
+        outlineVariant: palette.outlineVariant,
+      ),
+      scaffoldBackground: palette.scaffoldBackground,
+      statusColors: palette.statusColors,
+      cardElevation: palette.cardElevation,
+      shadowColor: palette.shadowColor,
+      fontFamily: fontFamily,
+    );
+  }
 
   static ThemeData _build({
     required Brightness brightness,
