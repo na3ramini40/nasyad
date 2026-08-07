@@ -13,6 +13,7 @@ import 'package:nasyad/domain/entities/home_reminder_filter.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/presentation/app_update/bloc/app_update_bloc.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
+import 'package:nasyad/presentation/home/widgets/device_reminder_quick_actions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -133,6 +134,16 @@ class _HomeBody extends StatelessWidget {
                     ? Icons.devices_other
                     : Icons.cake_outlined,
                 onTap: () => _openReminder(context, item),
+                onQuickActions: item.kind == HomeReminderKind.device
+                    ? () => showDeviceReminderQuickActions(
+                        context: context,
+                        deviceId: item.deviceId!,
+                        deviceName: item.title,
+                      )
+                    : null,
+                quickActionsTooltip: item.kind == HomeReminderKind.device
+                    ? l10n.reminderQuickActionsMenu
+                    : null,
               ),
             ),
           ),

@@ -590,6 +590,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Daily time for maintenance reminders and birthday alerts.';
 
   @override
+  String get reminderQuickActionsMenu => 'Quick actions';
+
+  @override
   String get checkForUpdates => 'Check for updates';
 
   @override

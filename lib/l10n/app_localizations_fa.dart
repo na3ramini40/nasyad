@@ -590,6 +590,9 @@ class AppLocalizationsFa extends AppLocalizations {
       'زمان روزانه برای یادآور نگهداری و تولد.';
 
   @override
+  String get reminderQuickActionsMenu => 'اقدام‌های سریع';
+
+  @override
   String get checkForUpdates => 'بررسی به‌روزرسانی';
 
   @override

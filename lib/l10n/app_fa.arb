@@ -267,6 +267,7 @@
   "reminderNotificationsHint": "وقتی نگهداری سررسید شود یا تولد نزدیک باشد، اعلان بده.",
   "reminderNotificationTime": "زمان اعلان",
   "reminderNotificationTimeHint": "زمان روزانه برای یادآور نگهداری و تولد.",
+  "reminderQuickActionsMenu": "اقدام‌های سریع",
   "checkForUpdates": "بررسی به‌روزرسانی",
   "checkForUpdatesHint": "آخرین نسخه را از گیت‌هاب دریافت کنید",
   "updateChecking": "در حال بررسی به‌روزرسانی…",

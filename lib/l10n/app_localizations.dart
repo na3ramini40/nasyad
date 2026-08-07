@@ -1184,6 +1184,12 @@ abstract class AppLocalizations {
   /// **'Daily time for maintenance reminders and birthday alerts.'**
   String get reminderNotificationTimeHint;
 
+  /// No description provided for @reminderQuickActionsMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick actions'**
+  String get reminderQuickActionsMenu;
+
   /// No description provided for @checkForUpdates.
   ///
   /// In en, this message translates to:

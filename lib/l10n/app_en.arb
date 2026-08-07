@@ -267,6 +267,7 @@
   "reminderNotificationsHint": "Notify when maintenance is due or a birthday is coming up.",
   "reminderNotificationTime": "Notification time",
   "reminderNotificationTimeHint": "Daily time for maintenance reminders and birthday alerts.",
+  "reminderQuickActionsMenu": "Quick actions",
   "checkForUpdates": "Check for updates",
   "checkForUpdatesHint": "Download the latest release from GitHub",
   "updateChecking": "Checking for updates…",
