@@ -25,7 +25,9 @@ import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_all_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
+import 'package:nasyad/domain/usecases/device/restore_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
+import 'package:nasyad/domain/usecases/device/watch_archived_root_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
 import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
@@ -72,6 +74,10 @@ class AppServices {
     updateDevice = UpdateDeviceUsecase(deviceRepository);
     deleteDevice = DeleteDeviceUsecase(deviceRepository);
     archiveDevice = ArchiveDeviceUsecase(deviceRepository);
+    restoreDevice = RestoreDeviceUsecase(deviceRepository);
+    watchArchivedRootDevices = WatchArchivedRootDevicesUsecase(
+      deviceRepository,
+    );
     watchLogsForDevice = WatchLogsForDeviceUsecase(deviceLogRepository);
     createDeviceLog = CreateDeviceLogUsecase(deviceLogRepository);
     deleteDeviceLog = DeleteDeviceLogUsecase(deviceLogRepository);
@@ -106,6 +112,8 @@ class AppServices {
   late final UpdateDeviceUsecase updateDevice;
   late final DeleteDeviceUsecase deleteDevice;
   late final ArchiveDeviceUsecase archiveDevice;
+  late final RestoreDeviceUsecase restoreDevice;
+  late final WatchArchivedRootDevicesUsecase watchArchivedRootDevices;
   late final WatchLogsForDeviceUsecase watchLogsForDevice;
   late final CreateDeviceLogUsecase createDeviceLog;
   late final DeleteDeviceLogUsecase deleteDeviceLog;

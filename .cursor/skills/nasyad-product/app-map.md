@@ -48,8 +48,14 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ### Device list
 **Entry:** Home → Device management; Preferences → Birthdays shortcut is separate  
 **Shows:** Root devices as cards — name, status badge (Up to Date / Due Soon / Needs Service), progress bar, last log summary; empty state with logo + add-first hint  
-**Actions:** Tap card → device detail; FAB → add root device  
-**Leaves to:** Device detail, add device
+**Actions:** Tap card → device detail; FAB → add root device; app bar archive icon → archived devices  
+**Leaves to:** Device detail, add device, archived devices
+
+### Archived devices
+**Entry:** Device list app bar; Preferences → Data  
+**Shows:** Archived device entries (root of each archived subtree) as list rows with restore action; empty state when nothing archived  
+**Actions:** Restore (confirms — device and all its parts return to active list)  
+**Leaves to:** Previous screen (list updates live)
 
 ### Add / edit device
 **Entry:** Device list FAB; device detail edit; add child from device detail  
@@ -90,9 +96,9 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ## Preferences
 
 **Entry:** Home settings icon  
-**Shows:** Language (en/fa); calendar system (Gregorian/Persian); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); data links (birthdays, export/import); about (app name + version, what's new, check for updates with status)  
-**Actions:** Change settings; open birthdays; open export/import; open what's new dialog; check for updates (manual)  
-**Leaves to:** Birthday list, export/import, what's new modal, update download/install dialog
+**Shows:** Language (en/fa); calendar system (Gregorian/Persian); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); data links (birthdays, archived devices, export/import); about (app name + version, what's new, check for updates with status)  
+**Actions:** Change settings; open birthdays; open archived devices; open export/import; open what's new dialog; check for updates (manual)  
+**Leaves to:** Birthday list, archived devices, export/import, what's new modal, update download/install dialog
 
 ### Export & import
 **Entry:** Preferences → Export & import  

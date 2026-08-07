@@ -8,10 +8,12 @@ import 'package:nasyad/presentation/birthday/bloc/birthday_edit_bloc.dart';
 import 'package:nasyad/presentation/birthday/bloc/birthday_list_bloc.dart';
 import 'package:nasyad/presentation/birthday/pages/birthday_edit_page.dart';
 import 'package:nasyad/presentation/birthday/pages/birthday_list_page.dart';
+import 'package:nasyad/presentation/device/bloc/archived_devices_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_log_bloc.dart';
 import 'package:nasyad/presentation/device/bloc/device_list_bloc.dart';
+import 'package:nasyad/presentation/device/pages/archived_devices_page.dart';
 import 'package:nasyad/presentation/device/pages/device_edit_page.dart';
 import 'package:nasyad/presentation/device/pages/device_list_page.dart';
 import 'package:nasyad/presentation/device/pages/device_log.dart';
@@ -37,6 +39,7 @@ abstract final class AppRoutes {
   static const deviceView = 'device_view';
   static const deviceEdit = 'device_edit';
   static const deviceLog = 'device_log';
+  static const archivedDevices = 'archived_devices';
 }
 
 GoRouter createAppRouter() {
@@ -77,6 +80,23 @@ GoRouter createAppRouter() {
                 child: const DeviceListPage(),
               );
             },
+            routes: [
+              GoRoute(
+                path: 'archived',
+                name: AppRoutes.archivedDevices,
+                builder: (context, state) {
+                  final services = AppServicesScope.of(context);
+                  return BlocProvider(
+                    create: (_) => ArchivedDevicesBloc(
+                      watchArchivedRootDevices:
+                          services.watchArchivedRootDevices,
+                      restoreDevice: services.restoreDevice,
+                    )..add(const ArchivedDevicesStarted()),
+                    child: const ArchivedDevicesPage(),
+                  );
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: 'preferences',

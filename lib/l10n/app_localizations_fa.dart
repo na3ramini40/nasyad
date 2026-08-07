@@ -198,6 +198,31 @@ class AppLocalizationsFa extends AppLocalizations {
   String get archive => 'بایگانی';
 
   @override
+  String get archivedDevices => 'دستگاه‌های بایگانی‌شده';
+
+  @override
+  String get archivedDevicesHint =>
+      'دستگاه‌ها و قطعات بایگانی‌شده را ببینید و بازیابی کنید.';
+
+  @override
+  String get noArchivedDevicesTitle => 'چیزی بایگانی نشده';
+
+  @override
+  String get noArchivedDevicesHint =>
+      'وقتی دستگاهی را بایگانی کنید، آن و قطعاتش اینجا نمایش داده می‌شوند.';
+
+  @override
+  String get restore => 'بازیابی';
+
+  @override
+  String get restoreDeviceTitle => 'بازیابی دستگاه؟';
+
+  @override
+  String restoreDeviceBody(String name) {
+    return '$name و همه قطعاتش به فهرست دستگاه‌های فعال برمی‌گردند.';
+  }
+
+  @override
   String get scheduleSection => 'زمان‌بندی';
 
   @override

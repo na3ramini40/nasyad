@@ -470,6 +470,48 @@ abstract class AppLocalizations {
   /// **'Archive'**
   String get archive;
 
+  /// No description provided for @archivedDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived devices'**
+  String get archivedDevices;
+
+  /// No description provided for @archivedDevicesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse and restore archived devices and their parts.'**
+  String get archivedDevicesHint;
+
+  /// No description provided for @noArchivedDevicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing archived'**
+  String get noArchivedDevicesTitle;
+
+  /// No description provided for @noArchivedDevicesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When you archive a device, it and its parts will appear here.'**
+  String get noArchivedDevicesHint;
+
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// No description provided for @restoreDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore device?'**
+  String get restoreDeviceTitle;
+
+  /// No description provided for @restoreDeviceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} and all its parts will return to your active device list.'**
+  String restoreDeviceBody(String name);
+
   /// No description provided for @scheduleSection.
   ///
   /// In en, this message translates to:

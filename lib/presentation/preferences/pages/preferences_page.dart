@@ -238,6 +238,14 @@ class PreferencesPage extends StatelessWidget {
                     ),
                     const Divider(height: 1),
                     ListTile(
+                      leading: const Icon(Icons.archive_outlined),
+                      title: Text(l10n.archivedDevices),
+                      subtitle: Text(l10n.archivedDevicesHint),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/devices/archived'),
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
                       leading: const Icon(Icons.import_export_outlined),
                       title: Text(l10n.exportImport),
                       subtitle: Text(l10n.exportImportHint),

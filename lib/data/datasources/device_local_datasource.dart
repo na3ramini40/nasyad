@@ -13,6 +13,8 @@ abstract class DeviceLocalDataSource {
 
   Stream<List<DeviceModel>> watchActiveDevices();
 
+  Stream<List<DeviceModel>> watchAllDevices();
+
   Future<DeviceModel?> getDevice(String id);
 
   Future<void> insertDevice(DeviceModel device);

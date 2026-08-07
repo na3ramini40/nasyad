@@ -14,6 +14,8 @@ class FakeDeviceRepository implements DeviceRepository {
       StreamController<List<DeviceSummary>>.broadcast();
   final StreamController<DeviceSummary?> detailController =
       StreamController<DeviceSummary?>.broadcast();
+  final StreamController<List<Device>> archivedRootsController =
+      StreamController<List<Device>>.broadcast();
 
   List<DeviceSummary> summaries = [];
   ExportBundle? lastImported;
@@ -31,6 +33,21 @@ class FakeDeviceRepository implements DeviceRepository {
 
   void emitDetail(DeviceSummary? value) {
     detailController.add(value);
+  }
+
+  void emitArchivedRoots(List<Device> value) {
+    archivedRootsController.add(value);
+  }
+
+  List<Device> archivedRootDevices() {
+    final byId = {for (final d in devices) d.id: d};
+    return devices.where((d) {
+      if (d.status != DeviceStatus.archived) return false;
+      final parentId = d.parentId;
+      if (parentId == null) return true;
+      final parent = byId[parentId];
+      return parent == null || parent.status != DeviceStatus.archived;
+    }).toList();
   }
 
   void emitError(Object error) {
@@ -75,6 +92,10 @@ class FakeDeviceRepository implements DeviceRepository {
   @override
   Stream<List<DeviceSummary>> watchRootDeviceSummaries() =>
       summariesController.stream;
+
+  @override
+  Stream<List<Device>> watchArchivedRootDevices() =>
+      archivedRootsController.stream;
 
   @override
   Stream<DeviceSummary?> watchDeviceSummary(String deviceId) =>
@@ -136,6 +157,7 @@ class FakeDeviceRepository implements DeviceRepository {
   Future<void> dispose() async {
     await summariesController.close();
     await detailController.close();
+    await archivedRootsController.close();
   }
 }
 

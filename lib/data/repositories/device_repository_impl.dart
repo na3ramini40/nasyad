@@ -76,6 +76,29 @@ class DeviceRepositoryImpl extends DeviceRepository {
   }
 
   @override
+  Stream<List<Device>> watchArchivedRootDevices() {
+    return _devices.watchAllDevices().map((deviceModels) {
+      final all = deviceModels.map((m) => m.toEntity()).toList();
+      return _archivedRootDevices(all);
+    });
+  }
+
+  List<Device> _archivedRootDevices(List<Device> all) {
+    final byId = {for (final d in all) d.id: d};
+    final roots =
+        all.where((d) {
+          if (d.status != DeviceStatus.archived) return false;
+          final parentId = d.parentId;
+          if (parentId == null) return true;
+          final parent = byId[parentId];
+          return parent == null || parent.status != DeviceStatus.archived;
+        }).toList()..sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
+    return roots;
+  }
+
+  @override
   Stream<DeviceSummary?> watchDeviceSummary(String deviceId) {
     return _devices.watchActiveDevices().asyncMap((deviceModels) async {
       final devices = deviceModels.map((m) => m.toEntity()).toList();
