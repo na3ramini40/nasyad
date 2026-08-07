@@ -28,6 +28,18 @@
   "deviceName": "Device Name",
   "deviceNameHint": "Enter device name...",
   "deviceNameRequired": "Device name is required",
+  "deviceMetadataSection": "Details",
+  "categoryPreset": "Category",
+  "categoryGeneric": "Generic",
+  "categoryCar": "Vehicle",
+  "categoryHvac": "HVAC",
+  "categoryAppliance": "Appliance",
+  "categoryElectronics": "Electronics",
+  "categoryPlumbing": "Plumbing",
+  "locationLabel": "Location",
+  "locationLabelHint": "e.g. Garage, Kitchen...",
+  "deviceNotes": "Device notes",
+  "deviceNotesHint": "Optional notes about this device (not log entries)...",
   "maintenanceRule": "Maintenance Rule",
   "selectMaintenanceRule": "Select a maintenance rule",
   "selectScheduleType": "Choose time or usage",
@@ -344,5 +356,60 @@
   "searchNoResultsHint": "Try a different name or check your spelling.",
   "searchDevicesSection": "Devices",
   "searchBirthdaysSection": "Birthdays",
-  "searchPathSeparator": " › "
+  "searchPathSeparator": " › ",
+  "places": "Places",
+  "addPlace": "Add place",
+  "editPlace": "Edit place",
+  "placeName": "Name",
+  "placeNameHint": "Where was this?",
+  "placeNameRequired": "Enter a name for this place",
+  "placeGeometryRequired": "Mark the place on the map first",
+  "placeKindPoint": "Point",
+  "placeKindLine": "Path",
+  "placeKindArea": "Area",
+  "placeKindLineWithCount": "Path · {count} points",
+  "@placeKindLineWithCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeKindAreaWithCount": "Area · {count} points",
+  "@placeKindAreaWithCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeCoordinateSummary": "{lat}, {lng}",
+  "@placeCoordinateSummary": {
+    "placeholders": {
+      "lat": { "type": "double", "format": "decimalPattern" },
+      "lng": { "type": "double", "format": "decimalPattern" }
+    }
+  },
+  "placeMapHintPoint": "Tap the map or use your location",
+  "placeMapHintLine": "Tap to add points · {count} so far (need 2+)",
+  "@placeMapHintLine": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeMapHintArea": "Tap to outline the area · {count} points (need 3+)",
+  "@placeMapHintArea": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeUseMyLocation": "My location",
+  "placeUndoPoint": "Undo",
+  "placeLocationDenied": "Location access is off. Enable it in settings or tap the map.",
+  "noPlacesTitle": "No places yet",
+  "noPlacesHint": "Save a spot, path, or area you've been to.",
+  "deletePlaceTitle": "Delete place?",
+  "deletePlaceBody": "{name} will be removed from this device.",
+  "@deletePlaceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "placesFeatureHint": "Mark spots, paths, and areas on a map."
 }

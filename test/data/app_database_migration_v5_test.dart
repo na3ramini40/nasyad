@@ -61,7 +61,7 @@ void main() {
     final database = AppDatabase(executor);
     addTearDown(database.close);
 
-    expect(database.schemaVersion, 5);
+    expect(database.schemaVersion, 6);
 
     await database
         .into(database.devicesTable)

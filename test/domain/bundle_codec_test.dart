@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nasyad/domain/entities/device_category_preset.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
 import 'package:nasyad/domain/entities/export_format.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
@@ -117,6 +118,31 @@ void main() {
       expect(device.scheduleType, ScheduleType.calendarInterval);
       expect(device.intervalValue, 6);
       expect(device.intervalUnit, 'months');
+    });
+
+    test('round-trips device metadata fields', () {
+      final withMetadata = sampleBundle(
+        devices: [
+          ExportDeviceBundle(
+            device: sampleDevice(
+              categoryPreset: DeviceCategoryPreset.car,
+              locationLabel: 'Garage',
+              description: 'Family SUV',
+            ),
+            logs: const [],
+          ),
+        ],
+      );
+      for (final format in ExportFormat.values) {
+        final decoded = BundleCodec.decode(
+          BundleCodec.encode(withMetadata, format),
+          format: format,
+        );
+        final device = decoded.devices.single.device;
+        expect(device.categoryPreset, DeviceCategoryPreset.car);
+        expect(device.locationLabel, 'Garage');
+        expect(device.description, 'Family SUV');
+      }
     });
 
     test('rejects invalid json and unsupported version', () {

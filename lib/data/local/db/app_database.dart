@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'nasyad'));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -54,6 +54,15 @@ class AppDatabase extends _$AppDatabase {
         );
         await customStatement(
           'ALTER TABLE device_logs_table ADD COLUMN photo_path TEXT NULL',
+        );
+      }
+
+      if (from < 6) {
+        await customStatement(
+          'ALTER TABLE devices_table ADD COLUMN category_preset TEXT NULL',
+        );
+        await customStatement(
+          'ALTER TABLE devices_table ADD COLUMN location_label TEXT NULL',
         );
       }
     },

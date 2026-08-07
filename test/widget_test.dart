@@ -50,17 +50,17 @@ Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
   );
 }
 
-AppServices _testServices() {
-  return AppServices(
+Future<AppServices> _testServices() {
+  return AppServices.createForTests(
     AppDatabase(NativeDatabase.memory()),
     lastSeenVersionStore: LastSeenVersionStore.memory(),
     calendarPreferenceStore: CalendarPreferenceStore.memory(),
-    soonWindowPreferenceStore: SoonWindowPreferenceStore.memory(),
-    reminderSnoozeStore: ReminderSnoozeStore.memory(),
     seasonThemePreferenceStore: SeasonThemePreferenceStore.memory(),
     themeModePreferenceStore: ThemeModePreferenceStore.memory(),
     reminderNotificationPreferenceStore:
         ReminderNotificationPreferenceStore.memory(),
+    soonWindowPreferenceStore: SoonWindowPreferenceStore.memory(),
+    reminderSnoozeStore: ReminderSnoozeStore.memory(),
   );
 }
 
@@ -88,7 +88,7 @@ void main() {
   setUpAll(setupSqliteForTests);
 
   testWidgets('splash navigates to home empty state', (tester) async {
-    final services = _testServices();
+    final services = await _testServices();
 
     await _pumpApp(tester, services);
 
@@ -101,7 +101,7 @@ void main() {
   });
 
   testWidgets('preferences switches language to persian', (tester) async {
-    final services = _testServices();
+    final services = await _testServices();
 
     await _pumpApp(tester, services);
 
@@ -125,7 +125,7 @@ void main() {
   });
 
   testWidgets('preferences can select dark theme', (tester) async {
-    final services = _testServices();
+    final services = await _testServices();
 
     await _pumpApp(tester, services);
 

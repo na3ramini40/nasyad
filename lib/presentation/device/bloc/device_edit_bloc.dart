@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasyad/core/utils/id_generator.dart';
 import 'package:nasyad/domain/entities/device.dart';
+import 'package:nasyad/domain/entities/device_category_preset.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
@@ -31,6 +32,9 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
        super(DeviceEditState(isEdit: deviceId != null, parentId: parentId)) {
     on<DeviceEditStarted>(_onStarted);
     on<DeviceEditNameChanged>(_onNameChanged);
+    on<DeviceEditCategoryPresetChanged>(_onCategoryPresetChanged);
+    on<DeviceEditLocationLabelChanged>(_onLocationLabelChanged);
+    on<DeviceEditNotesChanged>(_onNotesChanged);
     on<DeviceEditScheduleEnabledChanged>(_onScheduleEnabledChanged);
     on<DeviceEditScheduleTypeChanged>(_onScheduleTypeChanged);
     on<DeviceEditIntervalChanged>(_onIntervalChanged);
@@ -74,6 +78,9 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
           status: DeviceEditStatus.ready,
           templates: templates,
           name: device?.name ?? '',
+          categoryPreset: device?.categoryPreset,
+          locationLabel: device?.locationLabel ?? '',
+          notes: device?.description ?? '',
           parentId: device?.parentId ?? parentId,
           scheduleEnabled: device?.hasSchedule ?? false,
           scheduleType: device?.scheduleType,
@@ -102,6 +109,27 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     Emitter<DeviceEditState> emit,
   ) {
     emit(state.copyWith(name: event.name));
+  }
+
+  void _onCategoryPresetChanged(
+    DeviceEditCategoryPresetChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    emit(state.copyWith(categoryPreset: event.categoryPreset));
+  }
+
+  void _onLocationLabelChanged(
+    DeviceEditLocationLabelChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    emit(state.copyWith(locationLabel: event.locationLabel));
+  }
+
+  void _onNotesChanged(
+    DeviceEditNotesChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    emit(state.copyWith(notes: event.notes));
   }
 
   void _onScheduleEnabledChanged(
@@ -258,6 +286,9 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     final initialElapsed = int.tryParse(state.initialElapsed.trim()) ?? 0;
     if (initialElapsed < 0) return;
 
+    final notes = state.notes.trim();
+    final location = state.locationLabel.trim();
+
     emit(state.copyWith(status: DeviceEditStatus.saving, clearError: true));
 
     final now = DateTime.now();
@@ -273,7 +304,9 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
       id: id,
       parentId: state.parentId ?? _existing?.parentId,
       name: name,
-      description: _existing?.description,
+      description: notes.isEmpty ? null : notes,
+      categoryPreset: state.categoryPreset,
+      locationLabel: location.isEmpty ? null : location,
       status: _existing?.status ?? DeviceStatus.active,
       usageUnit: resolvedUsageUnit,
       currentUsage: _existing?.currentUsage ?? 0,

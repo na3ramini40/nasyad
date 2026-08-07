@@ -15,6 +15,9 @@ final class DeviceEditState extends Equatable {
     required this.isEdit,
     this.status = DeviceEditStatus.initial,
     this.name = '',
+    this.categoryPreset,
+    this.locationLabel = '',
+    this.notes = '',
     this.parentId,
     this.scheduleEnabled = true,
     this.scheduleType,
@@ -31,6 +34,9 @@ final class DeviceEditState extends Equatable {
   final bool isEdit;
   final DeviceEditStatus status;
   final String name;
+  final DeviceCategoryPreset? categoryPreset;
+  final String locationLabel;
+  final String notes;
   final String? parentId;
   final bool scheduleEnabled;
   final ScheduleType? scheduleType;
@@ -49,6 +55,9 @@ final class DeviceEditState extends Equatable {
   DeviceEditState copyWith({
     DeviceEditStatus? status,
     String? name,
+    DeviceCategoryPreset? categoryPreset,
+    String? locationLabel,
+    String? notes,
     String? parentId,
     bool? scheduleEnabled,
     ScheduleType? scheduleType,
@@ -70,6 +79,9 @@ final class DeviceEditState extends Equatable {
       isEdit: isEdit,
       status: status ?? this.status,
       name: name ?? this.name,
+      categoryPreset: categoryPreset ?? this.categoryPreset,
+      locationLabel: locationLabel ?? this.locationLabel,
+      notes: notes ?? this.notes,
       parentId: parentId ?? this.parentId,
       scheduleEnabled: scheduleEnabled ?? this.scheduleEnabled,
       scheduleType: clearScheduleType
@@ -93,6 +105,9 @@ final class DeviceEditState extends Equatable {
     isEdit,
     status,
     name,
+    categoryPreset,
+    locationLabel,
+    notes,
     parentId,
     scheduleEnabled,
     scheduleType,

@@ -9,6 +9,7 @@ import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/presentation/device/bloc/device_list_bloc.dart';
+import 'package:nasyad/presentation/device/device_category_presets.dart';
 
 class DeviceListPage extends StatelessWidget {
   const DeviceListPage({super.key});
@@ -67,7 +68,15 @@ class DeviceListPage extends StatelessWidget {
                         final item = summaries[index];
                         return DeviceCard(
                           name: item.device.name,
-                          label: l10n.deviceName,
+                          label:
+                              item.device.locationLabel?.trim().isNotEmpty ==
+                                  true
+                              ? item.device.locationLabel!.trim()
+                              : null,
+                          leading: Icon(
+                            categoryPresetIcon(item.device.categoryPreset),
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                           status: _cardStatus(item.status),
                           statusLabel: _statusLabel(l10n, item.status),
                           lastLogText: _lastLogText(l10n, item.latestLog),
@@ -91,14 +100,17 @@ class DeviceListPage extends StatelessWidget {
                       final item = summaries[index];
                       return DeviceCard(
                         name: item.device.name,
-                        label: l10n.deviceName,
+                        label:
+                            item.device.locationLabel?.trim().isNotEmpty == true
+                            ? item.device.locationLabel!.trim()
+                            : null,
                         status: _cardStatus(item.status),
                         statusLabel: _statusLabel(l10n, item.status),
                         lastLogText: _lastLogText(l10n, item.latestLog),
                         variant: DeviceCardVariant.grid,
                         progress: item.progress,
                         leading: Icon(
-                          Icons.devices_other,
+                          categoryPresetIcon(item.device.categoryPreset),
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                         onTap: () => context.push('/device/${item.device.id}'),

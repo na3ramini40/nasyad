@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/core/version/app_changelog.dart';
+import 'package:nasyad/core/version/app_version.dart';
 import 'package:nasyad/core/version/semver.dart';
 
 void main() {

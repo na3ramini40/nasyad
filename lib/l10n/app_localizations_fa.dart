@@ -93,6 +93,43 @@ class AppLocalizationsFa extends AppLocalizations {
   String get deviceNameRequired => 'نام دستگاه الزامی است';
 
   @override
+  String get deviceMetadataSection => 'جزئیات';
+
+  @override
+  String get categoryPreset => 'دسته‌بندی';
+
+  @override
+  String get categoryGeneric => 'عمومی';
+
+  @override
+  String get categoryCar => 'وسیله نقلیه';
+
+  @override
+  String get categoryHvac => 'سرمایش و گرمایش';
+
+  @override
+  String get categoryAppliance => 'لوازم خانگی';
+
+  @override
+  String get categoryElectronics => 'الکترونیک';
+
+  @override
+  String get categoryPlumbing => 'لوله‌کشی';
+
+  @override
+  String get locationLabel => 'مکان';
+
+  @override
+  String get locationLabelHint => 'مثلاً گاراژ، آشپزخانه...';
+
+  @override
+  String get deviceNotes => 'یادداشت دستگاه';
+
+  @override
+  String get deviceNotesHint =>
+      'یادداشت اختیاری درباره این دستگاه (نه سوابق نگهداری)...';
+
+  @override
   String get maintenanceRule => 'قانون نگهداری';
 
   @override

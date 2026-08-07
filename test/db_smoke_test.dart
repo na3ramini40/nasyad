@@ -7,10 +7,11 @@ import 'package:nasyad/data/local/db/app_database.dart';
 import 'sqlite_test_setup.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(setupSqliteForTests);
 
   test('watchDeviceSummaries emits empty list', () async {
-    final services = AppServices(
+    final services = await AppServices.createForTests(
       AppDatabase(NativeDatabase.memory()),
       lastSeenVersionStore: LastSeenVersionStore.memory(),
     );

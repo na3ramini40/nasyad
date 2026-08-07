@@ -49,6 +49,28 @@ class $DevicesTableTable extends DevicesTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _categoryPresetMeta = const VerificationMeta(
+    'categoryPreset',
+  );
+  @override
+  late final GeneratedColumn<String> categoryPreset = GeneratedColumn<String>(
+    'category_preset',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationLabelMeta = const VerificationMeta(
+    'locationLabel',
+  );
+  @override
+  late final GeneratedColumn<String> locationLabel = GeneratedColumn<String>(
+    'location_label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -177,6 +199,8 @@ class $DevicesTableTable extends DevicesTable
     parentId,
     name,
     description,
+    categoryPreset,
+    locationLabel,
     status,
     usageUnit,
     currentUsage,
@@ -226,6 +250,24 @@ class $DevicesTableTable extends DevicesTable
         description.isAcceptableOrUnknown(
           data['description']!,
           _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('category_preset')) {
+      context.handle(
+        _categoryPresetMeta,
+        categoryPreset.isAcceptableOrUnknown(
+          data['category_preset']!,
+          _categoryPresetMeta,
+        ),
+      );
+    }
+    if (data.containsKey('location_label')) {
+      context.handle(
+        _locationLabelMeta,
+        locationLabel.isAcceptableOrUnknown(
+          data['location_label']!,
+          _locationLabelMeta,
         ),
       );
     }
@@ -345,6 +387,14 @@ class $DevicesTableTable extends DevicesTable
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
+      categoryPreset: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category_preset'],
+      ),
+      locationLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location_label'],
+      ),
       status: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}status'],
@@ -404,6 +454,8 @@ class DevicesTableData extends DataClass
   final String? parentId;
   final String name;
   final String? description;
+  final String? categoryPreset;
+  final String? locationLabel;
   final String status;
   final String? usageUnit;
   final int currentUsage;
@@ -420,6 +472,8 @@ class DevicesTableData extends DataClass
     this.parentId,
     required this.name,
     this.description,
+    this.categoryPreset,
+    this.locationLabel,
     required this.status,
     this.usageUnit,
     required this.currentUsage,
@@ -442,6 +496,12 @@ class DevicesTableData extends DataClass
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || categoryPreset != null) {
+      map['category_preset'] = Variable<String>(categoryPreset);
+    }
+    if (!nullToAbsent || locationLabel != null) {
+      map['location_label'] = Variable<String>(locationLabel);
     }
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || usageUnit != null) {
@@ -479,6 +539,12 @@ class DevicesTableData extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      categoryPreset: categoryPreset == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryPreset),
+      locationLabel: locationLabel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationLabel),
       status: Value(status),
       usageUnit: usageUnit == null && nullToAbsent
           ? const Value.absent()
@@ -515,6 +581,8 @@ class DevicesTableData extends DataClass
       parentId: serializer.fromJson<String?>(json['parentId']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
+      categoryPreset: serializer.fromJson<String?>(json['categoryPreset']),
+      locationLabel: serializer.fromJson<String?>(json['locationLabel']),
       status: serializer.fromJson<String>(json['status']),
       usageUnit: serializer.fromJson<String?>(json['usageUnit']),
       currentUsage: serializer.fromJson<int>(json['currentUsage']),
@@ -540,6 +608,8 @@ class DevicesTableData extends DataClass
       'parentId': serializer.toJson<String?>(parentId),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
+      'categoryPreset': serializer.toJson<String?>(categoryPreset),
+      'locationLabel': serializer.toJson<String?>(locationLabel),
       'status': serializer.toJson<String>(status),
       'usageUnit': serializer.toJson<String?>(usageUnit),
       'currentUsage': serializer.toJson<int>(currentUsage),
@@ -559,6 +629,8 @@ class DevicesTableData extends DataClass
     Value<String?> parentId = const Value.absent(),
     String? name,
     Value<String?> description = const Value.absent(),
+    Value<String?> categoryPreset = const Value.absent(),
+    Value<String?> locationLabel = const Value.absent(),
     String? status,
     Value<String?> usageUnit = const Value.absent(),
     int? currentUsage,
@@ -575,6 +647,12 @@ class DevicesTableData extends DataClass
     parentId: parentId.present ? parentId.value : this.parentId,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
+    categoryPreset: categoryPreset.present
+        ? categoryPreset.value
+        : this.categoryPreset,
+    locationLabel: locationLabel.present
+        ? locationLabel.value
+        : this.locationLabel,
     status: status ?? this.status,
     usageUnit: usageUnit.present ? usageUnit.value : this.usageUnit,
     currentUsage: currentUsage ?? this.currentUsage,
@@ -600,6 +678,12 @@ class DevicesTableData extends DataClass
       description: data.description.present
           ? data.description.value
           : this.description,
+      categoryPreset: data.categoryPreset.present
+          ? data.categoryPreset.value
+          : this.categoryPreset,
+      locationLabel: data.locationLabel.present
+          ? data.locationLabel.value
+          : this.locationLabel,
       status: data.status.present ? data.status.value : this.status,
       usageUnit: data.usageUnit.present ? data.usageUnit.value : this.usageUnit,
       currentUsage: data.currentUsage.present
@@ -635,6 +719,8 @@ class DevicesTableData extends DataClass
           ..write('parentId: $parentId, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
+          ..write('categoryPreset: $categoryPreset, ')
+          ..write('locationLabel: $locationLabel, ')
           ..write('status: $status, ')
           ..write('usageUnit: $usageUnit, ')
           ..write('currentUsage: $currentUsage, ')
@@ -656,6 +742,8 @@ class DevicesTableData extends DataClass
     parentId,
     name,
     description,
+    categoryPreset,
+    locationLabel,
     status,
     usageUnit,
     currentUsage,
@@ -676,6 +764,8 @@ class DevicesTableData extends DataClass
           other.parentId == this.parentId &&
           other.name == this.name &&
           other.description == this.description &&
+          other.categoryPreset == this.categoryPreset &&
+          other.locationLabel == this.locationLabel &&
           other.status == this.status &&
           other.usageUnit == this.usageUnit &&
           other.currentUsage == this.currentUsage &&
@@ -694,6 +784,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
   final Value<String?> parentId;
   final Value<String> name;
   final Value<String?> description;
+  final Value<String?> categoryPreset;
+  final Value<String?> locationLabel;
   final Value<String> status;
   final Value<String?> usageUnit;
   final Value<int> currentUsage;
@@ -711,6 +803,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     this.parentId = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
+    this.categoryPreset = const Value.absent(),
+    this.locationLabel = const Value.absent(),
     this.status = const Value.absent(),
     this.usageUnit = const Value.absent(),
     this.currentUsage = const Value.absent(),
@@ -729,6 +823,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     this.parentId = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
+    this.categoryPreset = const Value.absent(),
+    this.locationLabel = const Value.absent(),
     this.status = const Value.absent(),
     this.usageUnit = const Value.absent(),
     this.currentUsage = const Value.absent(),
@@ -750,6 +846,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     Expression<String>? parentId,
     Expression<String>? name,
     Expression<String>? description,
+    Expression<String>? categoryPreset,
+    Expression<String>? locationLabel,
     Expression<String>? status,
     Expression<String>? usageUnit,
     Expression<int>? currentUsage,
@@ -768,6 +866,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
       if (parentId != null) 'parent_id': parentId,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
+      if (categoryPreset != null) 'category_preset': categoryPreset,
+      if (locationLabel != null) 'location_label': locationLabel,
       if (status != null) 'status': status,
       if (usageUnit != null) 'usage_unit': usageUnit,
       if (currentUsage != null) 'current_usage': currentUsage,
@@ -789,6 +889,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     Value<String?>? parentId,
     Value<String>? name,
     Value<String?>? description,
+    Value<String?>? categoryPreset,
+    Value<String?>? locationLabel,
     Value<String>? status,
     Value<String?>? usageUnit,
     Value<int>? currentUsage,
@@ -807,6 +909,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
       parentId: parentId ?? this.parentId,
       name: name ?? this.name,
       description: description ?? this.description,
+      categoryPreset: categoryPreset ?? this.categoryPreset,
+      locationLabel: locationLabel ?? this.locationLabel,
       status: status ?? this.status,
       usageUnit: usageUnit ?? this.usageUnit,
       currentUsage: currentUsage ?? this.currentUsage,
@@ -837,6 +941,12 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
+    }
+    if (categoryPreset.present) {
+      map['category_preset'] = Variable<String>(categoryPreset.value);
+    }
+    if (locationLabel.present) {
+      map['location_label'] = Variable<String>(locationLabel.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -886,6 +996,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
           ..write('parentId: $parentId, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
+          ..write('categoryPreset: $categoryPreset, ')
+          ..write('locationLabel: $locationLabel, ')
           ..write('status: $status, ')
           ..write('usageUnit: $usageUnit, ')
           ..write('currentUsage: $currentUsage, ')
@@ -2079,481 +2191,6 @@ class BirthdaysTableCompanion extends UpdateCompanion<BirthdaysTableData> {
   }
 }
 
-class $SyncOutboxTableTable extends SyncOutboxTable
-    with TableInfo<$SyncOutboxTableTable, SyncOutboxTableData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $SyncOutboxTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _entityKindMeta = const VerificationMeta(
-    'entityKind',
-  );
-  @override
-  late final GeneratedColumn<String> entityKind = GeneratedColumn<String>(
-    'entity_kind',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _operationMeta = const VerificationMeta(
-    'operation',
-  );
-  @override
-  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
-    'operation',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _entityIdMeta = const VerificationMeta(
-    'entityId',
-  );
-  @override
-  late final GeneratedColumn<String> entityId = GeneratedColumn<String>(
-    'entity_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _payloadJsonMeta = const VerificationMeta(
-    'payloadJson',
-  );
-  @override
-  late final GeneratedColumn<String> payloadJson = GeneratedColumn<String>(
-    'payload_json',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _attemptCountMeta = const VerificationMeta(
-    'attemptCount',
-  );
-  @override
-  late final GeneratedColumn<int> attemptCount = GeneratedColumn<int>(
-    'attempt_count',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    entityKind,
-    operation,
-    entityId,
-    payloadJson,
-    createdAt,
-    attemptCount,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'sync_outbox_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<SyncOutboxTableData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('entity_kind')) {
-      context.handle(
-        _entityKindMeta,
-        entityKind.isAcceptableOrUnknown(data['entity_kind']!, _entityKindMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_entityKindMeta);
-    }
-    if (data.containsKey('operation')) {
-      context.handle(
-        _operationMeta,
-        operation.isAcceptableOrUnknown(data['operation']!, _operationMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_operationMeta);
-    }
-    if (data.containsKey('entity_id')) {
-      context.handle(
-        _entityIdMeta,
-        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_entityIdMeta);
-    }
-    if (data.containsKey('payload_json')) {
-      context.handle(
-        _payloadJsonMeta,
-        payloadJson.isAcceptableOrUnknown(
-          data['payload_json']!,
-          _payloadJsonMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_payloadJsonMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('attempt_count')) {
-      context.handle(
-        _attemptCountMeta,
-        attemptCount.isAcceptableOrUnknown(
-          data['attempt_count']!,
-          _attemptCountMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  SyncOutboxTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return SyncOutboxTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      entityKind: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}entity_kind'],
-      )!,
-      operation: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}operation'],
-      )!,
-      entityId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}entity_id'],
-      )!,
-      payloadJson: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}payload_json'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      attemptCount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}attempt_count'],
-      )!,
-    );
-  }
-
-  @override
-  $SyncOutboxTableTable createAlias(String alias) {
-    return $SyncOutboxTableTable(attachedDatabase, alias);
-  }
-}
-
-class SyncOutboxTableData extends DataClass
-    implements Insertable<SyncOutboxTableData> {
-  final String id;
-  final String entityKind;
-  final String operation;
-  final String entityId;
-  final String payloadJson;
-  final DateTime createdAt;
-  final int attemptCount;
-  const SyncOutboxTableData({
-    required this.id,
-    required this.entityKind,
-    required this.operation,
-    required this.entityId,
-    required this.payloadJson,
-    required this.createdAt,
-    required this.attemptCount,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['entity_kind'] = Variable<String>(entityKind);
-    map['operation'] = Variable<String>(operation);
-    map['entity_id'] = Variable<String>(entityId);
-    map['payload_json'] = Variable<String>(payloadJson);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['attempt_count'] = Variable<int>(attemptCount);
-    return map;
-  }
-
-  SyncOutboxTableCompanion toCompanion(bool nullToAbsent) {
-    return SyncOutboxTableCompanion(
-      id: Value(id),
-      entityKind: Value(entityKind),
-      operation: Value(operation),
-      entityId: Value(entityId),
-      payloadJson: Value(payloadJson),
-      createdAt: Value(createdAt),
-      attemptCount: Value(attemptCount),
-    );
-  }
-
-  factory SyncOutboxTableData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SyncOutboxTableData(
-      id: serializer.fromJson<String>(json['id']),
-      entityKind: serializer.fromJson<String>(json['entityKind']),
-      operation: serializer.fromJson<String>(json['operation']),
-      entityId: serializer.fromJson<String>(json['entityId']),
-      payloadJson: serializer.fromJson<String>(json['payloadJson']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      attemptCount: serializer.fromJson<int>(json['attemptCount']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'entityKind': serializer.toJson<String>(entityKind),
-      'operation': serializer.toJson<String>(operation),
-      'entityId': serializer.toJson<String>(entityId),
-      'payloadJson': serializer.toJson<String>(payloadJson),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'attemptCount': serializer.toJson<int>(attemptCount),
-    };
-  }
-
-  SyncOutboxTableData copyWith({
-    String? id,
-    String? entityKind,
-    String? operation,
-    String? entityId,
-    String? payloadJson,
-    DateTime? createdAt,
-    int? attemptCount,
-  }) => SyncOutboxTableData(
-    id: id ?? this.id,
-    entityKind: entityKind ?? this.entityKind,
-    operation: operation ?? this.operation,
-    entityId: entityId ?? this.entityId,
-    payloadJson: payloadJson ?? this.payloadJson,
-    createdAt: createdAt ?? this.createdAt,
-    attemptCount: attemptCount ?? this.attemptCount,
-  );
-  SyncOutboxTableData copyWithCompanion(SyncOutboxTableCompanion data) {
-    return SyncOutboxTableData(
-      id: data.id.present ? data.id.value : this.id,
-      entityKind: data.entityKind.present
-          ? data.entityKind.value
-          : this.entityKind,
-      operation: data.operation.present ? data.operation.value : this.operation,
-      entityId: data.entityId.present ? data.entityId.value : this.entityId,
-      payloadJson: data.payloadJson.present
-          ? data.payloadJson.value
-          : this.payloadJson,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      attemptCount: data.attemptCount.present
-          ? data.attemptCount.value
-          : this.attemptCount,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SyncOutboxTableData(')
-          ..write('id: $id, ')
-          ..write('entityKind: $entityKind, ')
-          ..write('operation: $operation, ')
-          ..write('entityId: $entityId, ')
-          ..write('payloadJson: $payloadJson, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('attemptCount: $attemptCount')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    entityKind,
-    operation,
-    entityId,
-    payloadJson,
-    createdAt,
-    attemptCount,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is SyncOutboxTableData &&
-          other.id == this.id &&
-          other.entityKind == this.entityKind &&
-          other.operation == this.operation &&
-          other.entityId == this.entityId &&
-          other.payloadJson == this.payloadJson &&
-          other.createdAt == this.createdAt &&
-          other.attemptCount == this.attemptCount);
-}
-
-class SyncOutboxTableCompanion extends UpdateCompanion<SyncOutboxTableData> {
-  final Value<String> id;
-  final Value<String> entityKind;
-  final Value<String> operation;
-  final Value<String> entityId;
-  final Value<String> payloadJson;
-  final Value<DateTime> createdAt;
-  final Value<int> attemptCount;
-  final Value<int> rowid;
-  const SyncOutboxTableCompanion({
-    this.id = const Value.absent(),
-    this.entityKind = const Value.absent(),
-    this.operation = const Value.absent(),
-    this.entityId = const Value.absent(),
-    this.payloadJson = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.attemptCount = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  SyncOutboxTableCompanion.insert({
-    required String id,
-    required String entityKind,
-    required String operation,
-    required String entityId,
-    required String payloadJson,
-    required DateTime createdAt,
-    this.attemptCount = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       entityKind = Value(entityKind),
-       operation = Value(operation),
-       entityId = Value(entityId),
-       payloadJson = Value(payloadJson),
-       createdAt = Value(createdAt);
-  static Insertable<SyncOutboxTableData> custom({
-    Expression<String>? id,
-    Expression<String>? entityKind,
-    Expression<String>? operation,
-    Expression<String>? entityId,
-    Expression<String>? payloadJson,
-    Expression<DateTime>? createdAt,
-    Expression<int>? attemptCount,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (entityKind != null) 'entity_kind': entityKind,
-      if (operation != null) 'operation': operation,
-      if (entityId != null) 'entity_id': entityId,
-      if (payloadJson != null) 'payload_json': payloadJson,
-      if (createdAt != null) 'created_at': createdAt,
-      if (attemptCount != null) 'attempt_count': attemptCount,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  SyncOutboxTableCompanion copyWith({
-    Value<String>? id,
-    Value<String>? entityKind,
-    Value<String>? operation,
-    Value<String>? entityId,
-    Value<String>? payloadJson,
-    Value<DateTime>? createdAt,
-    Value<int>? attemptCount,
-    Value<int>? rowid,
-  }) {
-    return SyncOutboxTableCompanion(
-      id: id ?? this.id,
-      entityKind: entityKind ?? this.entityKind,
-      operation: operation ?? this.operation,
-      entityId: entityId ?? this.entityId,
-      payloadJson: payloadJson ?? this.payloadJson,
-      createdAt: createdAt ?? this.createdAt,
-      attemptCount: attemptCount ?? this.attemptCount,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (entityKind.present) {
-      map['entity_kind'] = Variable<String>(entityKind.value);
-    }
-    if (operation.present) {
-      map['operation'] = Variable<String>(operation.value);
-    }
-    if (entityId.present) {
-      map['entity_id'] = Variable<String>(entityId.value);
-    }
-    if (payloadJson.present) {
-      map['payload_json'] = Variable<String>(payloadJson.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (attemptCount.present) {
-      map['attempt_count'] = Variable<int>(attemptCount.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SyncOutboxTableCompanion(')
-          ..write('id: $id, ')
-          ..write('entityKind: $entityKind, ')
-          ..write('operation: $operation, ')
-          ..write('entityId: $entityId, ')
-          ..write('payloadJson: $payloadJson, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('attemptCount: $attemptCount, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2562,13 +2199,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $BirthdaysTableTable birthdaysTable = $BirthdaysTableTable(this);
-  late final $SyncOutboxTableTable syncOutboxTable = $SyncOutboxTableTable(
-    this,
-  );
   late final DeviceDao deviceDao = DeviceDao(this as AppDatabase);
   late final DeviceLogDao deviceLogDao = DeviceLogDao(this as AppDatabase);
   late final BirthdayDao birthdayDao = BirthdayDao(this as AppDatabase);
-  late final SyncOutboxDao syncOutboxDao = SyncOutboxDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2577,7 +2210,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     devicesTable,
     deviceLogsTable,
     birthdaysTable,
-    syncOutboxTable,
   ];
 }
 
@@ -2587,6 +2219,8 @@ typedef $$DevicesTableTableCreateCompanionBuilder =
       Value<String?> parentId,
       required String name,
       Value<String?> description,
+      Value<String?> categoryPreset,
+      Value<String?> locationLabel,
       Value<String> status,
       Value<String?> usageUnit,
       Value<int> currentUsage,
@@ -2606,6 +2240,8 @@ typedef $$DevicesTableTableUpdateCompanionBuilder =
       Value<String?> parentId,
       Value<String> name,
       Value<String?> description,
+      Value<String?> categoryPreset,
+      Value<String?> locationLabel,
       Value<String> status,
       Value<String?> usageUnit,
       Value<int> currentUsage,
@@ -2675,6 +2311,16 @@ class $$DevicesTableTableFilterComposer
 
   ColumnFilters<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get categoryPreset => $composableBuilder(
+    column: $table.categoryPreset,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get locationLabel => $composableBuilder(
+    column: $table.locationLabel,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2788,6 +2434,16 @@ class $$DevicesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get categoryPreset => $composableBuilder(
+    column: $table.categoryPreset,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get locationLabel => $composableBuilder(
+    column: $table.locationLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get status => $composableBuilder(
     column: $table.status,
     builder: (column) => ColumnOrderings(column),
@@ -2864,6 +2520,16 @@ class $$DevicesTableTableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get categoryPreset => $composableBuilder(
+    column: $table.categoryPreset,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get locationLabel => $composableBuilder(
+    column: $table.locationLabel,
     builder: (column) => column,
   );
 
@@ -2972,6 +2638,8 @@ class $$DevicesTableTableTableManager
                 Value<String?> parentId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<String?> categoryPreset = const Value.absent(),
+                Value<String?> locationLabel = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String?> usageUnit = const Value.absent(),
                 Value<int> currentUsage = const Value.absent(),
@@ -2989,6 +2657,8 @@ class $$DevicesTableTableTableManager
                 parentId: parentId,
                 name: name,
                 description: description,
+                categoryPreset: categoryPreset,
+                locationLabel: locationLabel,
                 status: status,
                 usageUnit: usageUnit,
                 currentUsage: currentUsage,
@@ -3008,6 +2678,8 @@ class $$DevicesTableTableTableManager
                 Value<String?> parentId = const Value.absent(),
                 required String name,
                 Value<String?> description = const Value.absent(),
+                Value<String?> categoryPreset = const Value.absent(),
+                Value<String?> locationLabel = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String?> usageUnit = const Value.absent(),
                 Value<int> currentUsage = const Value.absent(),
@@ -3025,6 +2697,8 @@ class $$DevicesTableTableTableManager
                 parentId: parentId,
                 name: name,
                 description: description,
+                categoryPreset: categoryPreset,
+                locationLabel: locationLabel,
                 status: status,
                 usageUnit: usageUnit,
                 currentUsage: currentUsage,
@@ -3813,260 +3487,6 @@ typedef $$BirthdaysTableTableProcessedTableManager =
       BirthdaysTableData,
       PrefetchHooks Function()
     >;
-typedef $$SyncOutboxTableTableCreateCompanionBuilder =
-    SyncOutboxTableCompanion Function({
-      required String id,
-      required String entityKind,
-      required String operation,
-      required String entityId,
-      required String payloadJson,
-      required DateTime createdAt,
-      Value<int> attemptCount,
-      Value<int> rowid,
-    });
-typedef $$SyncOutboxTableTableUpdateCompanionBuilder =
-    SyncOutboxTableCompanion Function({
-      Value<String> id,
-      Value<String> entityKind,
-      Value<String> operation,
-      Value<String> entityId,
-      Value<String> payloadJson,
-      Value<DateTime> createdAt,
-      Value<int> attemptCount,
-      Value<int> rowid,
-    });
-
-class $$SyncOutboxTableTableFilterComposer
-    extends Composer<_$AppDatabase, $SyncOutboxTableTable> {
-  $$SyncOutboxTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get entityKind => $composableBuilder(
-    column: $table.entityKind,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get operation => $composableBuilder(
-    column: $table.operation,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get entityId => $composableBuilder(
-    column: $table.entityId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get payloadJson => $composableBuilder(
-    column: $table.payloadJson,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get attemptCount => $composableBuilder(
-    column: $table.attemptCount,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$SyncOutboxTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $SyncOutboxTableTable> {
-  $$SyncOutboxTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get entityKind => $composableBuilder(
-    column: $table.entityKind,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get operation => $composableBuilder(
-    column: $table.operation,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get entityId => $composableBuilder(
-    column: $table.entityId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get payloadJson => $composableBuilder(
-    column: $table.payloadJson,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get attemptCount => $composableBuilder(
-    column: $table.attemptCount,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$SyncOutboxTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $SyncOutboxTableTable> {
-  $$SyncOutboxTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get entityKind => $composableBuilder(
-    column: $table.entityKind,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get operation =>
-      $composableBuilder(column: $table.operation, builder: (column) => column);
-
-  GeneratedColumn<String> get entityId =>
-      $composableBuilder(column: $table.entityId, builder: (column) => column);
-
-  GeneratedColumn<String> get payloadJson => $composableBuilder(
-    column: $table.payloadJson,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<int> get attemptCount => $composableBuilder(
-    column: $table.attemptCount,
-    builder: (column) => column,
-  );
-}
-
-class $$SyncOutboxTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $SyncOutboxTableTable,
-          SyncOutboxTableData,
-          $$SyncOutboxTableTableFilterComposer,
-          $$SyncOutboxTableTableOrderingComposer,
-          $$SyncOutboxTableTableAnnotationComposer,
-          $$SyncOutboxTableTableCreateCompanionBuilder,
-          $$SyncOutboxTableTableUpdateCompanionBuilder,
-          (
-            SyncOutboxTableData,
-            BaseReferences<
-              _$AppDatabase,
-              $SyncOutboxTableTable,
-              SyncOutboxTableData
-            >,
-          ),
-          SyncOutboxTableData,
-          PrefetchHooks Function()
-        > {
-  $$SyncOutboxTableTableTableManager(
-    _$AppDatabase db,
-    $SyncOutboxTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$SyncOutboxTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$SyncOutboxTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$SyncOutboxTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> entityKind = const Value.absent(),
-                Value<String> operation = const Value.absent(),
-                Value<String> entityId = const Value.absent(),
-                Value<String> payloadJson = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<int> attemptCount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => SyncOutboxTableCompanion(
-                id: id,
-                entityKind: entityKind,
-                operation: operation,
-                entityId: entityId,
-                payloadJson: payloadJson,
-                createdAt: createdAt,
-                attemptCount: attemptCount,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String entityKind,
-                required String operation,
-                required String entityId,
-                required String payloadJson,
-                required DateTime createdAt,
-                Value<int> attemptCount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => SyncOutboxTableCompanion.insert(
-                id: id,
-                entityKind: entityKind,
-                operation: operation,
-                entityId: entityId,
-                payloadJson: payloadJson,
-                createdAt: createdAt,
-                attemptCount: attemptCount,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$SyncOutboxTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $SyncOutboxTableTable,
-      SyncOutboxTableData,
-      $$SyncOutboxTableTableFilterComposer,
-      $$SyncOutboxTableTableOrderingComposer,
-      $$SyncOutboxTableTableAnnotationComposer,
-      $$SyncOutboxTableTableCreateCompanionBuilder,
-      $$SyncOutboxTableTableUpdateCompanionBuilder,
-      (
-        SyncOutboxTableData,
-        BaseReferences<
-          _$AppDatabase,
-          $SyncOutboxTableTable,
-          SyncOutboxTableData
-        >,
-      ),
-      SyncOutboxTableData,
-      PrefetchHooks Function()
-    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4077,6 +3497,4 @@ class $AppDatabaseManager {
       $$DeviceLogsTableTableTableManager(_db, _db.deviceLogsTable);
   $$BirthdaysTableTableTableManager get birthdaysTable =>
       $$BirthdaysTableTableTableManager(_db, _db.birthdaysTable);
-  $$SyncOutboxTableTableTableManager get syncOutboxTable =>
-      $$SyncOutboxTableTableTableManager(_db, _db.syncOutboxTable);
 }
