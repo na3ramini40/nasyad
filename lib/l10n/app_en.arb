@@ -279,6 +279,20 @@
   "reminderNotificationTime": "Notification time",
   "reminderNotificationTimeHint": "Daily time for maintenance reminders and birthday alerts.",
   "reminderQuickActionsMenu": "Quick actions",
+  "reminderSnooze": "Snooze",
+  "reminderSnoozeTitle": "Snooze reminder",
+  "reminderSnoozeOneDay": "1 day",
+  "reminderSnoozeThreeDays": "3 days",
+  "reminderSnoozeSevenDays": "7 days",
+  "reminderSnoozedForDays": "Snoozed for {days} days",
+  "@reminderSnoozedForDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "soonWindowSevenDays": "7 days",
+  "soonWindowFourteenDays": "14 days",
+  "soonWindowHint": "Birthday and home reminder badges use this window for \"Soon\".",
   "checkForUpdates": "Check for updates",
   "checkForUpdatesHint": "Download the latest release from GitHub",
   "updateChecking": "Checking for updates…",

@@ -15,6 +15,8 @@ class ReminderListItem extends StatelessWidget {
     this.onTap,
     this.onQuickActions,
     this.quickActionsTooltip,
+    this.onSnooze,
+    this.snoozeTooltip,
   });
 
   final String title;
@@ -25,6 +27,8 @@ class ReminderListItem extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onQuickActions;
   final String? quickActionsTooltip;
+  final VoidCallback? onSnooze;
+  final String? snoozeTooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +72,14 @@ class ReminderListItem extends StatelessWidget {
                 ),
               ),
             ),
+            if (onSnooze != null) ...[
+              IconButton(
+                onPressed: onSnooze,
+                icon: const Icon(Icons.snooze_outlined),
+                tooltip: snoozeTooltip,
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
             if (onQuickActions != null) ...[
               IconButton(
                 onPressed: onQuickActions,

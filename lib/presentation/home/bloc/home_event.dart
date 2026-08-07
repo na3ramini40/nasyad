@@ -20,6 +20,16 @@ final class HomeFilterChanged extends HomeEvent {
   List<Object?> get props => [filter];
 }
 
+final class HomeReminderSnoozed extends HomeEvent {
+  const HomeReminderSnoozed({required this.reminderId, required this.days});
+
+  final String reminderId;
+  final int days;
+
+  @override
+  List<Object?> get props => [reminderId, days];
+}
+
 final class _HomeRemindersUpdated extends HomeEvent {
   const _HomeRemindersUpdated(this.reminders);
 

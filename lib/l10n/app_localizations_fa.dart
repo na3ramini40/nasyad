@@ -627,6 +627,36 @@ class AppLocalizationsFa extends AppLocalizations {
   String get reminderQuickActionsMenu => 'اقدام‌های سریع';
 
   @override
+  String get reminderSnooze => 'تعویق';
+
+  @override
+  String get reminderSnoozeTitle => 'تعویق یادآور';
+
+  @override
+  String get reminderSnoozeOneDay => '۱ روز';
+
+  @override
+  String get reminderSnoozeThreeDays => '۳ روز';
+
+  @override
+  String get reminderSnoozeSevenDays => '۷ روز';
+
+  @override
+  String reminderSnoozedForDays(int days) {
+    return 'به مدت $days روز تعویق شد';
+  }
+
+  @override
+  String get soonWindowSevenDays => '۷ روز';
+
+  @override
+  String get soonWindowFourteenDays => '۱۴ روز';
+
+  @override
+  String get soonWindowHint =>
+      'نشان «به زودی» برای تولد و یادآورهای خانه بر اساس این بازه است.';
+
+  @override
   String get checkForUpdates => 'بررسی به‌روزرسانی';
 
   @override

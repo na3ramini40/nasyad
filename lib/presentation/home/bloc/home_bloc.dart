@@ -4,20 +4,24 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasyad/domain/entities/home_reminder.dart';
 import 'package:nasyad/domain/entities/home_reminder_filter.dart';
+import 'package:nasyad/domain/usecases/home/snooze_home_reminder_usecase.dart';
 import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc(this._watchHomeReminders) : super(const HomeInitial()) {
+  HomeBloc(this._watchHomeReminders, this._snoozeHomeReminder)
+    : super(const HomeInitial()) {
     on<HomeStarted>(_onStarted);
     on<HomeFilterChanged>(_onFilterChanged);
+    on<HomeReminderSnoozed>(_onReminderSnoozed);
     on<_HomeRemindersUpdated>(_onRemindersUpdated);
     on<_HomeWatchFailed>(_onWatchFailed);
   }
 
   final WatchHomeRemindersUsecase _watchHomeReminders;
+  final SnoozeHomeReminderUsecase _snoozeHomeReminder;
   StreamSubscription<List<HomeReminder>>? _subscription;
   HomeReminderFilter _filter = HomeReminderFilter.all;
 
@@ -37,6 +41,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return;
     }
     await _resubscribe(emit);
+  }
+
+  Future<void> _onReminderSnoozed(
+    HomeReminderSnoozed event,
+    Emitter<HomeState> emit,
+  ) async {
+    await _snoozeHomeReminder(reminderId: event.reminderId, days: event.days);
   }
 
   Future<void> _resubscribe(Emitter<HomeState> emit) async {

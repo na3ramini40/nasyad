@@ -7,6 +7,8 @@ import 'package:nasyad/core/calendar/calendar_preference_store.dart';
 import 'package:nasyad/core/notifications/reminder_notification_preference_store.dart';
 import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
+import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
+import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
 import 'package:nasyad/core/theme/season_theme_cubit.dart';
@@ -53,6 +55,8 @@ AppServices _testServices() {
     AppDatabase(NativeDatabase.memory()),
     lastSeenVersionStore: LastSeenVersionStore.memory(),
     calendarPreferenceStore: CalendarPreferenceStore.memory(),
+    soonWindowPreferenceStore: SoonWindowPreferenceStore.memory(),
+    reminderSnoozeStore: ReminderSnoozeStore.memory(),
     seasonThemePreferenceStore: SeasonThemePreferenceStore.memory(),
     themeModePreferenceStore: ThemeModePreferenceStore.memory(),
     reminderNotificationPreferenceStore:
@@ -75,6 +79,8 @@ Future<void> _disposeApp(WidgetTester tester, AppServices services) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pump(const Duration(milliseconds: 50));
   await tester.pump(const Duration(milliseconds: 50));
+  services.reminderSnoozeStore.dispose();
+  services.soonWindowPreferenceStore.dispose();
   await services.dispose();
 }
 

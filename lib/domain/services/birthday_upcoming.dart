@@ -13,9 +13,13 @@ class BirthdayUpcoming {
 
 abstract final class BirthdayUpcomingCalculator {
   static const reminderWindowDays = 30;
-  static const soonThresholdDays = 7;
+  static const defaultSoonThresholdDays = 7;
 
-  static BirthdayUpcoming? calculate(Birthday birthday, {DateTime? now}) {
+  static BirthdayUpcoming? calculate(
+    Birthday birthday, {
+    DateTime? now,
+    int soonThresholdDays = defaultSoonThresholdDays,
+  }) {
     final today = _dateOnly(now ?? DateTime.now());
     final next = _nextOccurrence(
       month: birthday.birthMonth,

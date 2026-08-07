@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nasyad/core/calendar/calendar_preference_store.dart';
 import 'package:nasyad/core/notifications/reminder_notification_preference_store.dart';
+import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
+import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
@@ -33,20 +35,23 @@ import 'package:nasyad/domain/usecases/device/restore_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_archived_root_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
-import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/create_device_log_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/delete_device_log_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/watch_logs_for_device_usecase.dart';
+import 'package:nasyad/domain/usecases/home/snooze_home_reminder_usecase.dart';
+import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
+import 'package:nasyad/domain/usecases/search/search_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
-import 'package:nasyad/domain/usecases/search/search_usecase.dart';
 
 class AppServices {
   AppServices(
     this.database, {
     LastSeenVersionStore? lastSeenVersionStore,
     CalendarPreferenceStore? calendarPreferenceStore,
+    SoonWindowPreferenceStore? soonWindowPreferenceStore,
+    ReminderSnoozeStore? reminderSnoozeStore,
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
     AppUpdateService? appUpdateService,
@@ -57,6 +62,9 @@ class AppServices {
   }) : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
        calendarPreferenceStore =
            calendarPreferenceStore ?? CalendarPreferenceStore(),
+       soonWindowPreferenceStore =
+           soonWindowPreferenceStore ?? SoonWindowPreferenceStore(),
+       reminderSnoozeStore = reminderSnoozeStore ?? ReminderSnoozeStore(),
        seasonThemePreferenceStore =
            seasonThemePreferenceStore ?? SeasonThemePreferenceStore(),
        themeModePreferenceStore =
@@ -110,6 +118,8 @@ class AppServices {
     watchHomeReminders = WatchHomeRemindersUsecase(
       watchDeviceSummaries,
       watchBirthdays,
+      reminderSnoozeStore,
+      soonWindowPreferenceStore,
     );
     this.localReminderNotificationService =
         localReminderNotificationService ?? LocalReminderNotificationService();
@@ -121,11 +131,14 @@ class AppServices {
           notificationService: this.localReminderNotificationService,
         );
     search = SearchUsecase(deviceRepository, birthdayRepository);
+    snoozeHomeReminder = SnoozeHomeReminderUsecase(reminderSnoozeStore);
   }
 
   final AppDatabase database;
   final LastSeenVersionStore lastSeenVersionStore;
   final CalendarPreferenceStore calendarPreferenceStore;
+  final SoonWindowPreferenceStore soonWindowPreferenceStore;
+  final ReminderSnoozeStore reminderSnoozeStore;
   final SeasonThemePreferenceStore seasonThemePreferenceStore;
   final ThemeModePreferenceStore themeModePreferenceStore;
   final ReminderNotificationPreferenceStore reminderNotificationPreferenceStore;
@@ -159,6 +172,7 @@ class AppServices {
   late final LocalReminderNotificationService localReminderNotificationService;
   late final LocalReminderScheduler localReminderScheduler;
   late final SearchUsecase search;
+  late final SnoozeHomeReminderUsecase snoozeHomeReminder;
 
   Future<void> dispose() async {
     await localReminderScheduler.dispose();

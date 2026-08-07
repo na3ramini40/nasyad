@@ -15,6 +15,7 @@ class HomeReminder extends Equatable {
     this.deviceId,
     this.birthdayId,
     this.deviceStatus,
+    this.deviceProgress,
     this.daysUntilBirthday,
   });
 
@@ -26,6 +27,7 @@ class HomeReminder extends Equatable {
   final String? deviceId;
   final String? birthdayId;
   final MaintenanceStatus? deviceStatus;
+  final double? deviceProgress;
   final int? daysUntilBirthday;
 
   @override
@@ -38,6 +40,7 @@ class HomeReminder extends Equatable {
     deviceId,
     birthdayId,
     deviceStatus,
+    deviceProgress,
     daysUntilBirthday,
   ];
 }

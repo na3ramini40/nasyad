@@ -12,6 +12,7 @@ import 'package:nasyad/core/deep_link/deep_link_handler.dart';
 import 'package:nasyad/core/deep_link/deep_link_resolver.dart';
 import 'package:nasyad/core/platform/firebase_platform.dart';
 import 'package:nasyad/core/router/app_router.dart';
+import 'package:nasyad/core/preferences/soon_window_cubit.dart';
 import 'package:nasyad/core/theme/app_fonts.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
 import 'package:nasyad/core/theme/season_theme_cubit.dart';
@@ -118,6 +119,11 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(
             create: (_) => CalendarSystemCubit(
               store: widget.services.calendarPreferenceStore,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => SoonWindowCubit(
+              store: widget.services.soonWindowPreferenceStore,
             ),
           ),
           BlocProvider(
