@@ -1,4 +1,5 @@
 import 'package:nasyad/domain/entities/device.dart';
+import 'package:nasyad/domain/entities/device_category_preset.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
@@ -17,6 +18,8 @@ Device sampleDevice({
   String? parentId,
   String name = 'Pump',
   String? description = 'Main pump',
+  DeviceCategoryPreset? categoryPreset = DeviceCategoryPreset.generic,
+  String? locationLabel = 'Basement',
   DeviceStatus status = DeviceStatus.active,
   UsageIntervalUnit? usageUnit,
   int currentUsage = 100,
@@ -34,6 +37,8 @@ Device sampleDevice({
     parentId: parentId,
     name: name,
     description: description,
+    categoryPreset: categoryPreset,
+    locationLabel: locationLabel,
     status: status,
     usageUnit: usageUnit,
     currentUsage: currentUsage,

@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/domain/entities/device_category_preset.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
+import 'package:nasyad/presentation/device/device_category_presets.dart';
 import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 class DeviceEditPage extends StatefulWidget {
@@ -26,12 +28,16 @@ class DeviceEditPage extends StatefulWidget {
 class _DeviceEditPageState extends State<DeviceEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _notesController = TextEditingController();
   final _intervalController = TextEditingController();
   final _initialElapsedController = TextEditingController(text: '0');
 
   @override
   void dispose() {
     _nameController.dispose();
+    _locationController.dispose();
+    _notesController.dispose();
     _intervalController.dispose();
     _initialElapsedController.dispose();
     super.dispose();
@@ -40,6 +46,12 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
   void _syncControllers(DeviceEditState state) {
     if (_nameController.text != state.name) {
       _nameController.text = state.name;
+    }
+    if (_locationController.text != state.locationLabel) {
+      _locationController.text = state.locationLabel;
+    }
+    if (_notesController.text != state.notes) {
+      _notesController.text = state.notes;
     }
     if (_intervalController.text != state.intervalValue) {
       _intervalController.text = state.intervalValue;
@@ -105,6 +117,8 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
           previous.status != current.status ||
           previous.errorMessage != current.errorMessage ||
           previous.name != current.name ||
+          previous.locationLabel != current.locationLabel ||
+          previous.notes != current.notes ||
           previous.intervalValue != current.intervalValue ||
           previous.initialElapsed != current.initialElapsed,
       listener: (context, state) {
@@ -171,6 +185,50 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                       }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Text(l10n.deviceMetadataSection, style: muted),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(l10n.categoryPreset, style: theme.textTheme.bodyMedium),
+                  const SizedBox(height: AppSpacing.xs),
+                  Wrap(
+                    spacing: AppSpacing.xs,
+                    runSpacing: AppSpacing.xs,
+                    children: [
+                      for (final preset in selectableCategoryPresets)
+                        FilterChip(
+                          avatar: Icon(categoryPresetIcon(preset), size: 18),
+                          label: Text(categoryPresetLabel(l10n, preset)),
+                          selected:
+                              (state.categoryPreset ??
+                                  DeviceCategoryPreset.generic) ==
+                              preset,
+                          onSelected: (_) => context.read<DeviceEditBloc>().add(
+                            DeviceEditCategoryPresetChanged(preset),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    controller: _locationController,
+                    label: l10n.locationLabel,
+                    hintText: l10n.locationLabelHint,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (value) => context.read<DeviceEditBloc>().add(
+                      DeviceEditLocationLabelChanged(value),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    controller: _notesController,
+                    label: l10n.deviceNotes,
+                    hintText: l10n.deviceNotesHint,
+                    textInputAction: TextInputAction.next,
+                    maxLines: 3,
+                    onChanged: (value) => context.read<DeviceEditBloc>().add(
+                      DeviceEditNotesChanged(value),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(l10n.scheduleSection, style: muted),

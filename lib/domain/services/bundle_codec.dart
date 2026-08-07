@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:nasyad/domain/entities/device.dart';
+import 'package:nasyad/domain/entities/device_category_preset.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
@@ -112,6 +113,8 @@ abstract final class BundleCodec {
         'parentId',
         'name',
         'description',
+        'categoryPreset',
+        'locationLabel',
         'status',
         'usageUnit',
         'currentUsage',
@@ -133,6 +136,8 @@ abstract final class BundleCodec {
           device.parentId ?? '',
           device.name,
           device.description ?? '',
+          device.categoryPreset?.storageValue ?? '',
+          device.locationLabel ?? '',
           device.status.storageValue,
           device.usageUnit?.storageValue ?? '',
           '${device.currentUsage}',
@@ -261,6 +266,10 @@ abstract final class BundleCodec {
       buffer.writeln('parentId: ${device.parentId ?? ''}');
       buffer.writeln('name: ${device.name}');
       buffer.writeln('description: ${device.description ?? ''}');
+      buffer.writeln(
+        'categoryPreset: ${device.categoryPreset?.storageValue ?? ''}',
+      );
+      buffer.writeln('locationLabel: ${device.locationLabel ?? ''}');
       buffer.writeln('status: ${device.status.storageValue}');
       buffer.writeln('usageUnit: ${device.usageUnit?.storageValue ?? ''}');
       buffer.writeln('currentUsage: ${device.currentUsage}');
@@ -384,6 +393,8 @@ abstract final class BundleCodec {
       'parentId': device.parentId,
       'name': device.name,
       'description': device.description,
+      'categoryPreset': device.categoryPreset?.storageValue,
+      'locationLabel': device.locationLabel,
       'status': device.status.storageValue,
       'usageUnit': device.usageUnit?.storageValue,
       'currentUsage': device.currentUsage,
@@ -405,6 +416,8 @@ abstract final class BundleCodec {
       'parentId': json['parentId']?.toString() ?? '',
       'name': '${json['name']}',
       'description': json['description']?.toString() ?? '',
+      'categoryPreset': json['categoryPreset']?.toString() ?? '',
+      'locationLabel': json['locationLabel']?.toString() ?? '',
       'status': '${json['status'] ?? 'active'}',
       'usageUnit': json['usageUnit']?.toString() ?? '',
       'currentUsage': '${json['currentUsage'] ?? 0}',
@@ -493,6 +506,8 @@ abstract final class BundleCodec {
       throw BundleCodecException('Device requires createdAt and updatedAt');
     }
     final description = map['description']?.trim();
+    final categoryRaw = map['categoryPreset']?.trim() ?? '';
+    final locationRaw = map['locationLabel']?.trim() ?? '';
     final parentRaw = map['parentId']?.trim() ?? '';
     final usageUnitRaw = map['usageUnit']?.trim() ?? '';
     final scheduleRaw = map['scheduleType']?.trim() ?? '';
@@ -505,6 +520,10 @@ abstract final class BundleCodec {
       description: (description == null || description.isEmpty)
           ? null
           : description,
+      categoryPreset: categoryRaw.isEmpty
+          ? null
+          : DeviceCategoryPresetX.fromStorage(categoryRaw),
+      locationLabel: locationRaw.isEmpty ? null : locationRaw,
       status: DeviceStatusX.fromStorage(map['status'] ?? 'active'),
       usageUnit: usageUnitRaw.isEmpty
           ? null

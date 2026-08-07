@@ -47,19 +47,19 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 
 ### Device list
 **Entry:** Home → Device management; Preferences → Birthdays shortcut is separate  
-**Shows:** Root devices as cards — name, status badge (Up to Date / Due Soon / Needs Service), progress bar, last log summary; empty state with logo + add-first hint  
+**Shows:** Root devices as cards — category icon, name, optional location label, status badge (Up to Date / Due Soon / Needs Service), progress bar, last log summary; empty state with logo + add-first hint  
 **Actions:** Tap card → device detail; FAB → add root device  
 **Leaves to:** Device detail, add device
 
 ### Add / edit device
 **Entry:** Device list FAB; device detail edit; add child from device detail  
-**Shows:** Name; optional schedule (type, interval, initial elapsed); usage unit for usage-based roots  
+**Shows:** Name; optional category icon preset; optional location label; optional device notes; optional schedule (type, interval, initial elapsed); usage unit for usage-based roots  
 **Actions:** Save; delete (edit only, confirms)  
 **Leaves to:** Previous screen
 
 ### Device detail
 **Entry:** Device list; home reminder; child card from parent  
-**Shows:** Name, status badge, progress bar (if scheduled), schedule card, children list (or add-child row), log history  
+**Shows:** Name, category icon, optional location label, optional device notes, status badge, progress bar (if scheduled), schedule card, children list (or add-child row), log history  
 **Actions:** Archive (subtree); edit; FAB → add log; tap child → child detail; add child  
 **Leaves to:** Edit device, add log, child detail, Home (after archive)
 

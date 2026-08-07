@@ -93,6 +93,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deviceNameRequired => 'Device name is required';
 
   @override
+  String get deviceMetadataSection => 'Details';
+
+  @override
+  String get categoryPreset => 'Category';
+
+  @override
+  String get categoryGeneric => 'Generic';
+
+  @override
+  String get categoryCar => 'Vehicle';
+
+  @override
+  String get categoryHvac => 'HVAC';
+
+  @override
+  String get categoryAppliance => 'Appliance';
+
+  @override
+  String get categoryElectronics => 'Electronics';
+
+  @override
+  String get categoryPlumbing => 'Plumbing';
+
+  @override
+  String get locationLabel => 'Location';
+
+  @override
+  String get locationLabelHint => 'e.g. Garage, Kitchen...';
+
+  @override
+  String get deviceNotes => 'Device notes';
+
+  @override
+  String get deviceNotesHint =>
+      'Optional notes about this device (not log entries)...';
+
+  @override
   String get maintenanceRule => 'Maintenance Rule';
 
   @override

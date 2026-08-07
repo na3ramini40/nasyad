@@ -266,6 +266,78 @@ abstract class AppLocalizations {
   /// **'Device name is required'**
   String get deviceNameRequired;
 
+  /// No description provided for @deviceMetadataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get deviceMetadataSection;
+
+  /// No description provided for @categoryPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryPreset;
+
+  /// No description provided for @categoryGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Generic'**
+  String get categoryGeneric;
+
+  /// No description provided for @categoryCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get categoryCar;
+
+  /// No description provided for @categoryHvac.
+  ///
+  /// In en, this message translates to:
+  /// **'HVAC'**
+  String get categoryHvac;
+
+  /// No description provided for @categoryAppliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appliance'**
+  String get categoryAppliance;
+
+  /// No description provided for @categoryElectronics.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get categoryElectronics;
+
+  /// No description provided for @categoryPlumbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumbing'**
+  String get categoryPlumbing;
+
+  /// No description provided for @locationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get locationLabel;
+
+  /// No description provided for @locationLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Garage, Kitchen...'**
+  String get locationLabelHint;
+
+  /// No description provided for @deviceNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Device notes'**
+  String get deviceNotes;
+
+  /// No description provided for @deviceNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional notes about this device (not log entries)...'**
+  String get deviceNotesHint;
+
   /// No description provided for @maintenanceRule.
   ///
   /// In en, this message translates to:

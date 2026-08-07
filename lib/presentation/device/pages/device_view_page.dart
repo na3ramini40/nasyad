@@ -10,6 +10,7 @@ import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
+import 'package:nasyad/presentation/device/device_category_presets.dart';
 import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 class DevicePage extends StatelessWidget {
@@ -78,12 +79,53 @@ class DevicePage extends StatelessWidget {
             body: AppContent(
               child: ListView(
                 children: [
-                  Text(
-                    summary.device.name,
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        categoryPresetIcon(summary.device.categoryPreset),
+                        size: 28,
+                        color: theme.colorScheme.secondary,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              summary.device.name,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                            if (summary.device.locationLabel != null &&
+                                summary.device.locationLabel!.trim().isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: AppSpacing.xxs,
+                                ),
+                                child: Text(
+                                  summary.device.locationLabel!.trim(),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+                  if (summary.device.description != null &&
+                      summary.device.description!.trim().isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      summary.device.description!.trim(),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.sm),
                   _statusBadge(l10n, summary.status),
                   const SizedBox(height: AppSpacing.md),
@@ -127,6 +169,15 @@ class DevicePage extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                         child: DeviceCard(
                           name: child.device.name,
+                          label:
+                              child.device.locationLabel?.trim().isNotEmpty ==
+                                  true
+                              ? child.device.locationLabel!.trim()
+                              : null,
+                          leading: Icon(
+                            categoryPresetIcon(child.device.categoryPreset),
+                            color: theme.colorScheme.secondary,
+                          ),
                           status: _cardStatus(child.status),
                           statusLabel: _statusLabel(l10n, child.status),
                           progress: child.progress,

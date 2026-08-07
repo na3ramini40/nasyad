@@ -49,6 +49,28 @@ class $DevicesTableTable extends DevicesTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _categoryPresetMeta = const VerificationMeta(
+    'categoryPreset',
+  );
+  @override
+  late final GeneratedColumn<String> categoryPreset = GeneratedColumn<String>(
+    'category_preset',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _locationLabelMeta = const VerificationMeta(
+    'locationLabel',
+  );
+  @override
+  late final GeneratedColumn<String> locationLabel = GeneratedColumn<String>(
+    'location_label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -177,6 +199,8 @@ class $DevicesTableTable extends DevicesTable
     parentId,
     name,
     description,
+    categoryPreset,
+    locationLabel,
     status,
     usageUnit,
     currentUsage,
@@ -226,6 +250,24 @@ class $DevicesTableTable extends DevicesTable
         description.isAcceptableOrUnknown(
           data['description']!,
           _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('category_preset')) {
+      context.handle(
+        _categoryPresetMeta,
+        categoryPreset.isAcceptableOrUnknown(
+          data['category_preset']!,
+          _categoryPresetMeta,
+        ),
+      );
+    }
+    if (data.containsKey('location_label')) {
+      context.handle(
+        _locationLabelMeta,
+        locationLabel.isAcceptableOrUnknown(
+          data['location_label']!,
+          _locationLabelMeta,
         ),
       );
     }
@@ -345,6 +387,14 @@ class $DevicesTableTable extends DevicesTable
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
+      categoryPreset: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category_preset'],
+      ),
+      locationLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location_label'],
+      ),
       status: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}status'],
@@ -404,6 +454,8 @@ class DevicesTableData extends DataClass
   final String? parentId;
   final String name;
   final String? description;
+  final String? categoryPreset;
+  final String? locationLabel;
   final String status;
   final String? usageUnit;
   final int currentUsage;
@@ -420,6 +472,8 @@ class DevicesTableData extends DataClass
     this.parentId,
     required this.name,
     this.description,
+    this.categoryPreset,
+    this.locationLabel,
     required this.status,
     this.usageUnit,
     required this.currentUsage,
@@ -442,6 +496,12 @@ class DevicesTableData extends DataClass
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || categoryPreset != null) {
+      map['category_preset'] = Variable<String>(categoryPreset);
+    }
+    if (!nullToAbsent || locationLabel != null) {
+      map['location_label'] = Variable<String>(locationLabel);
     }
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || usageUnit != null) {
@@ -479,6 +539,12 @@ class DevicesTableData extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      categoryPreset: categoryPreset == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryPreset),
+      locationLabel: locationLabel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationLabel),
       status: Value(status),
       usageUnit: usageUnit == null && nullToAbsent
           ? const Value.absent()
@@ -515,6 +581,8 @@ class DevicesTableData extends DataClass
       parentId: serializer.fromJson<String?>(json['parentId']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
+      categoryPreset: serializer.fromJson<String?>(json['categoryPreset']),
+      locationLabel: serializer.fromJson<String?>(json['locationLabel']),
       status: serializer.fromJson<String>(json['status']),
       usageUnit: serializer.fromJson<String?>(json['usageUnit']),
       currentUsage: serializer.fromJson<int>(json['currentUsage']),
@@ -540,6 +608,8 @@ class DevicesTableData extends DataClass
       'parentId': serializer.toJson<String?>(parentId),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
+      'categoryPreset': serializer.toJson<String?>(categoryPreset),
+      'locationLabel': serializer.toJson<String?>(locationLabel),
       'status': serializer.toJson<String>(status),
       'usageUnit': serializer.toJson<String?>(usageUnit),
       'currentUsage': serializer.toJson<int>(currentUsage),
@@ -559,6 +629,8 @@ class DevicesTableData extends DataClass
     Value<String?> parentId = const Value.absent(),
     String? name,
     Value<String?> description = const Value.absent(),
+    Value<String?> categoryPreset = const Value.absent(),
+    Value<String?> locationLabel = const Value.absent(),
     String? status,
     Value<String?> usageUnit = const Value.absent(),
     int? currentUsage,
@@ -575,6 +647,12 @@ class DevicesTableData extends DataClass
     parentId: parentId.present ? parentId.value : this.parentId,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
+    categoryPreset: categoryPreset.present
+        ? categoryPreset.value
+        : this.categoryPreset,
+    locationLabel: locationLabel.present
+        ? locationLabel.value
+        : this.locationLabel,
     status: status ?? this.status,
     usageUnit: usageUnit.present ? usageUnit.value : this.usageUnit,
     currentUsage: currentUsage ?? this.currentUsage,
@@ -600,6 +678,12 @@ class DevicesTableData extends DataClass
       description: data.description.present
           ? data.description.value
           : this.description,
+      categoryPreset: data.categoryPreset.present
+          ? data.categoryPreset.value
+          : this.categoryPreset,
+      locationLabel: data.locationLabel.present
+          ? data.locationLabel.value
+          : this.locationLabel,
       status: data.status.present ? data.status.value : this.status,
       usageUnit: data.usageUnit.present ? data.usageUnit.value : this.usageUnit,
       currentUsage: data.currentUsage.present
@@ -635,6 +719,8 @@ class DevicesTableData extends DataClass
           ..write('parentId: $parentId, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
+          ..write('categoryPreset: $categoryPreset, ')
+          ..write('locationLabel: $locationLabel, ')
           ..write('status: $status, ')
           ..write('usageUnit: $usageUnit, ')
           ..write('currentUsage: $currentUsage, ')
@@ -656,6 +742,8 @@ class DevicesTableData extends DataClass
     parentId,
     name,
     description,
+    categoryPreset,
+    locationLabel,
     status,
     usageUnit,
     currentUsage,
@@ -676,6 +764,8 @@ class DevicesTableData extends DataClass
           other.parentId == this.parentId &&
           other.name == this.name &&
           other.description == this.description &&
+          other.categoryPreset == this.categoryPreset &&
+          other.locationLabel == this.locationLabel &&
           other.status == this.status &&
           other.usageUnit == this.usageUnit &&
           other.currentUsage == this.currentUsage &&
@@ -694,6 +784,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
   final Value<String?> parentId;
   final Value<String> name;
   final Value<String?> description;
+  final Value<String?> categoryPreset;
+  final Value<String?> locationLabel;
   final Value<String> status;
   final Value<String?> usageUnit;
   final Value<int> currentUsage;
@@ -711,6 +803,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     this.parentId = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
+    this.categoryPreset = const Value.absent(),
+    this.locationLabel = const Value.absent(),
     this.status = const Value.absent(),
     this.usageUnit = const Value.absent(),
     this.currentUsage = const Value.absent(),
@@ -729,6 +823,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     this.parentId = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
+    this.categoryPreset = const Value.absent(),
+    this.locationLabel = const Value.absent(),
     this.status = const Value.absent(),
     this.usageUnit = const Value.absent(),
     this.currentUsage = const Value.absent(),
@@ -750,6 +846,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     Expression<String>? parentId,
     Expression<String>? name,
     Expression<String>? description,
+    Expression<String>? categoryPreset,
+    Expression<String>? locationLabel,
     Expression<String>? status,
     Expression<String>? usageUnit,
     Expression<int>? currentUsage,
@@ -768,6 +866,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
       if (parentId != null) 'parent_id': parentId,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
+      if (categoryPreset != null) 'category_preset': categoryPreset,
+      if (locationLabel != null) 'location_label': locationLabel,
       if (status != null) 'status': status,
       if (usageUnit != null) 'usage_unit': usageUnit,
       if (currentUsage != null) 'current_usage': currentUsage,
@@ -789,6 +889,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     Value<String?>? parentId,
     Value<String>? name,
     Value<String?>? description,
+    Value<String?>? categoryPreset,
+    Value<String?>? locationLabel,
     Value<String>? status,
     Value<String?>? usageUnit,
     Value<int>? currentUsage,
@@ -807,6 +909,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
       parentId: parentId ?? this.parentId,
       name: name ?? this.name,
       description: description ?? this.description,
+      categoryPreset: categoryPreset ?? this.categoryPreset,
+      locationLabel: locationLabel ?? this.locationLabel,
       status: status ?? this.status,
       usageUnit: usageUnit ?? this.usageUnit,
       currentUsage: currentUsage ?? this.currentUsage,
@@ -837,6 +941,12 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
+    }
+    if (categoryPreset.present) {
+      map['category_preset'] = Variable<String>(categoryPreset.value);
+    }
+    if (locationLabel.present) {
+      map['location_label'] = Variable<String>(locationLabel.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -886,6 +996,8 @@ class DevicesTableCompanion extends UpdateCompanion<DevicesTableData> {
           ..write('parentId: $parentId, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
+          ..write('categoryPreset: $categoryPreset, ')
+          ..write('locationLabel: $locationLabel, ')
           ..write('status: $status, ')
           ..write('usageUnit: $usageUnit, ')
           ..write('currentUsage: $currentUsage, ')
@@ -1912,6 +2024,8 @@ typedef $$DevicesTableTableCreateCompanionBuilder =
       Value<String?> parentId,
       required String name,
       Value<String?> description,
+      Value<String?> categoryPreset,
+      Value<String?> locationLabel,
       Value<String> status,
       Value<String?> usageUnit,
       Value<int> currentUsage,
@@ -1931,6 +2045,8 @@ typedef $$DevicesTableTableUpdateCompanionBuilder =
       Value<String?> parentId,
       Value<String> name,
       Value<String?> description,
+      Value<String?> categoryPreset,
+      Value<String?> locationLabel,
       Value<String> status,
       Value<String?> usageUnit,
       Value<int> currentUsage,
@@ -2000,6 +2116,16 @@ class $$DevicesTableTableFilterComposer
 
   ColumnFilters<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get categoryPreset => $composableBuilder(
+    column: $table.categoryPreset,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get locationLabel => $composableBuilder(
+    column: $table.locationLabel,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2113,6 +2239,16 @@ class $$DevicesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get categoryPreset => $composableBuilder(
+    column: $table.categoryPreset,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get locationLabel => $composableBuilder(
+    column: $table.locationLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get status => $composableBuilder(
     column: $table.status,
     builder: (column) => ColumnOrderings(column),
@@ -2189,6 +2325,16 @@ class $$DevicesTableTableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get categoryPreset => $composableBuilder(
+    column: $table.categoryPreset,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get locationLabel => $composableBuilder(
+    column: $table.locationLabel,
     builder: (column) => column,
   );
 
@@ -2297,6 +2443,8 @@ class $$DevicesTableTableTableManager
                 Value<String?> parentId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<String?> categoryPreset = const Value.absent(),
+                Value<String?> locationLabel = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String?> usageUnit = const Value.absent(),
                 Value<int> currentUsage = const Value.absent(),
@@ -2314,6 +2462,8 @@ class $$DevicesTableTableTableManager
                 parentId: parentId,
                 name: name,
                 description: description,
+                categoryPreset: categoryPreset,
+                locationLabel: locationLabel,
                 status: status,
                 usageUnit: usageUnit,
                 currentUsage: currentUsage,
@@ -2333,6 +2483,8 @@ class $$DevicesTableTableTableManager
                 Value<String?> parentId = const Value.absent(),
                 required String name,
                 Value<String?> description = const Value.absent(),
+                Value<String?> categoryPreset = const Value.absent(),
+                Value<String?> locationLabel = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String?> usageUnit = const Value.absent(),
                 Value<int> currentUsage = const Value.absent(),
@@ -2350,6 +2502,8 @@ class $$DevicesTableTableTableManager
                 parentId: parentId,
                 name: name,
                 description: description,
+                categoryPreset: categoryPreset,
+                locationLabel: locationLabel,
                 status: status,
                 usageUnit: usageUnit,
                 currentUsage: currentUsage,

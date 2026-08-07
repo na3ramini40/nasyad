@@ -9,6 +9,10 @@ class DevicesTable extends Table {
 
   TextColumn get description => text().nullable()();
 
+  TextColumn get categoryPreset => text().nullable()();
+
+  TextColumn get locationLabel => text().nullable()();
+
   TextColumn get status => text().withDefault(const Constant('active'))();
 
   TextColumn get usageUnit => text().nullable()();

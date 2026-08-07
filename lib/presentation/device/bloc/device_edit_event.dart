@@ -20,6 +20,33 @@ final class DeviceEditNameChanged extends DeviceEditEvent {
   List<Object?> get props => [name];
 }
 
+final class DeviceEditCategoryPresetChanged extends DeviceEditEvent {
+  const DeviceEditCategoryPresetChanged(this.categoryPreset);
+
+  final DeviceCategoryPreset? categoryPreset;
+
+  @override
+  List<Object?> get props => [categoryPreset];
+}
+
+final class DeviceEditLocationLabelChanged extends DeviceEditEvent {
+  const DeviceEditLocationLabelChanged(this.locationLabel);
+
+  final String locationLabel;
+
+  @override
+  List<Object?> get props => [locationLabel];
+}
+
+final class DeviceEditNotesChanged extends DeviceEditEvent {
+  const DeviceEditNotesChanged(this.notes);
+
+  final String notes;
+
+  @override
+  List<Object?> get props => [notes];
+}
+
 final class DeviceEditScheduleEnabledChanged extends DeviceEditEvent {
   const DeviceEditScheduleEnabledChanged(this.enabled);
 
