@@ -27,6 +27,12 @@ class DeviceLogLocalDataSourceImpl implements DeviceLogLocalDataSource {
   }
 
   @override
+  Future<DeviceLogModel?> getLogById(String id) async {
+    final row = await _dao.getLogById(id);
+    return row == null ? null : DeviceLogModel.fromTableData(row);
+  }
+
+  @override
   Future<void> insertDeviceLog(DeviceLogModel log) async {
     await _dao.insertLog(log.toCompanion());
   }

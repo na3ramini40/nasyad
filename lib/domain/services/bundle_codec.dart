@@ -158,6 +158,10 @@ abstract final class BundleCodec {
         'kind',
         'usageValue',
         'usageUnit',
+        'cost',
+        'costCurrency',
+        'vendor',
+        'photoBase64',
         'createdAt',
       ]),
     );
@@ -172,6 +176,10 @@ abstract final class BundleCodec {
             log.kind.storageValue,
             log.usageValue?.toString() ?? '',
             log.usageUnit?.storageValue ?? '',
+            log.cost?.toString() ?? '',
+            log.costCurrency ?? '',
+            log.vendor ?? '',
+            log.photoBase64 ?? '',
             log.createdAt.toUtc().toIso8601String(),
           ]),
         );
@@ -295,6 +303,12 @@ abstract final class BundleCodec {
         buffer.writeln('kind: ${log.kind.storageValue}');
         buffer.writeln('usageValue: ${log.usageValue ?? ''}');
         buffer.writeln('usageUnit: ${log.usageUnit?.storageValue ?? ''}');
+        buffer.writeln('cost: ${log.cost ?? ''}');
+        buffer.writeln('costCurrency: ${log.costCurrency ?? ''}');
+        buffer.writeln('vendor: ${log.vendor ?? ''}');
+        if (log.photoBase64 != null && log.photoBase64!.isNotEmpty) {
+          buffer.writeln('photoBase64: ${log.photoBase64}');
+        }
         buffer.writeln('createdAt: ${log.createdAt.toUtc().toIso8601String()}');
         buffer.writeln();
       }
@@ -444,6 +458,11 @@ abstract final class BundleCodec {
     'kind': log.kind.storageValue,
     'usageValue': log.usageValue,
     'usageUnit': log.usageUnit?.storageValue,
+    if (log.cost != null) 'cost': log.cost,
+    if (log.costCurrency != null) 'costCurrency': log.costCurrency,
+    if (log.vendor != null) 'vendor': log.vendor,
+    if (log.photoBase64 != null && log.photoBase64!.isNotEmpty)
+      'photoBase64': log.photoBase64,
     'createdAt': log.createdAt.toUtc().toIso8601String(),
   };
 
@@ -456,6 +475,10 @@ abstract final class BundleCodec {
     'usageValue':
         json['usageValue']?.toString() ?? json['usageDelta']?.toString() ?? '',
     'usageUnit': json['usageUnit']?.toString() ?? '',
+    'cost': json['cost']?.toString() ?? '',
+    'costCurrency': json['costCurrency']?.toString() ?? '',
+    'vendor': json['vendor']?.toString() ?? '',
+    'photoBase64': json['photoBase64']?.toString() ?? '',
     'createdAt': '${json['createdAt']}',
   });
 
@@ -540,6 +563,10 @@ abstract final class BundleCodec {
         map['usageValue']?.trim() ?? map['usageDelta']?.trim() ?? '';
     final unitRaw = map['usageUnit']?.trim() ?? '';
     final kindRaw = map['kind']?.trim() ?? '';
+    final costRaw = map['cost']?.trim() ?? '';
+    final costCurrencyRaw = map['costCurrency']?.trim() ?? '';
+    final vendorRaw = map['vendor']?.trim() ?? '';
+    final photoBase64Raw = map['photoBase64']?.trim() ?? '';
     return DeviceLog(
       id: id,
       deviceId: deviceId,
@@ -554,6 +581,10 @@ abstract final class BundleCodec {
       usageUnit: unitRaw.isEmpty
           ? null
           : UsageIntervalUnitX.fromStorage(unitRaw),
+      cost: costRaw.isEmpty ? null : double.tryParse(costRaw),
+      costCurrency: costCurrencyRaw.isEmpty ? null : costCurrencyRaw,
+      vendor: vendorRaw.isEmpty ? null : vendorRaw,
+      photoBase64: photoBase64Raw.isEmpty ? null : photoBase64Raw,
       createdAt: createdAt,
     );
   }

@@ -39,9 +39,15 @@ abstract final class AppChangelog {
       version: '1.4.0',
       en: [
         'Pick bundled schedule templates when adding or editing a device — presets like oil change or HVAC filter fill in the schedule for you.',
+        'Maintenance logs can include optional cost, vendor, and a photo attachment.',
+        'Log history shows cost, vendor, and photo thumbnails when present.',
+        'Export and import carry log extras and photos in JSON, CSV, and plain text.',
       ],
       fa: [
         'هنگام افزودن یا ویرایش دستگاه، از الگوهای زمان‌بندی آماده استفاده کنید — پیش‌تنظیم‌هایی مثل تعویض روغن یا فیلتر HVAC، زمان‌بندی را برای شما پر می‌کنند.',
+        'گزارش نگهداری می‌تواند هزینه، فروشنده و عکس پیوست اختیاری داشته باشد.',
+        'تاریخچه گزارش‌ها در صورت وجود هزینه، فروشنده و تصویر کوچک عکس را نشان می‌دهد.',
+        'خروجی و ورود داده، جزئیات گزارش و عکس‌ها را در JSON، CSV و متن ساده منتقل می‌کند.',
       ],
     ),
     ChangelogEntry(

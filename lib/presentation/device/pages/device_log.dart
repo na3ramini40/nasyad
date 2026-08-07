@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'package:nasyad/core/l10n/l10n.dart';
@@ -25,11 +26,18 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
   final _usageController = TextEditingController();
+  final _costController = TextEditingController();
+  final _costCurrencyController = TextEditingController();
+  final _vendorController = TextEditingController();
+  final _imagePicker = ImagePicker();
 
   @override
   void dispose() {
     _notesController.dispose();
     _usageController.dispose();
+    _costController.dispose();
+    _costCurrencyController.dispose();
+    _vendorController.dispose();
     super.dispose();
   }
 
@@ -47,6 +55,21 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
     if (picked != null && mounted) {
       context.read<DeviceLogBloc>().add(DeviceLogDateChanged(picked));
     }
+  }
+
+  Future<void> _pickPhoto() async {
+    final picked = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 2048,
+      maxHeight: 2048,
+      imageQuality: 85,
+    );
+    if (picked == null || !mounted) return;
+    final bytes = await picked.readAsBytes();
+    if (!mounted) return;
+    context.read<DeviceLogBloc>().add(
+      DeviceLogPhotoSelected(bytes, picked.name),
+    );
   }
 
   String _dateLabel(Locale locale, DateTime date) {
@@ -135,6 +158,68 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    controller: _costController,
+                    label: l10n.logCost,
+                    hintText: l10n.logCostHint,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+                    ],
+                    onChanged: (value) => context.read<DeviceLogBloc>().add(
+                      DeviceLogCostValueChanged(value),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    controller: _costCurrencyController,
+                    label: l10n.logCostCurrency,
+                    hintText: l10n.logCostCurrencyHint,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (value) => context.read<DeviceLogBloc>().add(
+                      DeviceLogCostCurrencyChanged(value),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    controller: _vendorController,
+                    label: l10n.logVendor,
+                    hintText: l10n.logVendorHint,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (value) => context.read<DeviceLogBloc>().add(
+                      DeviceLogVendorChanged(value),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Text(l10n.logPhoto, style: muted),
+                  const SizedBox(height: AppSpacing.xs),
+                  if (state.hasPhoto) ...[
+                    ClipRRect(
+                      borderRadius: AppRadius.borderMd,
+                      child: Image.memory(
+                        state.photoBytes!,
+                        height: 160,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    TextButton.icon(
+                      onPressed: () => context.read<DeviceLogBloc>().add(
+                        const DeviceLogPhotoCleared(),
+                      ),
+                      icon: const Icon(Icons.delete_outline),
+                      label: Text(l10n.logPhotoRemove),
+                    ),
+                  ] else
+                    OutlinedButton.icon(
+                      onPressed: _pickPhoto,
+                      icon: const Icon(Icons.photo_outlined),
+                      label: Text(l10n.logPhotoAttach),
+                    ),
+                  const SizedBox(height: AppSpacing.lg),
                   Text(l10n.date, style: muted),
                   const SizedBox(height: AppSpacing.xs),
                   InkWell(
@@ -200,6 +285,7 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                               DeviceLogSubmitRequested(
                                 usageReadingRequiredMessage:
                                     l10n.usageReadingRequired,
+                                invalidCostMessage: l10n.logInvalidCost,
                               ),
                             );
                           },

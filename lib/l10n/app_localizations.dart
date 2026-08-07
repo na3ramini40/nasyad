@@ -644,6 +644,66 @@ abstract class AppLocalizations {
   /// **'Notes are required'**
   String get notesRequired;
 
+  /// No description provided for @logCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost'**
+  String get logCost;
+
+  /// No description provided for @logCostHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional, e.g. 49.99'**
+  String get logCostHint;
+
+  /// No description provided for @logCostCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency label'**
+  String get logCostCurrency;
+
+  /// No description provided for @logCostCurrencyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional — uses locale currency if empty'**
+  String get logCostCurrencyHint;
+
+  /// No description provided for @logVendor.
+  ///
+  /// In en, this message translates to:
+  /// **'Vendor / service provider'**
+  String get logVendor;
+
+  /// No description provided for @logVendorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional, e.g. Auto shop'**
+  String get logVendorHint;
+
+  /// No description provided for @logPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get logPhoto;
+
+  /// No description provided for @logPhotoAttach.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach photo'**
+  String get logPhotoAttach;
+
+  /// No description provided for @logPhotoRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get logPhotoRemove;
+
+  /// No description provided for @logInvalidCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid cost amount'**
+  String get logInvalidCost;
+
   /// No description provided for @date.
   ///
   /// In en, this message translates to:

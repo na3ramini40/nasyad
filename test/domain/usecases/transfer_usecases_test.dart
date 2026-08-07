@@ -6,15 +6,19 @@ import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
 
 import '../../helpers/fake_repositories.dart';
+import '../../helpers/fake_log_photo_storage.dart';
 import '../../helpers/fixtures.dart';
 
 void main() {
   late FakeDeviceRepository devices;
   late FakeDeviceLogRepository logs;
 
+  late FakeLogPhotoStorage photos;
+
   setUp(() {
     devices = FakeDeviceRepository();
     logs = FakeDeviceLogRepository();
+    photos = FakeLogPhotoStorage();
   });
 
   tearDown(() async {
@@ -27,7 +31,7 @@ void main() {
       devices.devices.add(sampleDevice());
       logs.logsByDevice['device-1'] = [sampleLog()];
 
-      final result = await ExportDataUsecase(devices, logs)(
+      final result = await ExportDataUsecase(devices, logs, photos)(
         scope: ExportScopeKind.all,
         format: ExportFormat.json,
       );
@@ -39,7 +43,7 @@ void main() {
     });
 
     test('validates one and selected scopes', () async {
-      final usecase = ExportDataUsecase(devices, logs);
+      final usecase = ExportDataUsecase(devices, logs, photos);
       expect(
         () => usecase(
           scope: ExportScopeKind.one,
@@ -60,7 +64,7 @@ void main() {
 
     test('throws when no devices found', () async {
       expect(
-        () => ExportDataUsecase(devices, logs)(
+        () => ExportDataUsecase(devices, logs, photos)(
           scope: ExportScopeKind.all,
           format: ExportFormat.csv,
         ),
@@ -74,7 +78,7 @@ void main() {
         sampleDevice(id: 'b', name: 'B'),
       ]);
 
-      final result = await ExportDataUsecase(devices, logs)(
+      final result = await ExportDataUsecase(devices, logs, photos)(
         scope: ExportScopeKind.selected,
         format: ExportFormat.csv,
         deviceIds: const ['a'],

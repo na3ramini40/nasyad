@@ -982,6 +982,46 @@ class $DeviceLogsTableTable extends DeviceLogsTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _costMeta = const VerificationMeta('cost');
+  @override
+  late final GeneratedColumn<double> cost = GeneratedColumn<double>(
+    'cost',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _costCurrencyMeta = const VerificationMeta(
+    'costCurrency',
+  );
+  @override
+  late final GeneratedColumn<String> costCurrency = GeneratedColumn<String>(
+    'cost_currency',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vendorMeta = const VerificationMeta('vendor');
+  @override
+  late final GeneratedColumn<String> vendor = GeneratedColumn<String>(
+    'vendor',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _photoPathMeta = const VerificationMeta(
+    'photoPath',
+  );
+  @override
+  late final GeneratedColumn<String> photoPath = GeneratedColumn<String>(
+    'photo_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1002,6 +1042,10 @@ class $DeviceLogsTableTable extends DeviceLogsTable
     kind,
     usageValue,
     usageUnit,
+    cost,
+    costCurrency,
+    vendor,
+    photoPath,
     createdAt,
   ];
   @override
@@ -1061,6 +1105,33 @@ class $DeviceLogsTableTable extends DeviceLogsTable
         usageUnit.isAcceptableOrUnknown(data['usage_unit']!, _usageUnitMeta),
       );
     }
+    if (data.containsKey('cost')) {
+      context.handle(
+        _costMeta,
+        cost.isAcceptableOrUnknown(data['cost']!, _costMeta),
+      );
+    }
+    if (data.containsKey('cost_currency')) {
+      context.handle(
+        _costCurrencyMeta,
+        costCurrency.isAcceptableOrUnknown(
+          data['cost_currency']!,
+          _costCurrencyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vendor')) {
+      context.handle(
+        _vendorMeta,
+        vendor.isAcceptableOrUnknown(data['vendor']!, _vendorMeta),
+      );
+    }
+    if (data.containsKey('photo_path')) {
+      context.handle(
+        _photoPathMeta,
+        photoPath.isAcceptableOrUnknown(data['photo_path']!, _photoPathMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1106,6 +1177,22 @@ class $DeviceLogsTableTable extends DeviceLogsTable
         DriftSqlType.string,
         data['${effectivePrefix}usage_unit'],
       ),
+      cost: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}cost'],
+      ),
+      costCurrency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cost_currency'],
+      ),
+      vendor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}vendor'],
+      ),
+      photoPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}photo_path'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1128,6 +1215,10 @@ class DeviceLogsTableData extends DataClass
   final String kind;
   final int? usageValue;
   final String? usageUnit;
+  final double? cost;
+  final String? costCurrency;
+  final String? vendor;
+  final String? photoPath;
   final DateTime createdAt;
   const DeviceLogsTableData({
     required this.id,
@@ -1137,6 +1228,10 @@ class DeviceLogsTableData extends DataClass
     required this.kind,
     this.usageValue,
     this.usageUnit,
+    this.cost,
+    this.costCurrency,
+    this.vendor,
+    this.photoPath,
     required this.createdAt,
   });
   @override
@@ -1154,6 +1249,18 @@ class DeviceLogsTableData extends DataClass
     }
     if (!nullToAbsent || usageUnit != null) {
       map['usage_unit'] = Variable<String>(usageUnit);
+    }
+    if (!nullToAbsent || cost != null) {
+      map['cost'] = Variable<double>(cost);
+    }
+    if (!nullToAbsent || costCurrency != null) {
+      map['cost_currency'] = Variable<String>(costCurrency);
+    }
+    if (!nullToAbsent || vendor != null) {
+      map['vendor'] = Variable<String>(vendor);
+    }
+    if (!nullToAbsent || photoPath != null) {
+      map['photo_path'] = Variable<String>(photoPath);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -1174,6 +1281,16 @@ class DeviceLogsTableData extends DataClass
       usageUnit: usageUnit == null && nullToAbsent
           ? const Value.absent()
           : Value(usageUnit),
+      cost: cost == null && nullToAbsent ? const Value.absent() : Value(cost),
+      costCurrency: costCurrency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(costCurrency),
+      vendor: vendor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vendor),
+      photoPath: photoPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(photoPath),
       createdAt: Value(createdAt),
     );
   }
@@ -1191,6 +1308,10 @@ class DeviceLogsTableData extends DataClass
       kind: serializer.fromJson<String>(json['kind']),
       usageValue: serializer.fromJson<int?>(json['usageValue']),
       usageUnit: serializer.fromJson<String?>(json['usageUnit']),
+      cost: serializer.fromJson<double?>(json['cost']),
+      costCurrency: serializer.fromJson<String?>(json['costCurrency']),
+      vendor: serializer.fromJson<String?>(json['vendor']),
+      photoPath: serializer.fromJson<String?>(json['photoPath']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -1205,6 +1326,10 @@ class DeviceLogsTableData extends DataClass
       'kind': serializer.toJson<String>(kind),
       'usageValue': serializer.toJson<int?>(usageValue),
       'usageUnit': serializer.toJson<String?>(usageUnit),
+      'cost': serializer.toJson<double?>(cost),
+      'costCurrency': serializer.toJson<String?>(costCurrency),
+      'vendor': serializer.toJson<String?>(vendor),
+      'photoPath': serializer.toJson<String?>(photoPath),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -1217,6 +1342,10 @@ class DeviceLogsTableData extends DataClass
     String? kind,
     Value<int?> usageValue = const Value.absent(),
     Value<String?> usageUnit = const Value.absent(),
+    Value<double?> cost = const Value.absent(),
+    Value<String?> costCurrency = const Value.absent(),
+    Value<String?> vendor = const Value.absent(),
+    Value<String?> photoPath = const Value.absent(),
     DateTime? createdAt,
   }) => DeviceLogsTableData(
     id: id ?? this.id,
@@ -1226,6 +1355,10 @@ class DeviceLogsTableData extends DataClass
     kind: kind ?? this.kind,
     usageValue: usageValue.present ? usageValue.value : this.usageValue,
     usageUnit: usageUnit.present ? usageUnit.value : this.usageUnit,
+    cost: cost.present ? cost.value : this.cost,
+    costCurrency: costCurrency.present ? costCurrency.value : this.costCurrency,
+    vendor: vendor.present ? vendor.value : this.vendor,
+    photoPath: photoPath.present ? photoPath.value : this.photoPath,
     createdAt: createdAt ?? this.createdAt,
   );
   DeviceLogsTableData copyWithCompanion(DeviceLogsTableCompanion data) {
@@ -1239,6 +1372,12 @@ class DeviceLogsTableData extends DataClass
           ? data.usageValue.value
           : this.usageValue,
       usageUnit: data.usageUnit.present ? data.usageUnit.value : this.usageUnit,
+      cost: data.cost.present ? data.cost.value : this.cost,
+      costCurrency: data.costCurrency.present
+          ? data.costCurrency.value
+          : this.costCurrency,
+      vendor: data.vendor.present ? data.vendor.value : this.vendor,
+      photoPath: data.photoPath.present ? data.photoPath.value : this.photoPath,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -1253,6 +1392,10 @@ class DeviceLogsTableData extends DataClass
           ..write('kind: $kind, ')
           ..write('usageValue: $usageValue, ')
           ..write('usageUnit: $usageUnit, ')
+          ..write('cost: $cost, ')
+          ..write('costCurrency: $costCurrency, ')
+          ..write('vendor: $vendor, ')
+          ..write('photoPath: $photoPath, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1267,6 +1410,10 @@ class DeviceLogsTableData extends DataClass
     kind,
     usageValue,
     usageUnit,
+    cost,
+    costCurrency,
+    vendor,
+    photoPath,
     createdAt,
   );
   @override
@@ -1280,6 +1427,10 @@ class DeviceLogsTableData extends DataClass
           other.kind == this.kind &&
           other.usageValue == this.usageValue &&
           other.usageUnit == this.usageUnit &&
+          other.cost == this.cost &&
+          other.costCurrency == this.costCurrency &&
+          other.vendor == this.vendor &&
+          other.photoPath == this.photoPath &&
           other.createdAt == this.createdAt);
 }
 
@@ -1291,6 +1442,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
   final Value<String> kind;
   final Value<int?> usageValue;
   final Value<String?> usageUnit;
+  final Value<double?> cost;
+  final Value<String?> costCurrency;
+  final Value<String?> vendor;
+  final Value<String?> photoPath;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const DeviceLogsTableCompanion({
@@ -1301,6 +1456,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
     this.kind = const Value.absent(),
     this.usageValue = const Value.absent(),
     this.usageUnit = const Value.absent(),
+    this.cost = const Value.absent(),
+    this.costCurrency = const Value.absent(),
+    this.vendor = const Value.absent(),
+    this.photoPath = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1312,6 +1471,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
     this.kind = const Value.absent(),
     this.usageValue = const Value.absent(),
     this.usageUnit = const Value.absent(),
+    this.cost = const Value.absent(),
+    this.costCurrency = const Value.absent(),
+    this.vendor = const Value.absent(),
+    this.photoPath = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1326,6 +1489,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
     Expression<String>? kind,
     Expression<int>? usageValue,
     Expression<String>? usageUnit,
+    Expression<double>? cost,
+    Expression<String>? costCurrency,
+    Expression<String>? vendor,
+    Expression<String>? photoPath,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -1337,6 +1504,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
       if (kind != null) 'kind': kind,
       if (usageValue != null) 'usage_value': usageValue,
       if (usageUnit != null) 'usage_unit': usageUnit,
+      if (cost != null) 'cost': cost,
+      if (costCurrency != null) 'cost_currency': costCurrency,
+      if (vendor != null) 'vendor': vendor,
+      if (photoPath != null) 'photo_path': photoPath,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1350,6 +1521,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
     Value<String>? kind,
     Value<int?>? usageValue,
     Value<String?>? usageUnit,
+    Value<double?>? cost,
+    Value<String?>? costCurrency,
+    Value<String?>? vendor,
+    Value<String?>? photoPath,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -1361,6 +1536,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
       kind: kind ?? this.kind,
       usageValue: usageValue ?? this.usageValue,
       usageUnit: usageUnit ?? this.usageUnit,
+      cost: cost ?? this.cost,
+      costCurrency: costCurrency ?? this.costCurrency,
+      vendor: vendor ?? this.vendor,
+      photoPath: photoPath ?? this.photoPath,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -1390,6 +1569,18 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
     if (usageUnit.present) {
       map['usage_unit'] = Variable<String>(usageUnit.value);
     }
+    if (cost.present) {
+      map['cost'] = Variable<double>(cost.value);
+    }
+    if (costCurrency.present) {
+      map['cost_currency'] = Variable<String>(costCurrency.value);
+    }
+    if (vendor.present) {
+      map['vendor'] = Variable<String>(vendor.value);
+    }
+    if (photoPath.present) {
+      map['photo_path'] = Variable<String>(photoPath.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1409,6 +1600,10 @@ class DeviceLogsTableCompanion extends UpdateCompanion<DeviceLogsTableData> {
           ..write('kind: $kind, ')
           ..write('usageValue: $usageValue, ')
           ..write('usageUnit: $usageUnit, ')
+          ..write('cost: $cost, ')
+          ..write('costCurrency: $costCurrency, ')
+          ..write('vendor: $vendor, ')
+          ..write('photoPath: $photoPath, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -2430,6 +2625,10 @@ typedef $$DeviceLogsTableTableCreateCompanionBuilder =
       Value<String> kind,
       Value<int?> usageValue,
       Value<String?> usageUnit,
+      Value<double?> cost,
+      Value<String?> costCurrency,
+      Value<String?> vendor,
+      Value<String?> photoPath,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -2442,6 +2641,10 @@ typedef $$DeviceLogsTableTableUpdateCompanionBuilder =
       Value<String> kind,
       Value<int?> usageValue,
       Value<String?> usageUnit,
+      Value<double?> cost,
+      Value<String?> costCurrency,
+      Value<String?> vendor,
+      Value<String?> photoPath,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -2518,6 +2721,26 @@ class $$DeviceLogsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get cost => $composableBuilder(
+    column: $table.cost,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get costCurrency => $composableBuilder(
+    column: $table.costCurrency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get vendor => $composableBuilder(
+    column: $table.vendor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get photoPath => $composableBuilder(
+    column: $table.photoPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -2586,6 +2809,26 @@ class $$DeviceLogsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get cost => $composableBuilder(
+    column: $table.cost,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get costCurrency => $composableBuilder(
+    column: $table.costCurrency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get vendor => $composableBuilder(
+    column: $table.vendor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get photoPath => $composableBuilder(
+    column: $table.photoPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2643,6 +2886,20 @@ class $$DeviceLogsTableTableAnnotationComposer
 
   GeneratedColumn<String> get usageUnit =>
       $composableBuilder(column: $table.usageUnit, builder: (column) => column);
+
+  GeneratedColumn<double> get cost =>
+      $composableBuilder(column: $table.cost, builder: (column) => column);
+
+  GeneratedColumn<String> get costCurrency => $composableBuilder(
+    column: $table.costCurrency,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get vendor =>
+      $composableBuilder(column: $table.vendor, builder: (column) => column);
+
+  GeneratedColumn<String> get photoPath =>
+      $composableBuilder(column: $table.photoPath, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2708,6 +2965,10 @@ class $$DeviceLogsTableTableTableManager
                 Value<String> kind = const Value.absent(),
                 Value<int?> usageValue = const Value.absent(),
                 Value<String?> usageUnit = const Value.absent(),
+                Value<double?> cost = const Value.absent(),
+                Value<String?> costCurrency = const Value.absent(),
+                Value<String?> vendor = const Value.absent(),
+                Value<String?> photoPath = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DeviceLogsTableCompanion(
@@ -2718,6 +2979,10 @@ class $$DeviceLogsTableTableTableManager
                 kind: kind,
                 usageValue: usageValue,
                 usageUnit: usageUnit,
+                cost: cost,
+                costCurrency: costCurrency,
+                vendor: vendor,
+                photoPath: photoPath,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -2730,6 +2995,10 @@ class $$DeviceLogsTableTableTableManager
                 Value<String> kind = const Value.absent(),
                 Value<int?> usageValue = const Value.absent(),
                 Value<String?> usageUnit = const Value.absent(),
+                Value<double?> cost = const Value.absent(),
+                Value<String?> costCurrency = const Value.absent(),
+                Value<String?> vendor = const Value.absent(),
+                Value<String?> photoPath = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => DeviceLogsTableCompanion.insert(
@@ -2740,6 +3009,10 @@ class $$DeviceLogsTableTableTableManager
                 kind: kind,
                 usageValue: usageValue,
                 usageUnit: usageUnit,
+                cost: cost,
+                costCurrency: costCurrency,
+                vendor: vendor,
+                photoPath: photoPath,
                 createdAt: createdAt,
                 rowid: rowid,
               ),

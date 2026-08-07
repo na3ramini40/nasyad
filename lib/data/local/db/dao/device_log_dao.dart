@@ -31,6 +31,12 @@ class DeviceLogDao extends DatabaseAccessor<AppDatabase>
         .getSingleOrNull();
   }
 
+  Future<DeviceLogsTableData?> getLogById(String id) {
+    return (select(
+      deviceLogsTable,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
   Future<int> insertLog(DeviceLogsTableCompanion log) {
     return into(deviceLogsTable).insert(log);
   }

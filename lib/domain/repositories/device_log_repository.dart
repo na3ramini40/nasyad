@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:nasyad/domain/entities/device_log.dart';
 
 abstract class DeviceLogRepository {
@@ -5,7 +7,7 @@ abstract class DeviceLogRepository {
 
   Stream<List<DeviceLog>> watchLogsForDevice(String deviceId);
 
-  Future<void> createLog(DeviceLog log);
+  Future<void> createLog(DeviceLog log, {Uint8List? photoBytes});
 
   Future<void> deleteLog(String id);
 }

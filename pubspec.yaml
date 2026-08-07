@@ -43,6 +43,7 @@ dependencies:
   share_plus: ^11.1.0
   path_provider: ^2.1.5
   file_selector: ^1.0.3
+  image_picker: ^1.1.2
   # prefs (last-seen app version)
   shared_preferences: ^2.5.3
   shamsi_date: ^1.1.1

@@ -11,6 +11,7 @@ import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
 
+import '../helpers/fake_log_photo_storage.dart';
 import '../helpers/fixtures.dart';
 import '../sqlite_test_setup.dart';
 
@@ -21,12 +22,25 @@ void main() {
   late DeviceRepositoryImpl devices;
   late DeviceLogRepositoryImpl logs;
 
+  late FakeLogPhotoStorage photos;
+
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
+    photos = FakeLogPhotoStorage();
     final deviceDs = DeviceLocalDataSourceImpl(db.deviceDao);
     final logDs = DeviceLogLocalDataSourceImpl(db.deviceLogDao);
-    devices = DeviceRepositoryImpl(db: db, devices: deviceDs, logs: logDs);
-    logs = DeviceLogRepositoryImpl(db: db, logs: logDs, devices: deviceDs);
+    devices = DeviceRepositoryImpl(
+      db: db,
+      devices: deviceDs,
+      logs: logDs,
+      photos: photos,
+    );
+    logs = DeviceLogRepositoryImpl(
+      db: db,
+      logs: logDs,
+      devices: deviceDs,
+      photos: photos,
+    );
   });
 
   tearDown(() async {

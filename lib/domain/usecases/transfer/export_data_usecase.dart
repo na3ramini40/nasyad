@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:nasyad/data/services/log_photo_storage.dart';
+import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
 import 'package:nasyad/domain/entities/export_format.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
@@ -19,10 +23,11 @@ class ExportDataResult {
 }
 
 class ExportDataUsecase {
-  ExportDataUsecase(this._devices, this._logs);
+  ExportDataUsecase(this._devices, this._logs, this._photos);
 
   final DeviceRepository _devices;
   final DeviceLogRepository _logs;
+  final LogPhotoStorage _photos;
 
   Future<ExportDataResult> call({
     required ExportScopeKind scope,
@@ -48,7 +53,8 @@ class ExportDataUsecase {
     final bundles = <ExportDeviceBundle>[];
     for (final device in devices) {
       final logs = await _logs.getLogsForDevice(device.id);
-      bundles.add(ExportDeviceBundle(device: device, logs: logs));
+      final enriched = await Future.wait(logs.map(_enrichLogForExport));
+      bundles.add(ExportDeviceBundle(device: device, logs: enriched));
     }
 
     final bundle = ExportBundle(
@@ -70,5 +76,12 @@ class ExportDataUsecase {
       format: format,
       fileName: fileName,
     );
+  }
+
+  Future<DeviceLog> _enrichLogForExport(DeviceLog log) async {
+    if (log.photoPath == null) return log;
+    final bytes = await _photos.readBytes(log.photoPath);
+    if (bytes == null) return log;
+    return log.copyWith(photoBase64: base64Encode(bytes));
   }
 }

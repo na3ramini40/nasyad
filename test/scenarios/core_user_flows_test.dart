@@ -20,6 +20,7 @@ import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
 import '../helpers/fake_repositories.dart';
+import '../helpers/fake_log_photo_storage.dart';
 import '../helpers/fixtures.dart';
 import '../sqlite_test_setup.dart';
 
@@ -34,7 +35,12 @@ void main() {
       db = AppDatabase(NativeDatabase.memory());
       final deviceDs = DeviceLocalDataSourceImpl(db.deviceDao);
       final logDs = DeviceLogLocalDataSourceImpl(db.deviceLogDao);
-      devices = DeviceRepositoryImpl(db: db, devices: deviceDs, logs: logDs);
+      devices = DeviceRepositoryImpl(
+        db: db,
+        devices: deviceDs,
+        logs: logDs,
+        photos: FakeLogPhotoStorage(),
+      );
     });
 
     tearDown(() async {
@@ -165,8 +171,18 @@ void main() {
       db = AppDatabase(NativeDatabase.memory());
       final deviceDs = DeviceLocalDataSourceImpl(db.deviceDao);
       final logDs = DeviceLogLocalDataSourceImpl(db.deviceLogDao);
-      devices = DeviceRepositoryImpl(db: db, devices: deviceDs, logs: logDs);
-      logs = DeviceLogRepositoryImpl(db: db, logs: logDs, devices: deviceDs);
+      devices = DeviceRepositoryImpl(
+        db: db,
+        devices: deviceDs,
+        logs: logDs,
+        photos: FakeLogPhotoStorage(),
+      );
+      logs = DeviceLogRepositoryImpl(
+        db: db,
+        logs: logDs,
+        devices: deviceDs,
+        photos: FakeLogPhotoStorage(),
+      );
     });
 
     tearDown(() async {
@@ -376,6 +392,7 @@ void main() {
           db: db,
           devices: deviceDs,
           logs: logDs,
+          photos: FakeLogPhotoStorage(),
         );
         final birthdayRepo = FakeBirthdayRepository();
         addTearDown(() => birthdayRepo.dispose());

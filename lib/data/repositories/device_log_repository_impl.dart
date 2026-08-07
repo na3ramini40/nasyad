@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
+import 'package:nasyad/data/services/log_photo_storage.dart';
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
@@ -13,16 +16,19 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
   final AppDatabase _db;
   final DeviceLogLocalDataSource _logs;
   final DeviceLocalDataSource _devices;
+  final LogPhotoStorage _photos;
   final MaintenanceStatusCalculator _calculator;
 
   DeviceLogRepositoryImpl({
     required AppDatabase db,
     required DeviceLogLocalDataSource logs,
     required DeviceLocalDataSource devices,
+    required LogPhotoStorage photos,
     MaintenanceStatusCalculator? calculator,
   }) : _db = db,
        _logs = logs,
        _devices = devices,
+       _photos = photos,
        _calculator = calculator ?? MaintenanceStatusCalculator();
 
   @override
@@ -39,11 +45,17 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
   }
 
   @override
-  Future<void> createLog(DeviceLog log) async {
+  Future<void> createLog(DeviceLog log, {Uint8List? photoBytes}) async {
+    var persisted = log;
+    if (photoBytes != null) {
+      final path = await _photos.savePhoto(log.id, photoBytes);
+      persisted = log.copyWith(photoPath: path);
+    }
+
     await _db.transaction(() async {
-      final deviceModel = await _devices.getDevice(log.deviceId);
+      final deviceModel = await _devices.getDevice(persisted.deviceId);
       if (deviceModel == null) {
-        throw StateError('Device not found: ${log.deviceId}');
+        throw StateError('Device not found: ${persisted.deviceId}');
       }
       final device = deviceModel.toEntity();
       final all = (await _devices.getAllDevices())
@@ -51,11 +63,11 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
           .toList();
       final byId = {for (final d in all) d.id: d};
 
-      await _logs.insertDeviceLog(DeviceLogModel.fromEntity(log));
+      await _logs.insertDeviceLog(DeviceLogModel.fromEntity(persisted));
 
-      switch (log.kind) {
+      switch (persisted.kind) {
         case DeviceLogKind.usageUpdate:
-          await _applyUsageUpdate(device: device, log: log, byId: byId);
+          await _applyUsageUpdate(device: device, log: persisted, byId: byId);
         case DeviceLogKind.maintenanceDone:
           await _applyMaintenanceDone(device: device, byId: byId);
       }
@@ -104,6 +116,8 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
 
   @override
   Future<void> deleteLog(String id) async {
+    final existing = await _logs.getLogById(id);
     await _logs.deleteDeviceLog(id);
+    await _photos.deletePhoto(existing?.photoPath);
   }
 }

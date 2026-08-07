@@ -7,6 +7,8 @@ abstract class DeviceLogLocalDataSource {
 
   Future<DeviceLogModel?> getLatestLogForDevice(String deviceId);
 
+  Future<DeviceLogModel?> getLogById(String id);
+
   Future<void> insertDeviceLog(DeviceLogModel log);
 
   Future<void> upsertDeviceLog(DeviceLogModel log);
