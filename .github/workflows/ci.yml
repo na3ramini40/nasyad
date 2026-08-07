@@ -169,7 +169,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nasyad-apk-v${{ steps.app_version.outputs.name }}-${{ github.sha }}
-          path: build/app/outputs/flutter-apk/app-release.apk
+          # upload-artifact paths are repo-root relative (ignores defaults.run.working-directory)
+          path: client/build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -219,7 +220,7 @@ jobs:
         run: |
           VERSION="${{ steps.app_version.outputs.name }}"
           cd build/linux/x64/release/bundle
-          tar czf "../../../../../nasyad-v${VERSION}-linux-x64.tar.gz" .
+          tar czf "${GITHUB_WORKSPACE}/nasyad-v${VERSION}-linux-x64.tar.gz" .
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -237,7 +238,9 @@ jobs:
       startsWith(github.ref, 'refs/tags/') ||
       (github.event_name == 'push' &&
         (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
-    runs-on: windows-latest
+    # windows-latest currently has VS 2026; Flutter 3.35.x maps unknown VS to
+    # "Visual Studio 16 2019" and fails. Pin 2022 until we bump Flutter past 3.38.2.
+    runs-on: windows-2022
     outputs:
       app_version_name: ${{ steps.app_version.outputs.name }}
     steps:
@@ -279,7 +282,7 @@ jobs:
         run: |
           VERSION="${{ steps.app_version.outputs.name }}"
           cd build/windows/x64/runner/Release
-          powershell Compress-Archive -Path * -DestinationPath "../../../../../nasyad-v${VERSION}-windows-x64.zip"
+          powershell Compress-Archive -Path * -DestinationPath "${GITHUB_WORKSPACE}/nasyad-v${VERSION}-windows-x64.zip"
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -294,6 +297,10 @@ jobs:
     needs: [build_apk, build_linux, build_windows]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    # Override monorepo client default — release packaging is at repo root.
+    defaults:
+      run:
+        working-directory: .
     permissions:
       contents: write
     steps:
