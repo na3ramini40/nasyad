@@ -29,6 +29,7 @@ dependencies:
   firebase_core: ^3.15.2
   firebase_messaging: ^15.2.10
   flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
   # date & localization
   intl: any
 #  shamsi_date: ^1.1.1

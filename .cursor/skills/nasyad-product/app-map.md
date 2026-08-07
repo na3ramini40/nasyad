@@ -90,8 +90,8 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ## Preferences
 
 **Entry:** Home settings icon  
-**Shows:** Language (en/fa); calendar system (Gregorian/Persian); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); data links (birthdays, export/import); about (app name + version, what's new, check for updates with status)  
-**Actions:** Change settings; open birthdays; open export/import; open what's new dialog; check for updates (manual)  
+**Shows:** Language (en/fa); calendar system (Gregorian/Persian); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); due reminder notifications (enable + daily time, on supported platforms); data links (birthdays, export/import); about (app name + version, what's new, check for updates with status)  
+**Actions:** Change settings; toggle/reschedule local due reminders; pick notification time; open birthdays; open export/import; open what's new dialog; check for updates (manual)  
 **Leaves to:** Birthday list, export/import, what's new modal, update download/install dialog
 
 ### Export & import
@@ -107,4 +107,5 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 - **Status labels:** Up to Date · Due Soon · Needs Service (devices); Due · Soon · Upcoming (home badges)
 - **Back:** App bar back or system back returns to previous screen
 - **Data:** All on device; export/import for backup and move
+- **Local due reminders:** On-device scheduled notifications for due/soon maintenance and upcoming birthdays (not cloud push). Tap opens device detail or birthday edit. Reschedules when data or preferences change.
 - **Tree:** Devices nest; schedule optional per node; archive/delete removes whole subtree

@@ -17,6 +17,12 @@ class PushNotificationService {
       FlutterLocalNotificationsPlugin();
   static var _localNotificationsReady = false;
 
+  static FlutterLocalNotificationsPlugin get localNotificationsPlugin =>
+      _localNotifications;
+
+  /// Invoked when the user taps a local notification (push or due reminder).
+  static void Function(String? payload)? onNotificationPayloadTapped;
+
   static bool get isSupported =>
       !kIsWeb && (Platform.isAndroid || Platform.isIOS || Platform.isMacOS);
 
@@ -40,6 +46,9 @@ class PushNotificationService {
       _onMessageOpened(initialMessage);
     }
   }
+
+  static Future<void> ensureLocalNotificationsReady() =>
+      _ensureLocalNotificationsReady();
 
   static Future<void> _ensureLocalNotificationsReady() async {
     if (_localNotificationsReady) return;
@@ -123,6 +132,6 @@ class PushNotificationService {
   }
 
   static void _onLocalNotificationTapped(NotificationResponse response) {
-    debugPrint('Local notification tapped: ${response.payload}');
+    onNotificationPayloadTapped?.call(response.payload);
   }
 }

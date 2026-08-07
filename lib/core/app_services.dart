@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasyad/core/calendar/calendar_preference_store.dart';
+import 'package:nasyad/core/notifications/reminder_notification_preference_store.dart';
 import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
@@ -11,6 +12,8 @@ import 'package:nasyad/data/repositories/birthday_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
 import 'package:nasyad/data/services/app_update_service_impl.dart';
+import 'package:nasyad/data/services/local_reminder_notification_service.dart';
+import 'package:nasyad/data/services/local_reminder_scheduler.dart';
 import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
@@ -43,6 +46,9 @@ class AppServices {
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
     AppUpdateService? appUpdateService,
+    ReminderNotificationPreferenceStore? reminderNotificationPreferenceStore,
+    LocalReminderNotificationService? localReminderNotificationService,
+    LocalReminderScheduler? localReminderScheduler,
   }) : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
        calendarPreferenceStore =
            calendarPreferenceStore ?? CalendarPreferenceStore(),
@@ -50,6 +56,9 @@ class AppServices {
            seasonThemePreferenceStore ?? SeasonThemePreferenceStore(),
        themeModePreferenceStore =
            themeModePreferenceStore ?? ThemeModePreferenceStore(),
+       reminderNotificationPreferenceStore =
+           reminderNotificationPreferenceStore ??
+           ReminderNotificationPreferenceStore(),
        appUpdateService = appUpdateService ?? AppUpdateServiceImpl(),
        deviceRepository = DeviceRepositoryImpl(
          db: database,
@@ -86,6 +95,15 @@ class AppServices {
       watchDeviceSummaries,
       watchBirthdays,
     );
+    this.localReminderNotificationService =
+        localReminderNotificationService ?? LocalReminderNotificationService();
+    this.localReminderScheduler =
+        localReminderScheduler ??
+        LocalReminderScheduler(
+          watchHomeReminders: watchHomeReminders,
+          preferenceStore: this.reminderNotificationPreferenceStore,
+          notificationService: this.localReminderNotificationService,
+        );
   }
 
   final AppDatabase database;
@@ -93,6 +111,7 @@ class AppServices {
   final CalendarPreferenceStore calendarPreferenceStore;
   final SeasonThemePreferenceStore seasonThemePreferenceStore;
   final ThemeModePreferenceStore themeModePreferenceStore;
+  final ReminderNotificationPreferenceStore reminderNotificationPreferenceStore;
   final AppUpdateService appUpdateService;
   final DeviceRepository deviceRepository;
   final DeviceLogRepository deviceLogRepository;
@@ -117,8 +136,13 @@ class AppServices {
   late final UpdateBirthdayUsecase updateBirthday;
   late final DeleteBirthdayUsecase deleteBirthday;
   late final WatchHomeRemindersUsecase watchHomeReminders;
+  late final LocalReminderNotificationService localReminderNotificationService;
+  late final LocalReminderScheduler localReminderScheduler;
 
-  Future<void> dispose() => database.close();
+  Future<void> dispose() async {
+    await localReminderScheduler.dispose();
+    await database.close();
+  }
 }
 
 class AppServicesScope extends InheritedWidget {

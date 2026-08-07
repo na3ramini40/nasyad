@@ -548,6 +548,23 @@ class AppLocalizationsFa extends AppLocalizations {
   String get reminderBadgeUpcoming => 'نزدیک';
 
   @override
+  String get reminderNotificationsSection => 'یادآور سررسید';
+
+  @override
+  String get reminderNotificationsEnabled => 'یادآور محلی سررسید';
+
+  @override
+  String get reminderNotificationsHint =>
+      'وقتی نگهداری سررسید شود یا تولد نزدیک باشد، اعلان بده.';
+
+  @override
+  String get reminderNotificationTime => 'زمان اعلان';
+
+  @override
+  String get reminderNotificationTimeHint =>
+      'زمان روزانه برای یادآور نگهداری و تولد.';
+
+  @override
   String get checkForUpdates => 'بررسی به‌روزرسانی';
 
   @override
