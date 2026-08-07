@@ -10,4 +10,6 @@ abstract class BirthdayLocalDataSource {
   Future<void> updateBirthday(BirthdayModel birthday);
 
   Future<void> deleteBirthday(String id);
+
+  Future<List<BirthdayModel>> searchBirthdaysByName(String query);
 }

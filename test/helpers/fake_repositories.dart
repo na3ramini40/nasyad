@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:nasyad/domain/entities/birthday.dart';
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
+import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
 
@@ -133,6 +135,20 @@ class FakeDeviceRepository implements DeviceRepository {
     }
   }
 
+  @override
+  Future<List<Device>> searchActiveDevicesByName(String query) async {
+    _maybeThrow();
+    final pattern = query.trim().toLowerCase();
+    if (pattern.isEmpty) return const [];
+    return devices
+        .where(
+          (device) =>
+              device.status == DeviceStatus.active &&
+              device.name.toLowerCase().contains(pattern),
+        )
+        .toList(growable: false);
+  }
+
   Future<void> dispose() async {
     await summariesController.close();
     await detailController.close();
@@ -184,4 +200,50 @@ class FakeDeviceLogRepository implements DeviceLogRepository {
   }
 
   Future<void> dispose() => logsController.close();
+}
+
+class FakeBirthdayRepository implements BirthdayRepository {
+  final List<Birthday> items = [];
+  final StreamController<List<Birthday>> controller =
+      StreamController<List<Birthday>>.broadcast();
+
+  void emit() => controller.add(List.unmodifiable(items));
+
+  @override
+  Stream<List<Birthday>> watchBirthdays() => controller.stream;
+
+  @override
+  Future<Birthday?> getBirthday(String id) async {
+    return items.where((b) => b.id == id).firstOrNull;
+  }
+
+  @override
+  Future<void> createBirthday(Birthday birthday) async {
+    items.add(birthday);
+    emit();
+  }
+
+  @override
+  Future<void> updateBirthday(Birthday birthday) async {
+    final index = items.indexWhere((b) => b.id == birthday.id);
+    if (index >= 0) items[index] = birthday;
+    emit();
+  }
+
+  @override
+  Future<void> deleteBirthday(String id) async {
+    items.removeWhere((b) => b.id == id);
+    emit();
+  }
+
+  @override
+  Future<List<Birthday>> searchBirthdaysByName(String query) async {
+    final pattern = query.trim().toLowerCase();
+    if (pattern.isEmpty) return const [];
+    return items
+        .where((birthday) => birthday.name.toLowerCase().contains(pattern))
+        .toList(growable: false);
+  }
+
+  Future<void> dispose() => controller.close();
 }

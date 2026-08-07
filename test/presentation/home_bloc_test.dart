@@ -8,7 +8,6 @@ import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
 import '../helpers/fake_repositories.dart';
 import '../helpers/fixtures.dart';
-import 'birthday_list_bloc_test.dart';
 
 void main() {
   late FakeDeviceRepository deviceRepository;

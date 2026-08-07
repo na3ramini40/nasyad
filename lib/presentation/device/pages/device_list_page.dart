@@ -25,6 +25,13 @@ class DeviceListPage extends StatelessWidget {
           tooltip: l10n.back,
         ),
         title: Text(l10n.deviceManagement),
+        actions: [
+          IconButton(
+            onPressed: () => context.push('/search'),
+            icon: const Icon(Icons.search),
+            tooltip: l10n.search,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/device/new'),

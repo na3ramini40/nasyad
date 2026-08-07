@@ -34,4 +34,10 @@ class BirthdayLocalDataSourceImpl implements BirthdayLocalDataSource {
   Future<void> deleteBirthday(String id) {
     return _dao.deleteById(id);
   }
+
+  @override
+  Future<List<BirthdayModel>> searchBirthdaysByName(String query) async {
+    final rows = await _dao.searchByName(query);
+    return rows.map(BirthdayModel.fromRow).toList(growable: false);
+  }
 }

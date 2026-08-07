@@ -86,4 +86,20 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
       DevicesTableCompanion(status: Value(status), updatedAt: Value(updatedAt)),
     );
   }
+
+  Future<List<DevicesTableData>> searchActiveDevicesByName(String query) {
+    final pattern = _likePattern(query);
+    return (select(devicesTable)
+          ..where((t) => t.status.equals('active') & t.name.like(pattern))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
+
+  String _likePattern(String query) {
+    final escaped = query
+        .replaceAll(r'\', r'\\')
+        .replaceAll('%', r'\%')
+        .replaceAll('_', r'\_');
+    return '%$escaped%';
+  }
 }

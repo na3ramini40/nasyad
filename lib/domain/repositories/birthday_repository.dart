@@ -10,4 +10,6 @@ abstract class BirthdayRepository {
   Future<void> updateBirthday(Birthday birthday);
 
   Future<void> deleteBirthday(String id);
+
+  Future<List<Birthday>> searchBirthdaysByName(String query);
 }

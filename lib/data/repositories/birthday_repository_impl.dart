@@ -34,4 +34,10 @@ class BirthdayRepositoryImpl implements BirthdayRepository {
   Future<void> deleteBirthday(String id) {
     return _source.deleteBirthday(id);
   }
+
+  @override
+  Future<List<Birthday>> searchBirthdaysByName(String query) async {
+    final models = await _source.searchBirthdaysByName(query);
+    return models.map((m) => m.toEntity()).toList(growable: false);
+  }
 }

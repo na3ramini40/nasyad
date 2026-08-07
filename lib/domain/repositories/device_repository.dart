@@ -25,4 +25,6 @@ abstract class DeviceRepository {
   Future<void> setDeviceStatus(String id, DeviceStatus status);
 
   Future<void> importBundle(ExportBundle bundle);
+
+  Future<List<Device>> searchActiveDevicesByName(String query);
 }

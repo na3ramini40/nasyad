@@ -610,4 +610,33 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get dismiss => 'بستن';
+
+  @override
+  String get search => 'جستجو';
+
+  @override
+  String get searchHint => 'جستجو بر اساس نام…';
+
+  @override
+  String get searchPromptTitle => 'دستگاه‌ها و تولدها را پیدا کنید';
+
+  @override
+  String get searchPromptHint =>
+      'نام را وارد کنید تا در دستگاه‌ها و فهرست تولدها جستجو شود.';
+
+  @override
+  String get searchNoResultsTitle => 'نتیجه‌ای یافت نشد';
+
+  @override
+  String get searchNoResultsHint =>
+      'نام دیگری امتحان کنید یا املای آن را بررسی کنید.';
+
+  @override
+  String get searchDevicesSection => 'دستگاه‌ها';
+
+  @override
+  String get searchBirthdaysSection => 'تولدها';
+
+  @override
+  String get searchPathSeparator => ' › ';
 }

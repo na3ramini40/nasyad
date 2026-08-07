@@ -82,4 +82,10 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   ) async {
     await _dao.setStatusForIds(ids, status, updatedAt);
   }
+
+  @override
+  Future<List<DeviceModel>> searchActiveDevicesByName(String query) async {
+    final rows = await _dao.searchActiveDevicesByName(query);
+    return rows.map(DeviceModel.fromTableData).toList();
+  }
 }

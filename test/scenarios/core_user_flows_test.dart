@@ -21,7 +21,6 @@ import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
 import '../helpers/fake_repositories.dart';
 import '../helpers/fixtures.dart';
-import '../presentation/birthday_list_bloc_test.dart';
 import '../sqlite_test_setup.dart';
 
 void main() {
