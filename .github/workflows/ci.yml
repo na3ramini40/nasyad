@@ -278,11 +278,14 @@ jobs:
         run: flutter build windows --release
 
       - name: Package Windows bundle
-        shell: bash
+        shell: pwsh
+        working-directory: client/build/windows/x64/runner/Release
         run: |
-          VERSION="${{ steps.app_version.outputs.name }}"
-          cd build/windows/x64/runner/Release
-          powershell Compress-Archive -Path * -DestinationPath "${GITHUB_WORKSPACE}/nasyad-v${VERSION}-windows-x64.zip"
+          $dest = Join-Path $env:GITHUB_WORKSPACE "nasyad-v${{ steps.app_version.outputs.name }}-windows-x64.zip"
+          if (Test-Path $dest) { Remove-Item -Force $dest }
+          # Use -Path with a string so the shell does not expand * into multiple args.
+          Compress-Archive -Path "*" -DestinationPath $dest -Force
+          Get-Item $dest | Format-List FullName, Length
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
