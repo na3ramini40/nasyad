@@ -1,3 +1,7 @@
+# Local control plane (secrets, signing, modes) — see env.example/
+.env/
+.env
+
 # Miscellaneous
 *.class
 *.log
@@ -18,20 +22,24 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# Flutter/Dart/Pub related (client/)
+client/**/doc/api/
+client/**/ios/Flutter/.last_build_id
+client/.dart_tool/
+client/.flutter-plugins-dependencies
 .dart_tool/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+client/build/
+build/
 /coverage/
+
+# Python (server/)
+server/.venv/
+server/**/__pycache__/
+server/**/*.py[cod]
+server/db.sqlite3
 
 # Symbolication related
 app.*.symbols
@@ -40,6 +48,6 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+client/android/app/debug
+client/android/app/profile
+client/android/app/release

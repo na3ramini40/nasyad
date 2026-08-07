@@ -1,0 +1,6 @@
+Django>=5.1,<5.2
+djangorestframework>=3.17,<4
+django-cors-headers>=4.9,<5
+python-dotenv>=1.2,<2
+Pillow>=10,<12
+drf-spectacular>=0.28,<1

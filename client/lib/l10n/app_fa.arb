@@ -1,0 +1,518 @@
+{
+  "@@locale": "fa",
+  "appTitle": "نصیاد",
+  "more": "بیشتر",
+  "back": "بازگشت",
+  "save": "ذخیره",
+  "delete": "حذف",
+  "edit": "ویرایش",
+  "addDevice": "افزودن دستگاه",
+  "addLog": "افزودن گزارش",
+  "submitLog": "ثبت گزارش",
+  "language": "زبان",
+  "english": "انگلیسی",
+  "persian": "فارسی",
+  "preferences": "تنظیمات",
+  "appearance": "ظاهر",
+  "themeSystem": "پیش‌فرض سیستم",
+  "themeLight": "روشن",
+  "themeDark": "تاریک",
+  "seasonTheme": "تم فصلی",
+  "seasonThemeHint": "رنگ‌های الهام‌گرفته از فصل‌های سال",
+  "seasonClassic": "پیش‌فرض",
+  "seasonSpring": "بهار",
+  "seasonSummer": "تابستان",
+  "seasonAutumn": "پاییز",
+  "seasonWinter": "زمستان",
+  "brightness": "روشنایی",
+  "deviceName": "نام دستگاه",
+  "deviceNameHint": "نام دستگاه را وارد کنید...",
+  "deviceNameRequired": "نام دستگاه الزامی است",
+  "deviceMetadataSection": "جزئیات",
+  "categoryPreset": "دسته‌بندی",
+  "categoryGeneric": "عمومی",
+  "categoryCar": "وسیله نقلیه",
+  "categoryHvac": "سرمایش و گرمایش",
+  "categoryAppliance": "لوازم خانگی",
+  "categoryElectronics": "الکترونیک",
+  "categoryPlumbing": "لوله‌کشی",
+  "locationLabel": "مکان",
+  "locationLabelHint": "مثلاً گاراژ، آشپزخانه...",
+  "deviceNotes": "یادداشت دستگاه",
+  "deviceNotesHint": "یادداشت اختیاری درباره این دستگاه (نه سوابق نگهداری)...",
+  "maintenanceRule": "قانون نگهداری",
+  "selectMaintenanceRule": "یک قانون نگهداری انتخاب کنید",
+  "selectScheduleType": "زمان یا مصرف را انتخاب کنید",
+  "selectIntervalUnit": "یک واحد انتخاب کنید",
+  "scheduleType": "نوع زمان‌بندی",
+  "scheduleByTime": "بر اساس زمان",
+  "scheduleByUsage": "بر اساس مصرف",
+  "intervalAmount": "هر",
+  "intervalAmountHint": "یک عدد وارد کنید...",
+  "intervalAmountRequired": "عددی بزرگ‌تر از ۰ وارد کنید",
+  "intervalUnit": "واحد",
+  "suggestions": "پیشنهادها",
+  "scheduleTemplates": "الگوهای زمان‌بندی",
+  "unitDays": "روز",
+  "unitWeeks": "هفته",
+  "unitMonths": "ماه",
+  "ruleEvery": "هر {value} {unit}",
+  "@ruleEvery": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "addEditDevice": "افزودن/ویرایش دستگاه",
+  "editDevice": "ویرایش دستگاه",
+  "deviceDetails": "جزئیات دستگاه",
+  "needsService": "نیاز به سرویس",
+  "upToDate": "به‌روز",
+  "maintenanceDue": "زمان سرویس رسیده",
+  "maintenanceSoon": "به زودی",
+  "noDevicesTitle": "هنوز دستگاهی نیست",
+  "noDevicesHint": "یک دستگاه اضافه کنید. بعداً می‌توانید قطعات را زیر آن قرار دهید.",
+  "noLogsYet": "هنوز گزارشی نیست",
+  "usageReading": "مقدار مصرف فعلی",
+  "usageReadingHint": "مثلاً ۱۲۴۵۰",
+  "usageReadingRequired": "مقدار مصرف فعلی را وارد کنید",
+  "usageUnit": "واحد مصرف",
+  "unitHours": "ساعت",
+  "unitKm": "کیلومتر",
+  "unitCycles": "سیکل",
+  "archive": "بایگانی",
+  "archivedDevices": "دستگاه‌های بایگانی‌شده",
+  "archivedDevicesHint": "دستگاه‌ها و قطعات بایگانی‌شده را ببینید و بازیابی کنید.",
+  "noArchivedDevicesTitle": "چیزی بایگانی نشده",
+  "noArchivedDevicesHint": "وقتی دستگاهی را بایگانی کنید، آن و قطعاتش اینجا نمایش داده می‌شوند.",
+  "restore": "بازیابی",
+  "restoreDeviceTitle": "بازیابی دستگاه؟",
+  "restoreDeviceBody": "{name} و همه قطعاتش به فهرست دستگاه‌های فعال برمی‌گردند.",
+  "@restoreDeviceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "scheduleSection": "زمان‌بندی",
+  "noSchedule": "بدون زمان‌بندی (فقط ظرف)",
+  "initialElapsed": "از این دوره قبلاً گذشته",
+  "initialElapsedHint": "پیش‌فرض ۰",
+  "childrenSection": "قطعات و زیرمجموعه‌ها",
+  "addChild": "افزودن زیرمجموعه",
+  "markMaintained": "ثبت سرویس",
+  "updateUsage": "به‌روزرسانی مصرف",
+  "logKind": "نوع گزارش",
+  "logKindMaintenance": "سرویس انجام شد",
+  "logKindUsage": "به‌روزرسانی مصرف",
+  "currentUsageLabel": "مصرف فعلی: {value} {unit}",
+  "@currentUsageLabel": {
+    "placeholders": {
+      "value": { "type": "int" },
+      "unit": { "type": "String" }
+    }
+  },
+  "scheduleSummary": "هر {value} {unit}",
+  "@scheduleSummary": {
+    "placeholders": {
+      "value": { "type": "int" },
+      "unit": { "type": "String" }
+    }
+  },
+  "noScheduleConfigured": "برای این دستگاه زمان‌بندی تعریف نشده",
+  "logHistory": "تاریخچه گزارش‌ها",
+  "usageDelta": "مصرف از آخرین گزارش",
+  "usageDeltaHint": "اختیاری، مثلاً ۱۲۰",
+  "activeMaintenanceRules": "قوانین نگهداری فعال",
+  "notes": "یادداشت‌ها",
+  "notesHint": "یادداشت نگهداری را وارد کنید...",
+  "notesRequired": "یادداشت الزامی است",
+  "logCost": "هزینه",
+  "logCostHint": "اختیاری، مثلاً ۴۹.۹۹",
+  "logCostCurrency": "برچسب ارز",
+  "logCostCurrencyHint": "اختیاری — در صورت خالی بودن از ارز محلی استفاده می‌شود",
+  "logVendor": "فروشنده / ارائه‌دهنده خدمات",
+  "logVendorHint": "اختیاری، مثلاً تعمیرگاه",
+  "logPhoto": "عکس",
+  "logPhotoAttach": "پیوست عکس",
+  "logPhotoRemove": "حذف عکس",
+  "logInvalidCost": "مبلغ هزینه معتبر وارد کنید",
+  "date": "تاریخ",
+  "lastLog": "آخرین گزارش: {value}",
+  "@lastLog": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "lastLogMinutesAgo": "{count} دقیقه پیش",
+  "@lastLogMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogDaysAgo": "{count} روز پیش",
+  "@lastLogDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogWeeksAgo": "{count} هفته پیش",
+  "@lastLogWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleEvery3Months": "هر ۳ ماه",
+  "ruleEvery500Hours": "هر ۵۰۰ ساعت",
+  "ruleEvery6Months": "هر ۶ ماه",
+  "sampleDeviceAc": "کولر گازی - پذیرایی",
+  "sampleDeviceCar": "خودرو",
+  "sampleDeviceLaptop": "لپ‌تاپ",
+  "sampleLogFilterReplaced": "تعویض فیلتر",
+  "sampleLogOilChange": "تعویض روغن",
+  "sampleLogGeneralCheck": "بازرسی عمومی",
+  "data": "داده",
+  "exportImport": "خروجی و ورودی",
+  "exportImportHint": "پشتیبان‌گیری یا بازیابی دستگاه‌ها، تولدها و مکان‌ها.",
+  "exportSection": "خروجی",
+  "importSection": "ورودی",
+  "exportScope": "محدوده خروجی",
+  "exportScopeAll": "همه داده‌ها",
+  "exportScopeOne": "یک دستگاه",
+  "exportScopeSelected": "دستگاه‌های انتخاب‌شده",
+  "exportFormat": "قالب",
+  "formatJson": "JSON",
+  "formatCsv": "CSV",
+  "formatPlainText": "متن ساده",
+  "selectDevices": "انتخاب دستگاه‌ها",
+  "share": "اشتراک‌گذاری",
+  "saveFile": "ذخیره",
+  "chooseFile": "انتخاب فایل",
+  "importAction": "وارد کردن",
+  "importPreview": "آماده برای وارد کردن: {devices} دستگاه، {logs} گزارش، {birthdays} تولد، {places} مکان",
+  "@importPreview": {
+    "placeholders": {
+      "devices": { "type": "int" },
+      "logs": { "type": "int" },
+      "birthdays": { "type": "int" },
+      "places": { "type": "int" }
+    }
+  },
+  "ruleEvery1000Km": "هر ۱۰۰۰ کیلومتر",
+  "exportSuccess": "خروجی آماده است",
+  "exportSaved": "ذخیره شد در {path}",
+  "@exportSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "exportCopied": "خروجی در کلیپ‌بورد کپی شد (اشتراک‌گذاری در این سامانه در دسترس نیست)",
+  "importSuccess": "{devices} دستگاه، {birthdays} تولد و {places} مکان وارد شد",
+  "@importSuccess": {
+    "placeholders": {
+      "devices": { "type": "int" },
+      "birthdays": { "type": "int" },
+      "places": { "type": "int" }
+    }
+  },
+  "exportNoDevices": "دستگاهی برای خروجی انتخاب نشده است",
+  "importInvalid": "خواندن این فایل ممکن نشد",
+  "noDevicesForExport": "دستگاهی برای خروجی وجود ندارد",
+  "noDataForExport": "هنوز چیزی برای خروجی نیست",
+  "about": "درباره",
+  "whatsNew": "تازه‌ها",
+  "whatsNewHint": "تغییرات این نسخه را ببینید",
+  "appVersionLabel": "نسخه {version}",
+  "@appVersionLabel": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "gotIt": "متوجه شدم",
+  "cancel": "لغو",
+  "confirm": "تأیید",
+  "birthdays": "تولدها",
+  "addBirthday": "افزودن تولد",
+  "editBirthday": "ویرایش تولد",
+  "personName": "نام",
+  "personNameHint": "نام فرد...",
+  "personNameRequired": "نام الزامی است",
+  "birthMonthDay": "تاریخ تولد",
+  "birthMonthDayHint": "ماه و روز",
+  "birthMonthDayRequired": "ماه و روز را انتخاب کنید",
+  "pickMonthDay": "انتخاب ماه و روز",
+  "month": "ماه",
+  "day": "روز",
+  "noBirthdaysTitle": "هنوز تولدی ثبت نشده",
+  "noBirthdaysHint": "کسی را اضافه کنید تا تولدش را به خاطر بسپارید.",
+  "deleteBirthdayTitle": "حذف تولد؟",
+  "deleteBirthdayBody": "{name} از این دستگاه حذف می‌شود.",
+  "@deleteBirthdayBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "calendarSystem": "تقویم تاریخ",
+  "calendarGregorian": "میلادی",
+  "calendarPersian": "شمسی",
+  "calendarSystemHint": "برای تاریخ تولد. مستقل از زبان برنامه.",
+  "remindersSection": "یادآورها",
+  "featuresSection": "بخش‌ها",
+  "deviceManagement": "مدیریت دستگاه‌ها",
+  "deviceManagementHint": "دستگاه‌ها، قطعات و برنامه نگهداری را پیگیری کنید.",
+  "birthdaysFeatureHint": "تولد افراد مهم را به خاطر بسپارید.",
+  "places": "مکان‌ها",
+  "placesFeatureHint": "نقطه، مسیر و محدوده را روی نقشه ذخیره کنید تا آفلاین در دسترس باشد.",
+  "addPlace": "افزودن مکان",
+  "editPlace": "ویرایش مکان",
+  "placeName": "نام",
+  "placeNameHint": "نام مکان…",
+  "placeNameRequired": "نام الزامی است",
+  "placeGeometryRequired": "نقاط لازم را روی نقشه اضافه کنید",
+  "placeKindPoint": "نقطه",
+  "placeKindLine": "خط",
+  "placeKindArea": "محدوده",
+  "placeKindLineWithCount": "خط · {count} نقطه",
+  "@placeKindLineWithCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeKindAreaWithCount": "محدوده · {count} نقطه",
+  "@placeKindAreaWithCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeCoordinateSummary": "{lat}, {lng}",
+  "@placeCoordinateSummary": {
+    "placeholders": {
+      "lat": { "type": "double" },
+      "lng": { "type": "double" }
+    }
+  },
+  "placeMapHintPoint": "روی نقشه بزنید تا نقطه را تنظیم کنید",
+  "placeMapHintLine": "نقطه اضافه کنید ({count} تا الان). حداقل ۲ نقطه لازم است.",
+  "@placeMapHintLine": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeMapHintArea": "نقطه اضافه کنید ({count} تا الان). حداقل ۳ نقطه لازم است.",
+  "@placeMapHintArea": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeUseMyLocation": "موقعیت من",
+  "placeUndoPoint": "برگرداندن نقطه",
+  "placeLocationDenied": "برای استفاده از موقعیت شما، اجازه دسترسی به مکان لازم است.",
+  "noPlacesTitle": "هنوز مکانی ثبت نشده",
+  "noPlacesHint": "یک نقطه، مسیر یا محدوده اضافه کنید تا آفلاین پیدا کنید.",
+  "deletePlaceTitle": "حذف مکان؟",
+  "deletePlaceBody": "{name} از این دستگاه حذف می‌شود.",
+  "@deletePlaceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "reminderFilterAll": "همه",
+  "reminderFilterDevices": "دستگاه‌ها",
+  "reminderFilterBirthdays": "تولدها",
+  "noRemindersTitle": "مورد فوری نیست",
+  "noRemindersHint": "نگهداری سررسید و تولدهای نزدیک اینجا نمایش داده می‌شوند.",
+  "reminderDeviceDue": "نگهداری سررسید شده",
+  "reminderDeviceSoon": "نگهداری به زودی",
+  "reminderBirthdayToday": "امروز تولد است",
+  "reminderBirthdayTomorrow": "فردا تولد است",
+  "reminderBirthdayInDays": "تولد تا {days} روز دیگر",
+  "@reminderBirthdayInDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "reminderBadgeDue": "سررسید",
+  "reminderBadgeSoon": "به زودی",
+  "reminderBadgeUpcoming": "نزدیک",
+  "reminderNotificationsSection": "یادآور سررسید",
+  "reminderNotificationsEnabled": "یادآور محلی سررسید",
+  "reminderNotificationsHint": "وقتی نگهداری سررسید شود یا تولد نزدیک باشد، اعلان بده.",
+  "reminderNotificationTime": "زمان اعلان",
+  "reminderNotificationTimeHint": "زمان روزانه برای یادآور نگهداری و تولد.",
+  "reminderQuickActionsMenu": "اقدام‌های سریع",
+  "reminderSnooze": "تعویق",
+  "reminderSnoozeTitle": "تعویق یادآور",
+  "reminderSnoozeOneDay": "۱ روز",
+  "reminderSnoozeThreeDays": "۳ روز",
+  "reminderSnoozeSevenDays": "۷ روز",
+  "reminderSnoozedForDays": "به مدت {days} روز تعویق شد",
+  "@reminderSnoozedForDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "soonWindowSevenDays": "۷ روز",
+  "soonWindowFourteenDays": "۱۴ روز",
+  "soonWindowHint": "نشان «به زودی» برای تولد و یادآورهای خانه بر اساس این بازه است.",
+  "checkForUpdates": "بررسی به‌روزرسانی",
+  "checkForUpdatesHint": "آخرین نسخه را از گیت‌هاب دریافت کنید",
+  "updateChecking": "در حال بررسی به‌روزرسانی…",
+  "updateUpToDate": "آخرین نسخه را دارید",
+  "updateUnsupportedPlatform": "به‌روزرسانی درون‌برنامه‌ای روی این پلتفرم پشتیبانی نمی‌شود",
+  "updateAvailableTitle": "به‌روزرسانی موجود است",
+  "updateAvailableBody": "نسخه {version} آماده است ({size}).",
+  "@updateAvailableBody": {
+    "placeholders": {
+      "version": { "type": "String" },
+      "size": { "type": "String" }
+    }
+  },
+  "updateReleaseNotes": "یادداشت انتشار",
+  "updateDownload": "دانلود",
+  "updateInstall": "نصب به‌روزرسانی",
+  "updateDownloadProgress": "در حال دانلود… {percent}٪",
+  "@updateDownloadProgress": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "updateReadyToInstall": "دانلود کامل شد. برای پایان به‌روزرسانی نصب کنید.",
+  "updateBannerMessage": "نسخه {version} موجود است",
+  "@updateBannerMessage": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateErrorOffline": "اتصال به گیت‌هاب برقرار نشد. اینترنت را بررسی کنید و دوباره تلاش کنید.",
+  "updateSizeKb": "{size} کیلوبایت",
+  "@updateSizeKb": {
+    "placeholders": {
+      "size": { "type": "int" }
+    }
+  },
+  "updateSizeMb": "{size} مگابایت",
+  "@updateSizeMb": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "dismiss": "بستن",
+  "search": "جستجو",
+  "searchHint": "جستجو بر اساس نام…",
+  "searchPromptTitle": "دستگاه‌ها، تولدها و مکان‌ها را پیدا کنید",
+  "searchPromptHint": "نام را وارد کنید تا در دستگاه‌ها، تولدها و مکان‌ها جستجو شود.",
+  "searchNoResultsTitle": "نتیجه‌ای یافت نشد",
+  "searchNoResultsHint": "نام دیگری امتحان کنید یا املای آن را بررسی کنید.",
+  "searchDevicesSection": "دستگاه‌ها",
+  "searchBirthdaysSection": "تولدها",
+  "searchPlacesSection": "مکان‌ها",
+  "searchPathSeparator": " › ",
+  "syncSection": "همگام‌سازی",
+  "syncWithRemote": "همگام‌سازی با سرور",
+  "syncWithRemoteHint": "وقتی روشن باشد و آنلاین باشید، برنامه ممکن است با سرور شما همگام شود. برای نگه‌داشتن داده فقط روی این دستگاه خاموش کنید. همه چیز همچنان آفلاین کار می‌کند.",
+  "syncStatusOff": "همگام‌سازی خاموش — داده فقط روی این دستگاه می‌ماند.",
+  "syncStatusOffline": "آفلاین — تا اتصال دوباره فقط دادهٔ محلی.",
+  "syncStatusReady": "آماده — تا فراهم شدن همگام‌سازی سرور فقط محلی.",
+  "navHome": "خانه",
+  "navProfile": "پروفایل",
+  "introTitle": "به نصیاد خوش آمدید",
+  "introBody": "برای همگام‌سازی حساب بین دستگاه‌ها وارد شوید. می‌توانید بدون حساب هم ادامه دهید — همه چیز روی این دستگاه کار می‌کند.",
+  "introSignInWithPhone": "ورود با موبایل",
+  "introContinueOffline": "ادامه بدون حساب",
+  "authSignInTitle": "ورود",
+  "authPhoneBody": "شماره موبایل خود را وارد کنید. یک کد یک‌بارمصرف برایتان ارسال می‌شود.",
+  "authPhoneLabel": "شماره موبایل",
+  "authPhoneHint": "+۹۸۹۱۲… یا ۰۹۱۲…",
+  "authSendCode": "ارسال کد",
+  "authOtpTitle": "ورود کد",
+  "authOtpBody": "کد ارسال‌شده به {phone} را وارد کنید.",
+  "@authOtpBody": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "authOtpLabel": "کد تأیید",
+  "authOtpHint": "کد ۶ رقمی",
+  "authVerify": "تأیید",
+  "authResendCode": "ارسال دوباره",
+  "authResendCooldown": "ارسال دوباره تا {seconds} ثانیه",
+  "@authResendCooldown": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "authInvalidPhone": "یک شماره موبایل معتبر وارد کنید",
+  "authInvalidCode": "یک کد تأیید معتبر وارد کنید",
+  "authGenericError": "مشکلی پیش آمد. دوباره تلاش کنید.",
+  "authSyncing": "در حال همگام‌سازی داده‌ها…",
+  "authSyncFailed": "وارد شدید. همگام‌سازی الان ممکن نبود — دادهٔ محلی‌تان امن است.",
+  "authSyncConflictTitle": "داده روی این دستگاه و سرور فرق دارد",
+  "authSyncConflictBody": "چند مورد در هر دو جا با مقدار متفاوت وجود دارد ({count}). ادامه دادن دادهٔ این دستگاه را نگه می‌دارد و سرور را به‌روز می‌کند. دادهٔ محلی جایگزین نمی‌شود.",
+  "@authSyncConflictBody": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "authSyncConflictConfirm": "نگه داشتن دادهٔ دستگاه",
+  "authSyncConflictCancel": "رد کردن همگام‌سازی",
+  "authSyncCancelled": "وارد شدید. همگام‌سازی رد شد — دادهٔ محلی‌تان بدون تغییر ماند.",
+  "authSignOut": "خروج",
+  "appLockResetSuccess": "قفل برنامه خاموش شد. می‌توانید قفل جدید را از ترجیحات تنظیم کنید.",
+  "profileTitle": "پروفایل",
+  "profileGuestTitle": "وارد نشده‌اید",
+  "profileGuestBody": "با موبایل وارد شوید تا پروفایل را مدیریت کنید. دادهٔ محلی در هر صورت آفلاین کار می‌کند.",
+  "profileEditTitle": "ویرایش پروفایل",
+  "profileNameLabel": "نام",
+  "profileNameHint": "نام نمایشی شما",
+  "profileNameEmpty": "نامی تنظیم نشده",
+  "profileIdLabel": "شناسه حساب",
+  "profileIdHint": "شناسه صادرشده توسط سرور (فقط خواندنی)",
+  "profileChangePhoto": "تغییر تصویر",
+  "profileSaved": "پروفایل ذخیره شد",
+  "appLockSection": "قفل برنامه",
+  "languageAndRegion": "زبان و منطقه",
+  "appLockMethodOff": "خاموش",
+  "appLockMethodPassword": "رمز عبور",
+  "appLockMethodPin": "پین",
+  "appLockMethodBiometric": "اثر انگشت",
+  "appLockTimeout": "قفل بعد از",
+  "appLockTimeoutImmediate": "فوری",
+  "appLockTimeoutOneMinute": "۱ دقیقه",
+  "appLockTimeoutFiveMinutes": "۵ دقیقه",
+  "appLockTimeoutFifteenMinutes": "۱۵ دقیقه",
+  "appLockTimeoutThirtyMinutes": "۳۰ دقیقه",
+  "appLockTimeoutOneHour": "۱ ساعت",
+  "appLockUnlockTitle": "باز کردن ناصیاد",
+  "appLockUnlock": "باز کردن",
+  "appLockPasswordLabel": "رمز عبور",
+  "appLockPasswordHint": "رمز را وارد کنید",
+  "appLockPinLabel": "پین",
+  "appLockPinHint": "۴ تا ۸ رقم",
+  "appLockUseBiometric": "استفاده از اثر انگشت",
+  "appLockBiometricPrompt": "باز کردن ناصیاد",
+  "appLockForgot": "قفل را فراموش کرده‌اید؟",
+  "appLockForgotPhoneBody": "برای برداشتن قفل برنامه، شماره موبایل را تأیید کنید. داده‌هایتان روی همین دستگاه می‌ماند.",
+  "appLockResetSuccess": "قفل برنامه خاموش شد",
+  "appLockCreatePassword": "ساخت رمز عبور",
+  "appLockCreatePin": "ساخت پین",
+  "appLockConfirmLabel": "تأیید",
+  "appLockConfirmHint": "دوباره وارد کنید",
+  "appLockMismatch": "مقادیر یکسان نیستند",
+  "appLockPasswordTooShort": "حداقل ۴ نویسه وارد کنید",
+  "appLockPinTooShort": "۴ تا ۸ رقم وارد کنید",
+  "appLockWrongSecret": "اشتباه است",
+  "appLockBiometricUnavailable": "اثر انگشت روی این دستگاه در دسترس نیست",
+  "appLockBiometricFailed": "اثر انگشت کار نکرد. دوباره تلاش کنید.",
+  "appLockVerifyToContinue": "برای ادامه باز کنید"
+}

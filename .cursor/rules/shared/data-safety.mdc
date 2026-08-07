@@ -1,0 +1,27 @@
+---
+description: User data must never be lost, deleted, or corrupted by any change
+alwaysApply: false
+---
+
+# Data safety
+
+User data is sacred — on-device Drift data and, when sync exists, server rows. No change may lose, silently delete, or corrupt it.
+
+## Migrations (Drift and Django)
+
+- Always **preserve existing data**: no dropping, truncating, or rewriting user tables without a copy-forward path. Prefer additive columns/tables.
+- Every schema change ships an upgrade path from the **latest released version**; renames/moves copy data, never recreate empty.
+- When existing data is at risk, add a migration test: open a DB at the old version, migrate, assert the data survived.
+
+## Import / restore
+
+- Validate the whole file **before** writing anything; reject invalid input with a clear message.
+- Writes are atomic (single transaction) — never leave a half-imported state.
+- Export must round-trip: anything the app exports, the same or newer version imports back.
+- Changing the backup format is breaking → major bump (shared release rule).
+
+## Destructive actions
+
+- User-facing delete/overwrite flows state the consequence and confirm first.
+- Prefer soft delete (archive/status flag) over hard delete when the product allows recovery.
+- Agents never run data-wiping commands (drop DB, delete app storage, `flush`) against user data without an explicit user order.

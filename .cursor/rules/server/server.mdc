@@ -1,0 +1,12 @@
+---
+description: Server engineering gates — env, verify
+globs: server/**
+alwaysApply: false
+---
+
+# Server gates
+
+- **Env:** never commit root `.env/` or `server/.env`; track `env.example/` placeholders. Local: `cp -a env.example .env` then `./tool/env_apply.sh` (or `./tool/dev.sh --setup`).
+- **Verify:** after server changes run `cd server && ./tool/check.sh` (needs `server/.venv` — `./tool/dev.sh --setup` creates it). Must pass before any PR touching `server/`.
+- **Migrations:** every model change ships its migration (`python manage.py makemigrations`); prefer additive.
+- **Layout:** domain logic in apps, `config/` stays thin — settings and root URL includes only.

@@ -1,79 +1,83 @@
 # Nasyad
 
-Local-first maintenance tracker for devices, assets, and recurring follow-ups. Data stays on device — no cloud sync in this phase.
+Monorepo for the Nasyad maintenance tracker.
 
-## Run locally
+| Side | Path | Stack |
+|------|------|-------|
+| **Client** | [`client/`](client/) | Flutter — local-first UI, Drift, BLoC |
+| **Server** | [`server/`](server/) | Django REST API |
+| **Local secrets** | [`.env/`](.env/) (gitignored) | From [`env.example/`](env.example/) |
+
+## Control plane (`.env/`)
+
+One folder holds modes, API URL, app id, GitHub update channel, version, Django secrets, and Android signing:
 
 ```bash
-source tool/pub_env.sh   # Runflare mirror — local only
+cp -a env.example .env   # once — then edit .env/ for your machine
+./tool/env_apply.sh      # sync version + Android local files
+```
+
+| You (owner) | Contributors / forks |
+|-------------|----------------------|
+| Official `APP_APPLICATION_ID`, GitHub repo, release keystore in `.env/android/` | Example ids (`com.example.nasyad`), empty GitHub channel, debug signing |
+| Production Django secrets / admin | Their own `.env/server.env` + their own admin user |
+
+Never commit `.env/`.
+
+## Run everything (one command)
+
+```bash
+./tool/dev.sh --setup    # first time
+./tool/dev.sh
+```
+
+| Flag | What |
+|------|------|
+| `./tool/dev.sh` | Django API + `flutter run` (dart-defines from `.env/`) |
+| `./tool/dev.sh --client-only` | Flutter only |
+| `./tool/dev.sh --server-only` | API only |
+| `./tool/dev.sh --docker` | Server in Docker; Flutter on host |
+| `./tool/dev.sh -- -d linux` | Pass flags to `flutter run` |
+
+Requires: **Flutter** SDK (+ device/emulator). Server path needs **Python 3.12+** or **Docker** with `--docker`.
+
+## Verify (one command)
+
+```bash
+./tool/ci_verify.sh      # client + server — required before any PR
+```
+
+## Client (Flutter)
+
+```bash
+cd client
+source tool/pub_env.sh
 flutter pub get
-flutter run
+flutter run --dart-define=API_BASE_URL=http://127.0.0.1:8000
 ```
 
-Local pub packages use the **Runflare** mirror via `tool/pub_env.sh` (see `.cursor/rules/pub-mirror.mdc`). GitHub CI uses default `pub.dev`. Do not use `pub-azs.ir` for this repo.
+Prefer `./tool/dev.sh` so defines and Android id come from `.env/`.
 
-Tests and analysis:
+## Server (Django)
 
 ```bash
-source tool/pub_env.sh
-flutter analyze
-flutter test
+cp -a env.example .env   # if missing
+./tool/env_apply.sh
+cd server
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 ```
 
-After Drift / codegen changes:
+Health: http://127.0.0.1:8000/api/health/
 
-```bash
-source tool/pub_env.sh
-dart run build_runner build
-```
+API docs (DEBUG only): http://127.0.0.1:8000/api/schema/swagger-ui/. `NASYAD_MODE=release` / `DJANGO_DEBUG=false` hides docs and requires SMS for OTP.
 
-Agent entry: [`.cursor/AGENTS.md`](.cursor/AGENTS.md). Engineering rules: [`docs/AGENTS.md`](docs/AGENTS.md).
+## Agent entry
 
-## Local CI (before a PR)
+- [`AGENTS.md`](AGENTS.md) — engineering layout + `.cursor` index
 
-See [`.cursor/commands/verify-ci.md`](.cursor/commands/verify-ci.md) and [`.cursor/rules/ci-before-pr.mdc`](.cursor/rules/ci-before-pr.mdc). Quick run:
+## Feature delivery
 
-```bash
-./tool/ci_verify.sh
-```
-
-## CI / CD (GitHub Actions)
-
-Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Flutter pinned to **3.35.6**.
-
-| Job | What | When |
-|-----|------|------|
-| **Verify** | version consistency, format, Drift codegen freshness, `analyze`, `test` | Every push/PR/tag + manual run |
-| **Build APK** | release APK artifact named from `pubspec.yaml` version (30 days) | Auto on `main`/`master` & `v*` tags; manual via **Run workflow** |
-| **Build Linux** | `nasyad-vX.Y.Z-linux-x64.tar.gz` | Same triggers as APK |
-| **Build Windows** | `nasyad-vX.Y.Z-windows-x64.zip` | Same triggers as APK |
-| **GitHub Release** | APK + Linux + Windows assets | Auto on tags like `v1.1.0` (must match app version) |
-
-### Versioning
-
-Keep these three in sync (CI enforces it):
-
-1. `pubspec.yaml` `version:` (e.g. `1.1.0+2`)
-2. `lib/core/version/app_version.dart` (generated)
-3. Newest entry in `lib/core/version/app_changelog.dart` (en + fa notes)
-
-```bash
-dart run tool/bump_version.dart minor   # or major | patch
-# then edit changelog notes for the new version
-dart run tool/check_version.dart
-```
-
-Release tags must match the name: `git tag v1.1.0` when the app is `1.1.0+…`.
-
-### How to use
-
-1. Open a PR — **Verify** runs automatically (no APK yet).
-2. To build an APK from a PR branch: **Actions → CI → Run workflow** → pick the branch.
-3. Merge to `main`/`master` — Verify + APK build run automatically.
-4. Tag a release: `git tag v1.1.0 && git push origin v1.1.0` — builds APK and creates a GitHub Release.
-
-### Notes
-
-- **Install & update:** [docs/release-install.md](docs/release-install.md) — sideload signing, in-place upgrades, desktop updates, data migrations.
-- Release APKs require Android signing secrets in GitHub Actions (see doc). Without them, tag builds fail; main-branch builds use debug signing for artifacts only.
-- macOS is not built in CI yet; use `flutter build macos --release` locally.
+Cross-cutting features usually touch **both** `client/` and `server/`. Keep domain apps isolated.

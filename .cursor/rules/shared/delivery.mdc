@@ -1,0 +1,23 @@
+---
+description: Git safety and mandatory local CI before any PR
+alwaysApply: true
+---
+
+# Delivery
+
+## CI gate (hard)
+
+Before `gh pr create`, pushing to an open PR, or claiming "PR ready":
+
+1. `./tool/ci_verify.sh` must exit **0** (client format/analyze/test/codegen/version **and** server check/tests).
+2. No separate server skip — the root script always runs both.
+
+No exceptions — not for "analyze looked fine", not for partial runs. Fix, re-run until green, then push.
+
+## Git
+
+- Commit/push **only when the user asks** (or `/ship-pr` runs with explicit ship intent).
+- Before commit run `git status`, `git diff`, `git log -5 --oneline` in parallel; stage relevant files only; never stage secrets (`.env`, `key.properties`, keystores).
+- Message: why over what; HEREDOC; never skip hooks; never use `-i` flags.
+- Amend only if the user asked, or a hook modified files after your own unpushed commit. Failed/pushed commits get a **new** commit.
+- Never force-push `main`/`master`; no destructive git (hard reset, force push) without an explicit user order; never touch git config.

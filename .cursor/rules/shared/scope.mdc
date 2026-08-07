@@ -1,0 +1,34 @@
+---
+description: Nasyad product and engineering boundaries
+alwaysApply: false
+---
+
+# Scope
+
+Layout and stack authority: root `AGENTS.md`.
+
+## Product
+
+- Client is **local-first**: Drift is the UI source of truth; the app fully works offline. Export/import is the backup path.
+- Server is **optional** — remote sync/auth only when a feature explicitly needs it.
+- Locales: `en`, `fa` (RTL). Calendar system (Gregorian/Persian) is independent of language.
+
+## Modularity
+
+Features change constantly — each must be addable, upgradable, and extendable without breaking the others.
+
+- One client feature → `client/lib/presentation/<feature>/` (singular names) + `client/lib/domain/usecases/<feature>/`.
+- One server domain → Django app under `server/<app>/`, routes at `/api/<app>/`; shared code in `server/core/` only — apps never import another app's views.
+- Features depend on each other through repository/API contracts, never another feature's UI or internals — so one side can upgrade while its dependents keep working.
+- Prefer **additive** Drift migrations and API fields; breaking changes ship client + server together.
+
+## Domain bible
+
+`docs/domain.md` + `docs/domain/` is the application structure and correctness bible — any client/server stack must fit it. Rules may be Where: both | client | server. Cross-stack work: match the shard, then wire via `.cursor/skills/shared/api-contract/`, ship both in one delivery.
+
+## One-command run (keep it true)
+
+Anyone must be able to run their own copy with one command, no production secrets:
+
+- `./tool/dev.sh` (native) and `docker compose up` (server) must always work from a fresh clone.
+- Any change to services, env vars, ports, or runtime deps updates `docker-compose.yml`, `env.example/`, `tool/dev.sh` / `tool/env_apply.sh`, and the README **in the same change**.

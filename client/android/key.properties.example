@@ -1,0 +1,8 @@
+# Deprecated — use repo-root env.example/ → .env/
+#   cp -a env.example .env && ./tool/env_apply.sh
+#
+# Local release signing lives in .env/android/key.properties
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=nasyad
+storeFile=keystore/nasyad-release.jks
