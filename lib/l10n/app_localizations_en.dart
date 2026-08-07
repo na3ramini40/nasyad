@@ -655,4 +655,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dismiss => 'Dismiss';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchHint => 'Search by name…';
+
+  @override
+  String get searchPromptTitle => 'Find devices and birthdays';
+
+  @override
+  String get searchPromptHint =>
+      'Type a name to search your devices and birthday list.';
+
+  @override
+  String get searchNoResultsTitle => 'No matches';
+
+  @override
+  String get searchNoResultsHint =>
+      'Try a different name or check your spelling.';
+
+  @override
+  String get searchDevicesSection => 'Devices';
+
+  @override
+  String get searchBirthdaysSection => 'Birthdays';
+
+  @override
+  String get searchPathSeparator => ' › ';
 }

@@ -3,22 +3,24 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:nasyad/data/local/db/dao/birthday_dao.dart';
 import 'package:nasyad/data/local/db/dao/device_dao.dart';
 import 'package:nasyad/data/local/db/dao/device_log_dao.dart';
+import 'package:nasyad/data/local/db/dao/place_dao.dart';
 import 'package:nasyad/data/local/db/tables/birthdays_table.dart';
 import 'package:nasyad/data/local/db/tables/device_logs_table.dart';
 import 'package:nasyad/data/local/db/tables/devices_table.dart';
+import 'package:nasyad/data/local/db/tables/places_table.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [DevicesTable, DeviceLogsTable, BirthdaysTable],
-  daos: [DeviceDao, DeviceLogDao, BirthdayDao],
+  tables: [DevicesTable, DeviceLogsTable, BirthdaysTable, PlacesTable],
+  daos: [DeviceDao, DeviceLogDao, BirthdayDao, PlaceDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
     : super(executor ?? driftDatabase(name: 'nasyad'));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -40,6 +42,10 @@ class AppDatabase extends _$AppDatabase {
 
       if (from < 4) {
         await m.createTable(birthdaysTable);
+      }
+
+      if (from < 5) {
+        await m.createTable(placesTable);
       }
     },
   );

@@ -21,6 +21,8 @@ import 'package:nasyad/presentation/device/pages/device_view_page.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 import 'package:nasyad/presentation/home/pages/home_page.dart';
 import 'package:nasyad/presentation/preferences/pages/preferences_page.dart';
+import 'package:nasyad/presentation/search/bloc/search_bloc.dart';
+import 'package:nasyad/presentation/search/pages/search_page.dart';
 import 'package:nasyad/presentation/splash/bloc/splash_cubit.dart';
 import 'package:nasyad/presentation/splash/pages/splash_page.dart';
 import 'package:nasyad/presentation/transfer/bloc/transfer_bloc.dart';
@@ -40,6 +42,7 @@ abstract final class AppRoutes {
   static const deviceEdit = 'device_edit';
   static const deviceLog = 'device_log';
   static const archivedDevices = 'archived_devices';
+  static const search = 'search';
 }
 
 GoRouter createAppRouter() {
@@ -68,6 +71,17 @@ GoRouter createAppRouter() {
           );
         },
         routes: [
+          GoRoute(
+            path: 'search',
+            name: AppRoutes.search,
+            builder: (context, state) {
+              final services = AppServicesScope.of(context);
+              return BlocProvider(
+                create: (_) => SearchBloc(search: services.search),
+                child: const SearchPage(),
+              );
+            },
+          ),
           GoRoute(
             path: 'devices',
             name: AppRoutes.devices,

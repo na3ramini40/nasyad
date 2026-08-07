@@ -1291,6 +1291,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dismiss'**
   String get dismiss;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name…'**
+  String get searchHint;
+
+  /// No description provided for @searchPromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find devices and birthdays'**
+  String get searchPromptTitle;
+
+  /// No description provided for @searchPromptHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a name to search your devices and birthday list.'**
+  String get searchPromptHint;
+
+  /// No description provided for @searchNoResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches'**
+  String get searchNoResultsTitle;
+
+  /// No description provided for @searchNoResultsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different name or check your spelling.'**
+  String get searchNoResultsHint;
+
+  /// No description provided for @searchDevicesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get searchDevicesSection;
+
+  /// No description provided for @searchBirthdaysSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays'**
+  String get searchBirthdaysSection;
+
+  /// No description provided for @searchPathSeparator.
+  ///
+  /// In en, this message translates to:
+  /// **' › '**
+  String get searchPathSeparator;
 }
 
 class _AppLocalizationsDelegate

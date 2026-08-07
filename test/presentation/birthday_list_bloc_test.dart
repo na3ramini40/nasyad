@@ -1,50 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/domain/entities/birthday.dart';
 import 'package:nasyad/domain/entities/calendar_system.dart';
-import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/usecases/birthday/create_birthday_usecase.dart';
 import 'package:nasyad/domain/usecases/birthday/delete_birthday_usecase.dart';
 import 'package:nasyad/domain/usecases/birthday/watch_birthdays_usecase.dart';
 import 'package:nasyad/presentation/birthday/bloc/birthday_list_bloc.dart';
 
-class FakeBirthdayRepository implements BirthdayRepository {
-  final List<Birthday> items = [];
-  final StreamController<List<Birthday>> controller =
-      StreamController<List<Birthday>>.broadcast();
-
-  void emit() => controller.add(List.unmodifiable(items));
-
-  @override
-  Stream<List<Birthday>> watchBirthdays() => controller.stream;
-
-  @override
-  Future<Birthday?> getBirthday(String id) async {
-    return items.where((b) => b.id == id).firstOrNull;
-  }
-
-  @override
-  Future<void> createBirthday(Birthday birthday) async {
-    items.add(birthday);
-    emit();
-  }
-
-  @override
-  Future<void> updateBirthday(Birthday birthday) async {
-    final index = items.indexWhere((b) => b.id == birthday.id);
-    if (index >= 0) items[index] = birthday;
-    emit();
-  }
-
-  @override
-  Future<void> deleteBirthday(String id) async {
-    items.removeWhere((b) => b.id == id);
-    emit();
-  }
-
-  Future<void> dispose() => controller.close();
-}
+import '../helpers/fake_repositories.dart';
 
 Birthday _sample({String id = 'b1', String name = 'Ada'}) {
   final now = DateTime(2026, 1, 1);

@@ -74,6 +74,11 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
+            onPressed: () => context.push('/search'),
+            icon: const Icon(Icons.search),
+            tooltip: l10n.search,
+          ),
+          IconButton(
             onPressed: () => context.push('/preferences'),
             icon: const Icon(Icons.settings_outlined),
             tooltip: l10n.preferences,

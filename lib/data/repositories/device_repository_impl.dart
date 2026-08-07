@@ -217,4 +217,10 @@ class DeviceRepositoryImpl extends DeviceRepository {
       }
     });
   }
+
+  @override
+  Future<List<Device>> searchActiveDevicesByName(String query) async {
+    final models = await _devices.searchActiveDevicesByName(query);
+    return models.map((m) => m.toEntity()).toList();
+  }
 }

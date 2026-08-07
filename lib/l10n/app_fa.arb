@@ -310,5 +310,14 @@
       "size": { "type": "String" }
     }
   },
-  "dismiss": "بستن"
+  "dismiss": "بستن",
+  "search": "جستجو",
+  "searchHint": "جستجو بر اساس نام…",
+  "searchPromptTitle": "دستگاه‌ها و تولدها را پیدا کنید",
+  "searchPromptHint": "نام را وارد کنید تا در دستگاه‌ها و فهرست تولدها جستجو شود.",
+  "searchNoResultsTitle": "نتیجه‌ای یافت نشد",
+  "searchNoResultsHint": "نام دیگری امتحان کنید یا املای آن را بررسی کنید.",
+  "searchDevicesSection": "دستگاه‌ها",
+  "searchBirthdaysSection": "تولدها",
+  "searchPathSeparator": " › "
 }

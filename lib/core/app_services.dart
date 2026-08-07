@@ -39,6 +39,7 @@ import 'package:nasyad/domain/usecases/device_log/delete_device_log_usecase.dart
 import 'package:nasyad/domain/usecases/device_log/watch_logs_for_device_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
+import 'package:nasyad/domain/usecases/search/search_usecase.dart';
 
 class AppServices {
   AppServices(
@@ -110,6 +111,7 @@ class AppServices {
           preferenceStore: this.reminderNotificationPreferenceStore,
           notificationService: this.localReminderNotificationService,
         );
+    search = SearchUsecase(deviceRepository, birthdayRepository);
   }
 
   final AppDatabase database;
@@ -146,6 +148,7 @@ class AppServices {
   late final WatchHomeRemindersUsecase watchHomeReminders;
   late final LocalReminderNotificationService localReminderNotificationService;
   late final LocalReminderScheduler localReminderScheduler;
+  late final SearchUsecase search;
 
   Future<void> dispose() async {
     await localReminderScheduler.dispose();

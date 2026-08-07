@@ -24,7 +24,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 
 **Entry:** After splash; back from sub-features  
 **Shows:**
-- App bar: logo mark, app title, settings icon
+- App bar: logo mark, app title, search icon, settings icon
 - **Reminders** section: filter chips (All / Devices / Birthdays)
 - Optional **update available** banner when a newer GitHub release exists (tap → update dialog)
 - Reminder rows: title, subtitle (due/soon/today/tomorrow/in N days), urgency badge (Due / Soon / Upcoming), kind icon
@@ -40,7 +40,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 - Birthdays tile → birthday list
 - Settings → preferences
 
-**Leaves to:** Device detail, birthday edit, device list, birthday list, preferences
+**Leaves to:** Device detail, birthday edit, device list, birthday list, preferences, search
 
 ---
 
@@ -49,8 +49,8 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ### Device list
 **Entry:** Home → Device management; Preferences → Birthdays shortcut is separate  
 **Shows:** Root devices as cards — name, status badge (Up to Date / Due Soon / Needs Service), progress bar, last log summary; empty state with logo + add-first hint  
-**Actions:** Tap card → device detail; FAB → add root device; app bar archive icon → archived devices  
-**Leaves to:** Device detail, add device, archived devices
+**Actions:** Tap card → device detail; FAB → add root device; app bar archive icon → archived devices; app bar search → search  
+**Leaves to:** Device detail, add device, archived devices, search
 
 ### Archived devices
 **Entry:** Device list app bar; Preferences → Data  
@@ -106,6 +106,15 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 **Shows:** Export scope (all / one / selected), format (JSON / CSV / plain text), device picker when needed; import file picker  
 **Actions:** Export (share/save/copy); import file  
 **Leaves to:** Preferences (snackbar feedback)
+
+---
+
+## Search
+
+**Entry:** Home app bar search icon; Device list app bar search icon  
+**Shows:** Search field; prompt when empty; grouped results (Devices / Birthdays) with name and path or birthday date; empty state when no matches  
+**Actions:** Type to search; tap device → device detail; tap birthday → birthday edit  
+**Leaves to:** Device detail, birthday edit
 
 ---
 

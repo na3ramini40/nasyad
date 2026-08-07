@@ -30,4 +30,6 @@ abstract class DeviceLocalDataSource {
     String status,
     DateTime updatedAt,
   );
+
+  Future<List<DeviceModel>> searchActiveDevicesByName(String query);
 }

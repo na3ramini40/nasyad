@@ -27,6 +27,11 @@ class DeviceListPage extends StatelessWidget {
         title: Text(l10n.deviceManagement),
         actions: [
           IconButton(
+            onPressed: () => context.push('/search'),
+            icon: const Icon(Icons.search),
+            tooltip: l10n.search,
+          ),
+          IconButton(
             icon: const Icon(Icons.archive_outlined),
             onPressed: () => context.push('/devices/archived'),
             tooltip: l10n.archivedDevices,

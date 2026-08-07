@@ -7,7 +7,7 @@ import 'package:nasyad/domain/usecases/birthday/get_birthday_usecase.dart';
 import 'package:nasyad/domain/usecases/birthday/update_birthday_usecase.dart';
 import 'package:nasyad/presentation/birthday/bloc/birthday_edit_bloc.dart';
 
-import 'birthday_list_bloc_test.dart';
+import '../helpers/fake_repositories.dart';
 
 Birthday _birthdaySample({String id = 'b1', String name = 'Ada'}) {
   final now = DateTime(2026, 1, 1);

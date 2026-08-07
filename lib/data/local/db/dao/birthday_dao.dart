@@ -32,4 +32,20 @@ class BirthdayDao extends DatabaseAccessor<AppDatabase>
   Future<int> deleteById(String id) {
     return (delete(birthdaysTable)..where((t) => t.id.equals(id))).go();
   }
+
+  Future<List<BirthdaysTableData>> searchByName(String query) {
+    final pattern = _likePattern(query);
+    return (select(birthdaysTable)
+          ..where((t) => t.name.like(pattern))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
+        .get();
+  }
+
+  String _likePattern(String query) {
+    final escaped = query
+        .replaceAll(r'\', r'\\')
+        .replaceAll('%', r'\%')
+        .replaceAll('_', r'\_');
+    return '%$escaped%';
+  }
 }

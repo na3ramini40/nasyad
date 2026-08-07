@@ -310,5 +310,14 @@
       "size": { "type": "String" }
     }
   },
-  "dismiss": "Dismiss"
+  "dismiss": "Dismiss",
+  "search": "Search",
+  "searchHint": "Search by name…",
+  "searchPromptTitle": "Find devices and birthdays",
+  "searchPromptHint": "Type a name to search your devices and birthday list.",
+  "searchNoResultsTitle": "No matches",
+  "searchNoResultsHint": "Try a different name or check your spelling.",
+  "searchDevicesSection": "Devices",
+  "searchBirthdaysSection": "Birthdays",
+  "searchPathSeparator": " › "
 }
