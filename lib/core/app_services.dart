@@ -118,8 +118,8 @@ class AppServices {
     watchHomeReminders = WatchHomeRemindersUsecase(
       watchDeviceSummaries,
       watchBirthdays,
-      reminderSnoozeStore,
-      soonWindowPreferenceStore,
+      this.reminderSnoozeStore,
+      this.soonWindowPreferenceStore,
     );
     this.localReminderNotificationService =
         localReminderNotificationService ?? LocalReminderNotificationService();
@@ -131,7 +131,31 @@ class AppServices {
           notificationService: this.localReminderNotificationService,
         );
     search = SearchUsecase(deviceRepository, birthdayRepository);
-    snoozeHomeReminder = SnoozeHomeReminderUsecase(reminderSnoozeStore);
+    snoozeHomeReminder = SnoozeHomeReminderUsecase(this.reminderSnoozeStore);
+  }
+
+  static Future<AppServices> createForTests(
+    AppDatabase database, {
+    LastSeenVersionStore? lastSeenVersionStore,
+    CalendarPreferenceStore? calendarPreferenceStore,
+    SoonWindowPreferenceStore? soonWindowPreferenceStore,
+    ReminderSnoozeStore? reminderSnoozeStore,
+    SeasonThemePreferenceStore? seasonThemePreferenceStore,
+    ThemeModePreferenceStore? themeModePreferenceStore,
+    ReminderNotificationPreferenceStore? reminderNotificationPreferenceStore,
+    LogPhotoStorage? photoStorage,
+  }) async {
+    return AppServices(
+      database,
+      lastSeenVersionStore: lastSeenVersionStore,
+      calendarPreferenceStore: calendarPreferenceStore,
+      soonWindowPreferenceStore: soonWindowPreferenceStore,
+      reminderSnoozeStore: reminderSnoozeStore,
+      seasonThemePreferenceStore: seasonThemePreferenceStore,
+      themeModePreferenceStore: themeModePreferenceStore,
+      reminderNotificationPreferenceStore: reminderNotificationPreferenceStore,
+      photoStorage: photoStorage,
+    );
   }
 
   final AppDatabase database;
