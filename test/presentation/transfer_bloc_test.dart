@@ -7,6 +7,7 @@ import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
 import 'package:nasyad/presentation/transfer/bloc/transfer_bloc.dart';
 
+import '../helpers/fake_log_photo_storage.dart';
 import '../helpers/fake_repositories.dart';
 import '../helpers/fake_transfer_file_actions.dart';
 import '../helpers/fixtures.dart';
@@ -23,7 +24,7 @@ void main() {
     files = FakeTransferFileActions();
     bloc = TransferBloc(
       getAllDevices: GetAllDevicesUsecase(devices),
-      exportData: ExportDataUsecase(devices, logs),
+      exportData: ExportDataUsecase(devices, logs, FakeLogPhotoStorage()),
       importData: ImportDataUsecase(devices),
       fileActions: files,
     );

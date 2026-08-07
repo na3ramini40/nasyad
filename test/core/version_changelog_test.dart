@@ -86,8 +86,8 @@ void main() {
     });
 
     test('seeded changelog latest matches AppVersion', () {
-      expect(AppChangelog.latest?.version, '1.3.0');
-      expect(AppChangelog.entriesSince('1.2.0').first.version, '1.3.0');
+      expect(AppChangelog.latest?.version, '1.4.0');
+      expect(AppChangelog.entriesSince('1.3.0').first.version, '1.4.0');
       expect(AppChangelog.entries.map((e) => e.version), contains('1.0.0'));
     });
 

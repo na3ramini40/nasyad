@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasyad/core/utils/id_generator.dart';
@@ -28,6 +30,11 @@ class DeviceLogBloc extends Bloc<DeviceLogEvent, DeviceLogFormState> {
     on<DeviceLogNotesChanged>(_onNotesChanged);
     on<DeviceLogDateChanged>(_onDateChanged);
     on<DeviceLogUsageValueChanged>(_onUsageValueChanged);
+    on<DeviceLogCostValueChanged>(_onCostValueChanged);
+    on<DeviceLogCostCurrencyChanged>(_onCostCurrencyChanged);
+    on<DeviceLogVendorChanged>(_onVendorChanged);
+    on<DeviceLogPhotoSelected>(_onPhotoSelected);
+    on<DeviceLogPhotoCleared>(_onPhotoCleared);
     on<DeviceLogSubmitRequested>(_onSubmit);
   }
 
@@ -102,6 +109,43 @@ class DeviceLogBloc extends Bloc<DeviceLogEvent, DeviceLogFormState> {
     emit(state.copyWith(usageValue: event.usageValue));
   }
 
+  void _onCostValueChanged(
+    DeviceLogCostValueChanged event,
+    Emitter<DeviceLogFormState> emit,
+  ) {
+    emit(state.copyWith(costValue: event.costValue));
+  }
+
+  void _onCostCurrencyChanged(
+    DeviceLogCostCurrencyChanged event,
+    Emitter<DeviceLogFormState> emit,
+  ) {
+    emit(state.copyWith(costCurrency: event.costCurrency));
+  }
+
+  void _onVendorChanged(
+    DeviceLogVendorChanged event,
+    Emitter<DeviceLogFormState> emit,
+  ) {
+    emit(state.copyWith(vendor: event.vendor));
+  }
+
+  void _onPhotoSelected(
+    DeviceLogPhotoSelected event,
+    Emitter<DeviceLogFormState> emit,
+  ) {
+    emit(
+      state.copyWith(photoBytes: event.bytes, photoFileName: event.fileName),
+    );
+  }
+
+  void _onPhotoCleared(
+    DeviceLogPhotoCleared event,
+    Emitter<DeviceLogFormState> emit,
+  ) {
+    emit(state.copyWith(clearPhoto: true));
+  }
+
   Future<void> _onSubmit(
     DeviceLogSubmitRequested event,
     Emitter<DeviceLogFormState> emit,
@@ -120,9 +164,26 @@ class DeviceLogBloc extends Bloc<DeviceLogEvent, DeviceLogFormState> {
       }
     }
 
+    double? cost;
+    final costRaw = state.costValue.trim();
+    if (costRaw.isNotEmpty) {
+      cost = double.tryParse(costRaw.replaceAll(',', '.'));
+      if (cost == null || cost < 0) {
+        emit(
+          state.copyWith(
+            status: DeviceLogStatus.failure,
+            errorMessage: event.invalidCostMessage,
+          ),
+        );
+        return;
+      }
+    }
+
     emit(state.copyWith(status: DeviceLogStatus.saving, clearError: true));
 
     final now = DateTime.now();
+    final currencyRaw = state.costCurrency.trim();
+    final vendorRaw = state.vendor.trim();
     final log = DeviceLog(
       id: IdGenerator.newId(),
       deviceId: deviceId,
@@ -131,11 +192,14 @@ class DeviceLogBloc extends Bloc<DeviceLogEvent, DeviceLogFormState> {
       kind: state.kind,
       usageValue: usageValue,
       usageUnit: state.usageOwner?.usageUnit ?? state.usageUnit,
+      cost: cost,
+      costCurrency: currencyRaw.isEmpty ? null : currencyRaw,
+      vendor: vendorRaw.isEmpty ? null : vendorRaw,
       createdAt: now,
     );
 
     try {
-      await _createDeviceLog(log);
+      await _createDeviceLog(log, photoBytes: state.photoBytes);
       emit(state.copyWith(status: DeviceLogStatus.saved));
     } catch (error) {
       emit(

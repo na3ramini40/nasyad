@@ -265,6 +265,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notesRequired => 'Notes are required';
 
   @override
+  String get logCost => 'Cost';
+
+  @override
+  String get logCostHint => 'Optional, e.g. 49.99';
+
+  @override
+  String get logCostCurrency => 'Currency label';
+
+  @override
+  String get logCostCurrencyHint => 'Optional — uses locale currency if empty';
+
+  @override
+  String get logVendor => 'Vendor / service provider';
+
+  @override
+  String get logVendorHint => 'Optional, e.g. Auto shop';
+
+  @override
+  String get logPhoto => 'Photo';
+
+  @override
+  String get logPhotoAttach => 'Attach photo';
+
+  @override
+  String get logPhotoRemove => 'Remove photo';
+
+  @override
+  String get logInvalidCost => 'Enter a valid cost amount';
+
+  @override
   String get date => 'Date';
 
   @override

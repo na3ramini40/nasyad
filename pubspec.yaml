@@ -1,7 +1,7 @@
 name: nasyad
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.3.0+4
+version: 1.4.0+5
 environment:
   sdk: ^3.9.2
 
@@ -41,6 +41,7 @@ dependencies:
   share_plus: ^11.1.0
   path_provider: ^2.1.5
   file_selector: ^1.0.3
+  image_picker: ^1.1.2
   # prefs (last-seen app version)
   shared_preferences: ^2.5.3
   shamsi_date: ^1.1.1

@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'nasyad'));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -40,6 +40,21 @@ class AppDatabase extends _$AppDatabase {
 
       if (from < 4) {
         await m.createTable(birthdaysTable);
+      }
+
+      if (from < 5) {
+        await customStatement(
+          'ALTER TABLE device_logs_table ADD COLUMN cost REAL NULL',
+        );
+        await customStatement(
+          'ALTER TABLE device_logs_table ADD COLUMN cost_currency TEXT NULL',
+        );
+        await customStatement(
+          'ALTER TABLE device_logs_table ADD COLUMN vendor TEXT NULL',
+        );
+        await customStatement(
+          'ALTER TABLE device_logs_table ADD COLUMN photo_path TEXT NULL',
+        );
       }
     },
   );

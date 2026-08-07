@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
+import 'package:nasyad/data/services/log_photo_storage.dart';
 import 'package:nasyad/domain/entities/device.dart';
+import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
@@ -16,16 +21,19 @@ class DeviceRepositoryImpl extends DeviceRepository {
   final AppDatabase _db;
   final DeviceLocalDataSource _devices;
   final DeviceLogLocalDataSource _logs;
+  final LogPhotoStorage _photos;
   final MaintenanceStatusCalculator _calculator;
 
   DeviceRepositoryImpl({
     required AppDatabase db,
     required DeviceLocalDataSource devices,
     required DeviceLogLocalDataSource logs,
+    required LogPhotoStorage photos,
     MaintenanceStatusCalculator? calculator,
   }) : _db = db,
        _devices = devices,
        _logs = logs,
+       _photos = photos,
        _calculator = calculator ?? MaintenanceStatusCalculator();
 
   @override
@@ -189,9 +197,25 @@ class DeviceRepositoryImpl extends DeviceRepository {
       for (final item in bundle.devices) {
         await _devices.upsertDevice(DeviceModel.fromEntity(item.device));
         for (final log in item.logs) {
-          await _logs.upsertDeviceLog(DeviceLogModel.fromEntity(log));
+          final imported = await _persistImportedPhoto(log);
+          await _logs.upsertDeviceLog(DeviceLogModel.fromEntity(imported));
         }
       }
     });
+  }
+
+  Future<DeviceLog> _persistImportedPhoto(DeviceLog log) async {
+    final encoded = log.photoBase64;
+    if (encoded == null || encoded.trim().isEmpty) {
+      return log.copyWith(clearPhotoBase64: true);
+    }
+    Uint8List bytes;
+    try {
+      bytes = base64Decode(encoded.trim());
+    } on FormatException {
+      return log.copyWith(clearPhotoBase64: true);
+    }
+    final path = await _photos.savePhoto(log.id, bytes);
+    return log.copyWith(photoPath: path, clearPhotoBase64: true);
   }
 }

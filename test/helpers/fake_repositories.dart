@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
@@ -168,7 +169,7 @@ class FakeDeviceLogRepository implements DeviceLogRepository {
       logsController.stream;
 
   @override
-  Future<void> createLog(DeviceLog log) async {
+  Future<void> createLog(DeviceLog log, {Uint8List? photoBytes}) async {
     _maybeThrow();
     created.add(log);
     logsByDevice.putIfAbsent(log.deviceId, () => []).add(log);

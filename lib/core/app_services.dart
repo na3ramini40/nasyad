@@ -11,6 +11,7 @@ import 'package:nasyad/data/repositories/birthday_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
 import 'package:nasyad/data/services/app_update_service_impl.dart';
+import 'package:nasyad/data/services/log_photo_storage.dart';
 import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
@@ -43,6 +44,7 @@ class AppServices {
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
     AppUpdateService? appUpdateService,
+    LogPhotoStorage? photoStorage,
   }) : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
        calendarPreferenceStore =
            calendarPreferenceStore ?? CalendarPreferenceStore(),
@@ -51,15 +53,18 @@ class AppServices {
        themeModePreferenceStore =
            themeModePreferenceStore ?? ThemeModePreferenceStore(),
        appUpdateService = appUpdateService ?? AppUpdateServiceImpl(),
+       logPhotoStorage = photoStorage ?? LogPhotoStorageImpl(),
        deviceRepository = DeviceRepositoryImpl(
          db: database,
          devices: DeviceLocalDataSourceImpl(database.deviceDao),
          logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
+         photos: (photoStorage ?? LogPhotoStorageImpl()),
        ),
        deviceLogRepository = DeviceLogRepositoryImpl(
          db: database,
          logs: DeviceLogLocalDataSourceImpl(database.deviceLogDao),
          devices: DeviceLocalDataSourceImpl(database.deviceDao),
+         photos: (photoStorage ?? LogPhotoStorageImpl()),
        ),
        birthdayRepository = BirthdayRepositoryImpl(
          BirthdayLocalDataSourceImpl(database.birthdayDao),
@@ -75,7 +80,11 @@ class AppServices {
     watchLogsForDevice = WatchLogsForDeviceUsecase(deviceLogRepository);
     createDeviceLog = CreateDeviceLogUsecase(deviceLogRepository);
     deleteDeviceLog = DeleteDeviceLogUsecase(deviceLogRepository);
-    exportData = ExportDataUsecase(deviceRepository, deviceLogRepository);
+    exportData = ExportDataUsecase(
+      deviceRepository,
+      deviceLogRepository,
+      logPhotoStorage,
+    );
     importData = ImportDataUsecase(deviceRepository);
     watchBirthdays = WatchBirthdaysUsecase(birthdayRepository);
     getBirthday = GetBirthdayUsecase(birthdayRepository);
@@ -94,6 +103,7 @@ class AppServices {
   final SeasonThemePreferenceStore seasonThemePreferenceStore;
   final ThemeModePreferenceStore themeModePreferenceStore;
   final AppUpdateService appUpdateService;
+  final LogPhotoStorage logPhotoStorage;
   final DeviceRepository deviceRepository;
   final DeviceLogRepository deviceLogRepository;
   final BirthdayRepository birthdayRepository;

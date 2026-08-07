@@ -36,6 +36,19 @@ abstract final class AppChangelog {
   /// Newest first. Notes are written for end users in every `lib/l10n` language.
   static const List<ChangelogEntry> entries = [
     ChangelogEntry(
+      version: '1.4.0',
+      en: [
+        'Maintenance logs can include optional cost, vendor, and a photo attachment.',
+        'Log history shows cost, vendor, and photo thumbnails when present.',
+        'Export and import carry log extras and photos in JSON, CSV, and plain text.',
+      ],
+      fa: [
+        'گزارش نگهداری می‌تواند هزینه، فروشنده و عکس پیوست اختیاری داشته باشد.',
+        'تاریخچه گزارش‌ها در صورت وجود هزینه، فروشنده و تصویر کوچک عکس را نشان می‌دهد.',
+        'خروجی و ورود داده، جزئیات گزارش و عکس‌ها را در JSON، CSV و متن ساده منتقل می‌کند.',
+      ],
+    ),
+    ChangelogEntry(
       version: '1.3.0',
       en: [
         'Check for app updates from GitHub — a banner on Home or manual check in Preferences downloads and installs the latest release.',

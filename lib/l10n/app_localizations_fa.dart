@@ -265,6 +265,37 @@ class AppLocalizationsFa extends AppLocalizations {
   String get notesRequired => 'یادداشت الزامی است';
 
   @override
+  String get logCost => 'هزینه';
+
+  @override
+  String get logCostHint => 'اختیاری، مثلاً ۴۹.۹۹';
+
+  @override
+  String get logCostCurrency => 'برچسب ارز';
+
+  @override
+  String get logCostCurrencyHint =>
+      'اختیاری — در صورت خالی بودن از ارز محلی استفاده می‌شود';
+
+  @override
+  String get logVendor => 'فروشنده / ارائه‌دهنده خدمات';
+
+  @override
+  String get logVendorHint => 'اختیاری، مثلاً تعمیرگاه';
+
+  @override
+  String get logPhoto => 'عکس';
+
+  @override
+  String get logPhotoAttach => 'پیوست عکس';
+
+  @override
+  String get logPhotoRemove => 'حذف عکس';
+
+  @override
+  String get logInvalidCost => 'مبلغ هزینه معتبر وارد کنید';
+
+  @override
   String get date => 'تاریخ';
 
   @override

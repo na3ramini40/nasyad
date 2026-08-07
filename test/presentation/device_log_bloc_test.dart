@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
@@ -48,6 +50,7 @@ void main() {
     bloc.add(
       const DeviceLogSubmitRequested(
         usageReadingRequiredMessage: 'reading required',
+        invalidCostMessage: 'invalid cost',
       ),
     );
 
@@ -75,6 +78,7 @@ void main() {
     bloc.add(
       const DeviceLogSubmitRequested(
         usageReadingRequiredMessage: 'reading required',
+        invalidCostMessage: 'invalid cost',
       ),
     );
 
@@ -96,6 +100,7 @@ void main() {
     bloc.add(
       const DeviceLogSubmitRequested(
         usageReadingRequiredMessage: 'reading required',
+        invalidCostMessage: 'invalid cost',
       ),
     );
 
@@ -121,6 +126,7 @@ void main() {
     bloc.add(
       const DeviceLogSubmitRequested(
         usageReadingRequiredMessage: 'reading required',
+        invalidCostMessage: 'invalid cost',
       ),
     );
 
@@ -182,4 +188,40 @@ void main() {
       ),
     );
   });
+
+  test(
+    'submits maintenance done log with cost vendor and photo bytes',
+    () async {
+      bloc.add(const DeviceLogStarted());
+      await Future<void>.delayed(Duration.zero);
+
+      bloc.add(const DeviceLogCostValueChanged('49.99'));
+      bloc.add(const DeviceLogCostCurrencyChanged('USD'));
+      bloc.add(const DeviceLogVendorChanged('Auto shop'));
+      bloc.add(
+        DeviceLogPhotoSelected(Uint8List.fromList([1, 2, 3]), 'receipt.jpg'),
+      );
+      bloc.add(
+        const DeviceLogSubmitRequested(
+          usageReadingRequiredMessage: 'reading required',
+          invalidCostMessage: 'invalid cost',
+        ),
+      );
+
+      await expectLater(
+        bloc.stream,
+        emitsThrough(
+          isA<DeviceLogFormState>().having(
+            (s) => s.status,
+            'status',
+            DeviceLogStatus.saved,
+          ),
+        ),
+      );
+
+      expect(logs.created.single.cost, 49.99);
+      expect(logs.created.single.costCurrency, 'USD');
+      expect(logs.created.single.vendor, 'Auto shop');
+    },
+  );
 }

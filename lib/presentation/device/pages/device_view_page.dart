@@ -5,7 +5,10 @@ import 'package:intl/intl.dart';
 
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
+import 'package:nasyad/core/ui/log_photo_thumbnail.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/core/utils/log_cost_formatter.dart';
+import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
@@ -154,9 +157,16 @@ class DevicePage extends StatelessWidget {
                                     logs[i].kind,
                                     logs[i].notes,
                                   ),
-                                  subtitle: DateFormat.yMMMd(
-                                    locale.toString(),
-                                  ).add_jm().format(logs[i].date),
+                                  subtitle: _logSubtitle(l10n, locale, logs[i]),
+                                  leading: LogPhotoThumbnail(
+                                    photoPath: logs[i].photoPath,
+                                    onTap: logs[i].photoPath == null
+                                        ? null
+                                        : () => LogPhotoPreviewDialog.show(
+                                            context,
+                                            logs[i].photoPath!,
+                                          ),
+                                  ),
                                   showDivider: i != logs.length - 1,
                                 ),
                             ],
@@ -187,6 +197,22 @@ class DevicePage extends StatelessWidget {
       DeviceLogKind.maintenanceDone => l10n.markMaintained,
       DeviceLogKind.usageUpdate => l10n.updateUsage,
     };
+  }
+
+  String _logSubtitle(AppLocalizations l10n, Locale locale, DeviceLog log) {
+    final parts = <String>[
+      DateFormat.yMMMd(locale.toString()).add_jm().format(log.date),
+    ];
+    if (log.cost != null) {
+      parts.add(
+        formatLogCost(locale, log.cost!, currencyLabel: log.costCurrency),
+      );
+    }
+    final vendor = log.vendor?.trim();
+    if (vendor != null && vendor.isNotEmpty) {
+      parts.add(vendor);
+    }
+    return parts.join(' · ');
   }
 
   Widget _statusBadge(AppLocalizations l10n, MaintenanceStatus status) {

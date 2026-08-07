@@ -59,14 +59,14 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 
 ### Device detail
 **Entry:** Device list; home reminder; child card from parent  
-**Shows:** Name, status badge, progress bar (if scheduled), schedule card, children list (or add-child row), log history  
+**Shows:** Name, status badge, progress bar (if scheduled), schedule card, children list (or add-child row), log history (date, cost, vendor, photo thumbnail when present)  
 **Actions:** Archive (subtree); edit; FAB → add log; tap child → child detail; add child  
 **Leaves to:** Edit device, add log, child detail, Home (after archive)
 
 ### Add log
 **Entry:** Device detail FAB (maintenance default; usage if linked)  
-**Shows:** Kind (maintenance done / usage update), date, optional notes; usage field when relevant  
-**Actions:** Save  
+**Shows:** Kind (maintenance done / usage update), date, optional notes; optional cost (amount + currency label), vendor/service provider, photo attachment; usage field when relevant  
+**Actions:** Save; attach or remove photo  
 **Leaves to:** Device detail
 
 ---

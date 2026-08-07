@@ -56,6 +56,11 @@ DeviceLog sampleLog({
   DeviceLogKind kind = DeviceLogKind.maintenanceDone,
   int? usageValue,
   UsageIntervalUnit? usageUnit = UsageIntervalUnit.hours,
+  double? cost,
+  String? costCurrency,
+  String? vendor,
+  String? photoPath,
+  String? photoBase64,
   DateTime? createdAt,
 }) {
   return DeviceLog(
@@ -66,6 +71,11 @@ DeviceLog sampleLog({
     kind: kind,
     usageValue: usageValue,
     usageUnit: usageUnit,
+    cost: cost,
+    costCurrency: costCurrency,
+    vendor: vendor,
+    photoPath: photoPath,
+    photoBase64: photoBase64,
     createdAt: createdAt ?? t1,
   );
 }

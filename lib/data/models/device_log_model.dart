@@ -12,6 +12,10 @@ class DeviceLogModel {
   final DeviceLogKind kind;
   final int? usageValue;
   final UsageIntervalUnit? usageUnit;
+  final double? cost;
+  final String? costCurrency;
+  final String? vendor;
+  final String? photoPath;
   final DateTime createdAt;
 
   const DeviceLogModel({
@@ -22,10 +26,14 @@ class DeviceLogModel {
     required this.kind,
     this.usageValue,
     this.usageUnit,
+    this.cost,
+    this.costCurrency,
+    this.vendor,
+    this.photoPath,
     required this.createdAt,
   });
 
-  DeviceLog toEntity() {
+  DeviceLog toEntity({String? photoBase64}) {
     return DeviceLog(
       id: id,
       deviceId: deviceId,
@@ -34,6 +42,11 @@ class DeviceLogModel {
       kind: kind,
       usageValue: usageValue,
       usageUnit: usageUnit,
+      cost: cost,
+      costCurrency: costCurrency,
+      vendor: vendor,
+      photoPath: photoPath,
+      photoBase64: photoBase64,
       createdAt: createdAt,
     );
   }
@@ -47,6 +60,10 @@ class DeviceLogModel {
       kind: log.kind,
       usageValue: log.usageValue,
       usageUnit: log.usageUnit,
+      cost: log.cost,
+      costCurrency: log.costCurrency,
+      vendor: log.vendor,
+      photoPath: log.photoPath,
       createdAt: log.createdAt,
     );
   }
@@ -62,6 +79,10 @@ class DeviceLogModel {
       usageUnit: log.usageUnit == null
           ? null
           : UsageIntervalUnitX.fromStorage(log.usageUnit!),
+      cost: log.cost,
+      costCurrency: log.costCurrency,
+      vendor: log.vendor,
+      photoPath: log.photoPath,
       createdAt: log.createdAt,
     );
   }
@@ -75,6 +96,10 @@ class DeviceLogModel {
       kind: Value(kind.storageValue),
       usageValue: Value(usageValue),
       usageUnit: Value(usageUnit?.storageValue),
+      cost: Value(cost),
+      costCurrency: Value(costCurrency),
+      vendor: Value(vendor),
+      photoPath: Value(photoPath),
       createdAt: createdAt,
     );
   }

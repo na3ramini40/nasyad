@@ -17,6 +17,14 @@ class DeviceLogsTable extends Table {
 
   TextColumn get usageUnit => text().nullable()();
 
+  RealColumn get cost => real().nullable()();
+
+  TextColumn get costCurrency => text().nullable()();
+
+  TextColumn get vendor => text().nullable()();
+
+  TextColumn get photoPath => text().nullable()();
+
   DateTimeColumn get createdAt => dateTime()();
 
   @override
