@@ -16,6 +16,8 @@ From `pubspec.yaml` — use these by default:
 
 **Do not assume** `get_it`, `injectable`, `freezed`, or network clients.
 
+**Package choice:** prefer `pub.dev` over custom reimplementations when the behavior is general-purpose — see `.cursor/rules/nasyad-scope.mdc` (Engineering boundaries).
+
 ## Codegen
 
 After Drift schema/DAO/annotation changes:

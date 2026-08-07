@@ -14,6 +14,9 @@ alwaysApply: true
 ## Engineering boundaries
 
 - Active stack only — see `pubspec.yaml` and `.cursor/skills/nasyad-flutter/stack.md`.
+- **Prefer packages over rewrites** — for general-purpose behavior (parsing, formatting, algorithms, platform bridges, reusable UI), use a maintained `pub.dev` package instead of hand-rolling it. Reuse packages already in `pubspec.yaml` first; add a new one when no active dependency fits.
+- **When to write custom code** — Nasyad-specific domain logic, thin wrappers around existing stack, or no suitable package (maintenance, license, size, or product boundary — e.g. cloud sync while scope is local-first).
+- **Adding a dependency** — pick a well-maintained package with reasonable transitive weight; update `docs/AGENTS.md` for structural or gated additions (`get_it`, `injectable`, `freezed`, network clients, and other stack-shaping deps).
 - Do not add `get_it`, `injectable`, `freezed`, or network clients without updating `docs/AGENTS.md`.
 - Do not create aspirational folders (`injection/`, `maintenance/`) until they exist in code and docs.
 - Never edit generated `*.g.dart` files.
