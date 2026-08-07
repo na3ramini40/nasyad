@@ -3,22 +3,15 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:nasyad/data/local/db/dao/birthday_dao.dart';
 import 'package:nasyad/data/local/db/dao/device_dao.dart';
 import 'package:nasyad/data/local/db/dao/device_log_dao.dart';
-import 'package:nasyad/data/local/db/dao/sync_outbox_dao.dart';
 import 'package:nasyad/data/local/db/tables/birthdays_table.dart';
 import 'package:nasyad/data/local/db/tables/device_logs_table.dart';
 import 'package:nasyad/data/local/db/tables/devices_table.dart';
-import 'package:nasyad/data/local/db/tables/sync_outbox_table.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [
-    DevicesTable,
-    DeviceLogsTable,
-    BirthdaysTable,
-    SyncOutboxTable,
-  ],
-  daos: [DeviceDao, DeviceLogDao, BirthdayDao, SyncOutboxDao],
+  tables: [DevicesTable, DeviceLogsTable, BirthdaysTable],
+  daos: [DeviceDao, DeviceLogDao, BirthdayDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
@@ -62,7 +55,6 @@ class AppDatabase extends _$AppDatabase {
         await customStatement(
           'ALTER TABLE device_logs_table ADD COLUMN photo_path TEXT NULL',
         );
-        await m.createTable(syncOutboxTable);
       }
     },
   );
