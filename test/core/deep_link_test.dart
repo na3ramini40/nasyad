@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/deep_link/deep_link_constants.dart';
+import 'package:nasyad/core/deep_link/deep_link_handler.dart';
 import 'package:nasyad/core/deep_link/deep_link_mapper.dart';
 import 'package:nasyad/core/deep_link/deep_link_parser.dart';
 import 'package:nasyad/core/deep_link/deep_link_resolver.dart';
@@ -156,6 +159,51 @@ void main() {
 
     test('uses nasyad scheme constant', () {
       expect(DeepLinkConstants.scheme, 'nasyad');
+    });
+  });
+
+  group('DeepLinkHandler', () {
+    testWidgets('handleUri navigates to resolved location', (tester) async {
+      final router = GoRouter(
+        initialLocation: '/splash',
+        routes: [
+          GoRoute(
+            path: '/splash',
+            builder: (_, _) => const Scaffold(body: Text('splash')),
+          ),
+          GoRoute(
+            path: '/devices',
+            builder: (_, _) => const Scaffold(body: Text('devices')),
+          ),
+        ],
+      );
+      final handler = DeepLinkHandler(router: router);
+
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      handler.handleUri(Uri.parse('nasyad:///devices'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('devices'), findsOneWidget);
+      expect(find.text('splash'), findsNothing);
+    });
+
+    testWidgets('handleUri ignores unknown URIs', (tester) async {
+      final router = GoRouter(
+        initialLocation: '/splash',
+        routes: [
+          GoRoute(
+            path: '/splash',
+            builder: (_, _) => const Scaffold(body: Text('splash')),
+          ),
+        ],
+      );
+      final handler = DeepLinkHandler(router: router);
+
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      handler.handleUri(Uri.parse('nasyad:///unknown'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('splash'), findsOneWidget);
     });
   });
 }

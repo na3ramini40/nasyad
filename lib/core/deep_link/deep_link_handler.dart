@@ -1,20 +1,33 @@
+import 'dart:async';
+
+import 'package:app_links/app_links.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nasyad/core/deep_link/deep_link_resolver.dart';
 
-/// Stub entry point for platform link streams.
-///
-/// [install] is a no-op until a package such as `app_links` or go_router's
-/// deep-link API is wired. [handleUri] is ready for manual or test invocation.
+/// Subscribes to platform `nasyad://` links and navigates via [GoRouter.go].
 class DeepLinkHandler {
-  DeepLinkHandler({required GoRouter router}) : _router = router;
+  DeepLinkHandler({required GoRouter router, AppLinks? appLinks})
+    : _router = router,
+      _appLinks = appLinks ?? AppLinks();
 
   final GoRouter _router;
+  final AppLinks _appLinks;
+  StreamSubscription<Uri>? _linkSubscription;
 
-  /// Reserved for a future platform link subscription.
-  void install() {}
+  /// Listens for cold- and warm-start platform links.
+  void install() {
+    _linkSubscription ??= _appLinks.uriLinkStream.listen(_onIncomingUri);
+  }
 
-  /// Reserved for cancelling a future platform link subscription.
-  void dispose() {}
+  void dispose() {
+    unawaited(_linkSubscription?.cancel());
+    _linkSubscription = null;
+  }
+
+  void _onIncomingUri(Uri uri) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => handleUri(uri));
+  }
 
   /// Navigates when [uri] resolves to a known in-app location.
   void handleUri(Uri uri) {
