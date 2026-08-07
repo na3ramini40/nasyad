@@ -21,7 +21,10 @@ final class DeviceEditState extends Equatable {
     this.intervalUnit,
     this.intervalValue = '',
     this.initialElapsed = '0',
+    this.fixedDueAt,
     this.usageUnit,
+    this.templates = const [],
+    this.appliedTemplateId,
     this.errorMessage,
   });
 
@@ -34,7 +37,10 @@ final class DeviceEditState extends Equatable {
   final String? intervalUnit;
   final String intervalValue;
   final String initialElapsed;
+  final DateTime? fixedDueAt;
   final UsageIntervalUnit? usageUnit;
+  final List<ScheduleTemplate> templates;
+  final String? appliedTemplateId;
   final String? errorMessage;
 
   bool get isBusy =>
@@ -49,11 +55,15 @@ final class DeviceEditState extends Equatable {
     String? intervalUnit,
     String? intervalValue,
     String? initialElapsed,
+    DateTime? fixedDueAt,
     UsageIntervalUnit? usageUnit,
+    List<ScheduleTemplate>? templates,
+    String? appliedTemplateId,
     String? errorMessage,
     bool clearScheduleType = false,
     bool clearIntervalUnit = false,
     bool clearUsageUnit = false,
+    bool clearFixedDueAt = false,
     bool clearError = false,
   }) {
     return DeviceEditState(
@@ -70,7 +80,10 @@ final class DeviceEditState extends Equatable {
           : (intervalUnit ?? this.intervalUnit),
       intervalValue: intervalValue ?? this.intervalValue,
       initialElapsed: initialElapsed ?? this.initialElapsed,
+      fixedDueAt: clearFixedDueAt ? null : (fixedDueAt ?? this.fixedDueAt),
       usageUnit: clearUsageUnit ? null : (usageUnit ?? this.usageUnit),
+      templates: templates ?? this.templates,
+      appliedTemplateId: appliedTemplateId,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
@@ -86,7 +99,10 @@ final class DeviceEditState extends Equatable {
     intervalUnit,
     intervalValue,
     initialElapsed,
+    fixedDueAt,
     usageUnit,
+    templates,
+    appliedTemplateId,
     errorMessage,
   ];
 }

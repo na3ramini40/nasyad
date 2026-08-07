@@ -60,8 +60,8 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 
 ### Add / edit device
 **Entry:** Device list FAB; device detail edit; add child from device detail  
-**Shows:** Name; optional schedule (type, interval, initial elapsed); usage unit for usage-based roots  
-**Actions:** Save; delete (edit only, confirms)  
+**Shows:** Name; optional schedule (type, interval, initial elapsed); usage unit for usage-based roots; **schedule templates** picker when schedule is enabled (bundled presets with en/fa labels, e.g. oil change, HVAC filter)  
+**Actions:** Save; pick a template to fill schedule fields; delete (edit only, confirms)  
 **Leaves to:** Previous screen
 
 ### Device detail

@@ -36,6 +36,15 @@ abstract final class AppChangelog {
   /// Newest first. Notes are written for end users in every `lib/l10n` language.
   static const List<ChangelogEntry> entries = [
     ChangelogEntry(
+      version: '1.4.0',
+      en: [
+        'Pick bundled schedule templates when adding or editing a device — presets like oil change or HVAC filter fill in the schedule for you.',
+      ],
+      fa: [
+        'هنگام افزودن یا ویرایش دستگاه، از الگوهای زمان‌بندی آماده استفاده کنید — پیش‌تنظیم‌هایی مثل تعویض روغن یا فیلتر HVAC، زمان‌بندی را برای شما پر می‌کنند.',
+      ],
+    ),
+    ChangelogEntry(
       version: '1.3.0',
       en: [
         'Check for app updates from GitHub — a banner on Home or manual check in Preferences downloads and installs the latest release.',

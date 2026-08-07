@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
+import 'package:nasyad/domain/entities/schedule_template.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
+import 'package:nasyad/domain/services/schedule_template_catalog.dart';
 import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
 import 'package:nasyad/presentation/device/bloc/device_edit_bloc.dart';
-import 'package:nasyad/presentation/device/schedule_presets.dart';
 
 import '../helpers/fake_repositories.dart';
 import '../helpers/fixtures.dart';
@@ -26,10 +27,20 @@ DeviceEditBloc _build(
   );
 }
 
+Future<void> _startBloc(DeviceEditBloc bloc) async {
+  bloc.add(const DeviceEditStarted());
+  await bloc.stream.firstWhere(
+    (state) => state.status == DeviceEditStatus.ready,
+  );
+}
+
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late FakeDeviceRepository repository;
 
   setUp(() {
+    ScheduleTemplateCatalog.resetCacheForTesting();
     repository = FakeDeviceRepository();
   });
 
@@ -41,9 +52,8 @@ void main() {
     final bloc = _build(repository);
     addTearDown(bloc.close);
 
-    bloc.add(const DeviceEditStarted());
-    await Future<void>.delayed(Duration.zero);
-    expect(bloc.state.status, DeviceEditStatus.ready);
+    await _startBloc(bloc);
+    expect(bloc.state.templates, isNotEmpty);
 
     bloc.add(const DeviceEditNameChanged('Compressor'));
     bloc.add(
@@ -77,8 +87,7 @@ void main() {
     final bloc = _build(repository);
     addTearDown(bloc.close);
 
-    bloc.add(const DeviceEditStarted());
-    await Future<void>.delayed(Duration.zero);
+    await _startBloc(bloc);
     bloc.add(
       const DeviceEditSaveRequested(
         nameRequiredMessage: 'name required',
@@ -128,16 +137,17 @@ void main() {
     );
   });
 
-  test('suggestion applied updates schedule fields', () async {
+  test('template applied updates schedule fields', () async {
     final bloc = _build(repository);
     addTearDown(bloc.close);
 
-    bloc.add(const DeviceEditStarted());
-    await Future<void>.delayed(Duration.zero);
+    await _startBloc(bloc);
     bloc.add(
-      DeviceEditSuggestionApplied(
-        const ScheduleSuggestion(
-          label: 'Every 500 hours',
+      DeviceEditTemplateApplied(
+        const ScheduleTemplate(
+          id: 'hours_500',
+          labelEn: 'Every 500 hours',
+          labelFa: 'هر ۵۰۰ ساعت',
           scheduleType: ScheduleType.usageInterval,
           intervalValue: 500,
           intervalUnit: 'hours',
@@ -151,7 +161,36 @@ void main() {
         isA<DeviceEditState>()
             .having((s) => s.scheduleType, 'type', ScheduleType.usageInterval)
             .having((s) => s.intervalValue, 'value', '500')
-            .having((s) => s.intervalUnit, 'unit', 'hours'),
+            .having((s) => s.intervalUnit, 'unit', 'hours')
+            .having((s) => s.appliedTemplateId, 'template', 'hours_500'),
+      ),
+    );
+  });
+
+  test('fixed-date template sets due date', () async {
+    final bloc = _build(repository);
+    addTearDown(bloc.close);
+
+    await _startBloc(bloc);
+    bloc.add(
+      DeviceEditTemplateApplied(
+        const ScheduleTemplate(
+          id: 'annual',
+          labelEn: 'Annual',
+          labelFa: 'سالانه',
+          scheduleType: ScheduleType.fixedDate,
+          intervalValue: 12,
+          intervalUnit: 'months',
+        ),
+      ),
+    );
+
+    await expectLater(
+      bloc.stream,
+      emitsThrough(
+        isA<DeviceEditState>()
+            .having((s) => s.scheduleType, 'type', ScheduleType.fixedDate)
+            .having((s) => s.fixedDueAt, 'due', isNotNull),
       ),
     );
   });
@@ -160,8 +199,7 @@ void main() {
     final bloc = _build(repository);
     addTearDown(bloc.close);
 
-    bloc.add(const DeviceEditStarted());
-    await Future<void>.delayed(Duration.zero);
+    await _startBloc(bloc);
     bloc.add(const DeviceEditNameChanged('Car'));
     bloc.add(const DeviceEditScheduleEnabledChanged(false));
     bloc.add(
@@ -191,8 +229,7 @@ void main() {
     final bloc = _build(repository);
     addTearDown(bloc.close);
 
-    bloc.add(const DeviceEditStarted());
-    await Future<void>.delayed(Duration.zero);
+    await _startBloc(bloc);
     bloc.add(const DeviceEditNameChanged('Bike'));
     bloc.add(const DeviceEditScheduleTypeChanged(ScheduleType.usageInterval));
     bloc.add(const DeviceEditIntervalUnitChanged('km'));
@@ -226,8 +263,7 @@ void main() {
     final bloc = _build(repository, parentId: 'car');
     addTearDown(bloc.close);
 
-    bloc.add(const DeviceEditStarted());
-    await Future<void>.delayed(Duration.zero);
+    await _startBloc(bloc);
     expect(bloc.state.parentId, 'car');
 
     bloc.add(const DeviceEditNameChanged('Oil'));
