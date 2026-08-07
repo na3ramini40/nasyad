@@ -129,6 +129,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get suggestions => 'پیشنهادها';
 
   @override
+  String get scheduleTemplates => 'الگوهای زمان‌بندی';
+
+  @override
   String get unitDays => 'روز';
 
   @override

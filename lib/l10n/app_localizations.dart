@@ -338,6 +338,12 @@ abstract class AppLocalizations {
   /// **'Suggestions'**
   String get suggestions;
 
+  /// No description provided for @scheduleTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule templates'**
+  String get scheduleTemplates;
+
   /// No description provided for @unitDays.
   ///
   /// In en, this message translates to:

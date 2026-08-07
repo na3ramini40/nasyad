@@ -9,7 +9,9 @@ import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
-import 'package:nasyad/presentation/device/schedule_presets.dart';
+import 'package:nasyad/domain/entities/schedule_template.dart';
+import 'package:nasyad/domain/services/schedule_due_offset.dart';
+import 'package:nasyad/domain/services/schedule_template_catalog.dart';
 
 part 'device_edit_event.dart';
 part 'device_edit_state.dart';
@@ -35,7 +37,7 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     on<DeviceEditIntervalUnitChanged>(_onIntervalUnitChanged);
     on<DeviceEditInitialElapsedChanged>(_onInitialElapsedChanged);
     on<DeviceEditUsageUnitChanged>(_onUsageUnitChanged);
-    on<DeviceEditSuggestionApplied>(_onSuggestionApplied);
+    on<DeviceEditTemplateApplied>(_onTemplateApplied);
     on<DeviceEditSaveRequested>(_onSave);
     on<DeviceEditDeleteRequested>(_onDelete);
   }
@@ -53,29 +55,36 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     DeviceEditStarted event,
     Emitter<DeviceEditState> emit,
   ) async {
-    if (deviceId == null) {
-      emit(state.copyWith(status: DeviceEditStatus.ready));
-      return;
-    }
-
     emit(state.copyWith(status: DeviceEditStatus.loading));
     try {
+      final templates = await ScheduleTemplateCatalog.load();
+
+      if (deviceId == null) {
+        emit(
+          state.copyWith(status: DeviceEditStatus.ready, templates: templates),
+        );
+        return;
+      }
+
       final device = await _getDevice(deviceId!);
       _existing = device;
 
       emit(
         state.copyWith(
           status: DeviceEditStatus.ready,
+          templates: templates,
           name: device?.name ?? '',
           parentId: device?.parentId ?? parentId,
           scheduleEnabled: device?.hasSchedule ?? false,
           scheduleType: device?.scheduleType,
           intervalUnit: device?.intervalUnit,
           intervalValue: device?.intervalValue?.toString() ?? '',
+          fixedDueAt: device?.fixedDueAt,
           usageUnit: device?.usageUnit,
           clearScheduleType: device?.scheduleType == null,
           clearIntervalUnit: device?.intervalUnit == null,
           clearUsageUnit: device?.usageUnit == null,
+          clearFixedDueAt: device?.fixedDueAt == null,
         ),
       );
     } catch (error) {
@@ -112,7 +121,9 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
           scheduleEnabled: false,
           clearScheduleType: true,
           clearIntervalUnit: true,
+          clearFixedDueAt: true,
           intervalValue: '',
+          appliedTemplateId: null,
         ),
       );
     }
@@ -127,6 +138,8 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
         scheduleEnabled: true,
         scheduleType: event.scheduleType,
         clearIntervalUnit: true,
+        clearFixedDueAt: event.scheduleType != ScheduleType.fixedDate,
+        appliedTemplateId: null,
       ),
     );
   }
@@ -135,14 +148,21 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     DeviceEditIntervalChanged event,
     Emitter<DeviceEditState> emit,
   ) {
-    emit(state.copyWith(intervalValue: event.intervalValue));
+    emit(
+      state.copyWith(
+        intervalValue: event.intervalValue,
+        appliedTemplateId: null,
+      ),
+    );
   }
 
   void _onIntervalUnitChanged(
     DeviceEditIntervalUnitChanged event,
     Emitter<DeviceEditState> emit,
   ) {
-    emit(state.copyWith(intervalUnit: event.intervalUnit));
+    emit(
+      state.copyWith(intervalUnit: event.intervalUnit, appliedTemplateId: null),
+    );
   }
 
   void _onInitialElapsedChanged(
@@ -159,19 +179,30 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     emit(state.copyWith(usageUnit: event.usageUnit));
   }
 
-  void _onSuggestionApplied(
-    DeviceEditSuggestionApplied event,
+  void _onTemplateApplied(
+    DeviceEditTemplateApplied event,
     Emitter<DeviceEditState> emit,
   ) {
-    final suggestion = event.suggestion;
+    final template = event.template;
+    final fixedDueAt = template.scheduleType == ScheduleType.fixedDate
+        ? dueDateFromInterval(
+            intervalValue: template.intervalValue,
+            intervalUnit: template.intervalUnit,
+            from: DateTime.now(),
+          )
+        : null;
+
     emit(
       state.copyWith(
         scheduleEnabled: true,
-        scheduleType: suggestion.scheduleType,
-        intervalUnit: suggestion.intervalUnit,
-        intervalValue: '${suggestion.intervalValue}',
-        usageUnit: suggestion.scheduleType == ScheduleType.usageInterval
-            ? UsageIntervalUnitX.fromStorage(suggestion.intervalUnit)
+        scheduleType: template.scheduleType,
+        intervalUnit: template.intervalUnit,
+        intervalValue: '${template.intervalValue}',
+        fixedDueAt: fixedDueAt,
+        clearFixedDueAt: fixedDueAt == null,
+        appliedTemplateId: template.id,
+        usageUnit: template.scheduleType == ScheduleType.usageInterval
+            ? UsageIntervalUnitX.fromStorage(template.intervalUnit)
             : state.usageUnit,
       ),
     );
@@ -249,7 +280,11 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
       scheduleType: state.scheduleEnabled ? state.scheduleType : null,
       intervalValue: state.scheduleEnabled ? amount : null,
       intervalUnit: state.scheduleEnabled ? state.intervalUnit : null,
-      fixedDueAt: state.scheduleEnabled ? _existing?.fixedDueAt : null,
+      fixedDueAt: state.scheduleEnabled
+          ? (state.scheduleType == ScheduleType.fixedDate
+                ? state.fixedDueAt
+                : _existing?.fixedDueAt)
+          : null,
       lastMaintainedAt: _existing?.lastMaintainedAt ?? now,
       usageAtLastMaintenance: _existing?.usageAtLastMaintenance ?? 0,
       createdAt: _existing?.createdAt ?? now,

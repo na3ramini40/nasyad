@@ -1,49 +1,5 @@
 import 'package:nasyad/domain/entities/interval_unit.dart';
-import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/l10n/app_localizations.dart';
-
-class ScheduleSuggestion {
-  const ScheduleSuggestion({
-    required this.label,
-    required this.scheduleType,
-    required this.intervalValue,
-    required this.intervalUnit,
-  });
-
-  final String label;
-  final ScheduleType scheduleType;
-  final int intervalValue;
-  final String intervalUnit;
-}
-
-List<ScheduleSuggestion> scheduleSuggestions(AppLocalizations l10n) {
-  return [
-    ScheduleSuggestion(
-      label: l10n.ruleEvery3Months,
-      scheduleType: ScheduleType.calendarInterval,
-      intervalValue: 3,
-      intervalUnit: CalendarIntervalUnit.months.storageValue,
-    ),
-    ScheduleSuggestion(
-      label: l10n.ruleEvery6Months,
-      scheduleType: ScheduleType.calendarInterval,
-      intervalValue: 6,
-      intervalUnit: CalendarIntervalUnit.months.storageValue,
-    ),
-    ScheduleSuggestion(
-      label: l10n.ruleEvery1000Km,
-      scheduleType: ScheduleType.usageInterval,
-      intervalValue: 1000,
-      intervalUnit: UsageIntervalUnit.km.storageValue,
-    ),
-    ScheduleSuggestion(
-      label: l10n.ruleEvery500Hours,
-      scheduleType: ScheduleType.usageInterval,
-      intervalValue: 500,
-      intervalUnit: UsageIntervalUnit.hours.storageValue,
-    ),
-  ];
-}
 
 String scheduleDisplayName({
   required AppLocalizations l10n,

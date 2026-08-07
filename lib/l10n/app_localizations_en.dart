@@ -129,6 +129,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get suggestions => 'Suggestions';
 
   @override
+  String get scheduleTemplates => 'Schedule templates';
+
+  @override
   String get unitDays => 'Days';
 
   @override

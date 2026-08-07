@@ -40,6 +40,7 @@
   "intervalAmountRequired": "عددی بزرگ‌تر از ۰ وارد کنید",
   "intervalUnit": "واحد",
   "suggestions": "پیشنهادها",
+  "scheduleTemplates": "الگوهای زمان‌بندی",
   "unitDays": "روز",
   "unitWeeks": "هفته",
   "unitMonths": "ماه",

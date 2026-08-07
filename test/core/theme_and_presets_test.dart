@@ -18,7 +18,7 @@ void main() {
     expect(lerped.success, isNot(AppStatusColors.light.success));
   });
 
-  testWidgets('schedule presets and display name', (tester) async {
+  testWidgets('schedule display name', (tester) async {
     late AppLocalizations l10n;
     await tester.pumpWidget(
       MaterialApp(
@@ -33,10 +33,6 @@ void main() {
         ),
       ),
     );
-
-    final suggestions = scheduleSuggestions(l10n);
-    expect(suggestions, hasLength(4));
-    expect(suggestions.first.intervalValue, 3);
 
     expect(
       scheduleDisplayName(l10n: l10n, value: 3, unitStorage: 'months'),

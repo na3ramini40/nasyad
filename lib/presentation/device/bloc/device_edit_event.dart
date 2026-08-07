@@ -74,13 +74,13 @@ final class DeviceEditUsageUnitChanged extends DeviceEditEvent {
   List<Object?> get props => [usageUnit];
 }
 
-final class DeviceEditSuggestionApplied extends DeviceEditEvent {
-  const DeviceEditSuggestionApplied(this.suggestion);
+final class DeviceEditTemplateApplied extends DeviceEditEvent {
+  const DeviceEditTemplateApplied(this.template);
 
-  final ScheduleSuggestion suggestion;
+  final ScheduleTemplate template;
 
   @override
-  List<Object?> get props => [suggestion];
+  List<Object?> get props => [template];
 }
 
 final class DeviceEditSaveRequested extends DeviceEditEvent {

@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "oil_change_5000km",
+      "label": {
+        "en": "Oil change every 5,000 km",
+        "fa": "تعویض روغن هر ۵٬۰۰۰ کیلومتر"
+      },
+      "scheduleType": "usageInterval",
+      "intervalValue": 5000,
+      "intervalUnit": "km"
+    },
+    {
+      "id": "hvac_filter_3months",
+      "label": {
+        "en": "HVAC filter every 3 months",
+        "fa": "فیلتر HVAC هر ۳ ماه"
+      },
+      "scheduleType": "calendarInterval",
+      "intervalValue": 3,
+      "intervalUnit": "months"
+    },
+    {
+      "id": "every_3_months",
+      "label": {
+        "en": "Every 3 months",
+        "fa": "هر ۳ ماه"
+      },
+      "scheduleType": "calendarInterval",
+      "intervalValue": 3,
+      "intervalUnit": "months"
+    },
+    {
+      "id": "every_6_months",
+      "label": {
+        "en": "Every 6 months",
+        "fa": "هر ۶ ماه"
+      },
+      "scheduleType": "calendarInterval",
+      "intervalValue": 6,
+      "intervalUnit": "months"
+    },
+    {
+      "id": "every_1000_km",
+      "label": {
+        "en": "Every 1,000 km",
+        "fa": "هر ۱٬۰۰۰ کیلومتر"
+      },
+      "scheduleType": "usageInterval",
+      "intervalValue": 1000,
+      "intervalUnit": "km"
+    },
+    {
+      "id": "every_500_hours",
+      "label": {
+        "en": "Every 500 hours",
+        "fa": "هر ۵۰۰ ساعت"
+      },
+      "scheduleType": "usageInterval",
+      "intervalValue": 500,
+      "intervalUnit": "hours"
+    },
+    {
+      "id": "annual_inspection",
+      "label": {
+        "en": "Annual inspection (fixed date)",
+        "fa": "بازرسی سالانه (تاریخ ثابت)"
+      },
+      "scheduleType": "fixedDate",
+      "intervalValue": 12,
+      "intervalUnit": "months"
+    }
+  ]
+}

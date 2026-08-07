@@ -93,7 +93,7 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isEdit = widget.isEdit;
-    final suggestions = scheduleSuggestions(l10n);
+    final locale = Localizations.localeOf(context).languageCode;
     final theme = Theme.of(context);
     final muted = theme.textTheme.titleSmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
@@ -259,20 +259,23 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                       ),
                     ],
                     const SizedBox(height: AppSpacing.lg),
-                    Text(l10n.suggestions, style: muted),
+                    Text(l10n.scheduleTemplates, style: muted),
                     const SizedBox(height: AppSpacing.xs),
-                    for (final suggestion in suggestions)
+                    for (final template in state.templates)
                       Padding(
                         padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                         child: SelectableOptionTile(
-                          label: suggestion.label,
+                          label: template.labelFor(locale),
                           selected:
-                              state.scheduleType == suggestion.scheduleType &&
-                              state.intervalUnit == suggestion.intervalUnit &&
-                              state.intervalValue.trim() ==
-                                  '${suggestion.intervalValue}',
+                              state.appliedTemplateId == template.id ||
+                              (state.appliedTemplateId == null &&
+                                  template.matchesSchedule(
+                                    scheduleType: state.scheduleType,
+                                    intervalUnit: state.intervalUnit,
+                                    intervalValueText: state.intervalValue,
+                                  )),
                           onTap: () => context.read<DeviceEditBloc>().add(
-                            DeviceEditSuggestionApplied(suggestion),
+                            DeviceEditTemplateApplied(template),
                           ),
                         ),
                       ),
