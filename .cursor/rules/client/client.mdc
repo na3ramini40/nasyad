@@ -1,0 +1,14 @@
+---
+description: Client engineering gates — pub mirror, codegen, signing
+globs: client/**
+alwaysApply: false
+---
+
+# Client gates
+
+- **Pub mirror (local only):** `source client/tool/pub_env.sh` before any local `flutter` / `dart pub` command (Runflare, falls back to devneeds.ir). GitHub CI uses default `pub.dev` — never add mirror env to workflows.
+- **Codegen:** after Drift schema/DAO/annotation changes run `dart run build_runner build --delete-conflicting-outputs`. Never hand-edit `*.g.dart` or other generated files.
+- **Migrations:** schema change → bump `schemaVersion` + migration step in `lib/data/local/db/` (details: `docs/domain/client-store.md`).
+- **Strings:** all user-facing text via ARB files in `lib/l10n/` — never hard-coded in widgets.
+- **Signing:** debug for everyone (`flutter run`); release key is owner + CI only — see shared security rule.
+- **Stack:** active packages only (`client/pubspec.yaml`). No `get_it`, `injectable`, `freezed`, or new network clients without updating root `AGENTS.md`.

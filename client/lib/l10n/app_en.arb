@@ -1,0 +1,518 @@
+{
+  "@@locale": "en",
+  "appTitle": "Nasyad",
+  "more": "More",
+  "back": "Back",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "addDevice": "Add device",
+  "addLog": "Add Log",
+  "submitLog": "Submit Log",
+  "language": "Language",
+  "english": "English",
+  "persian": "Persian",
+  "preferences": "Preferences",
+  "appearance": "Appearance",
+  "themeSystem": "System default",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "seasonTheme": "Season theme",
+  "seasonThemeHint": "Accent colors inspired by the seasons",
+  "seasonClassic": "Default",
+  "seasonSpring": "Spring",
+  "seasonSummer": "Summer",
+  "seasonAutumn": "Autumn",
+  "seasonWinter": "Winter",
+  "brightness": "Brightness",
+  "deviceName": "Device Name",
+  "deviceNameHint": "Enter device name...",
+  "deviceNameRequired": "Device name is required",
+  "deviceMetadataSection": "Details",
+  "categoryPreset": "Category",
+  "categoryGeneric": "Generic",
+  "categoryCar": "Vehicle",
+  "categoryHvac": "HVAC",
+  "categoryAppliance": "Appliance",
+  "categoryElectronics": "Electronics",
+  "categoryPlumbing": "Plumbing",
+  "locationLabel": "Location",
+  "locationLabelHint": "e.g. Garage, Kitchen...",
+  "deviceNotes": "Device notes",
+  "deviceNotesHint": "Optional notes about this device (not log entries)...",
+  "maintenanceRule": "Maintenance Rule",
+  "selectMaintenanceRule": "Select a maintenance rule",
+  "selectScheduleType": "Choose time or usage",
+  "selectIntervalUnit": "Choose a unit",
+  "scheduleType": "Schedule type",
+  "scheduleByTime": "By time",
+  "scheduleByUsage": "By usage",
+  "intervalAmount": "Every",
+  "intervalAmountHint": "Enter a number...",
+  "intervalAmountRequired": "Enter a number greater than 0",
+  "intervalUnit": "Unit",
+  "suggestions": "Suggestions",
+  "scheduleTemplates": "Schedule templates",
+  "unitDays": "Days",
+  "unitWeeks": "Weeks",
+  "unitMonths": "Months",
+  "ruleEvery": "Every {value} {unit}",
+  "@ruleEvery": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "addEditDevice": "Add/Edit Device",
+  "editDevice": "Edit Device",
+  "deviceDetails": "Device Details",
+  "needsService": "Needs Service",
+  "upToDate": "Up to Date",
+  "maintenanceDue": "Maintenance Due",
+  "maintenanceSoon": "Due Soon",
+  "noDevicesTitle": "No devices yet",
+  "noDevicesHint": "Add a device to start tracking. You can nest parts under it later.",
+  "noLogsYet": "No logs yet",
+  "usageReading": "Current usage reading",
+  "usageReadingHint": "e.g. 12450",
+  "usageReadingRequired": "Enter the current usage reading",
+  "usageUnit": "Usage unit",
+  "unitHours": "Hours",
+  "unitKm": "Kilometers",
+  "unitCycles": "Cycles",
+  "archive": "Archive",
+  "archivedDevices": "Archived devices",
+  "archivedDevicesHint": "Browse and restore archived devices and their parts.",
+  "noArchivedDevicesTitle": "Nothing archived",
+  "noArchivedDevicesHint": "When you archive a device, it and its parts will appear here.",
+  "restore": "Restore",
+  "restoreDeviceTitle": "Restore device?",
+  "restoreDeviceBody": "{name} and all its parts will return to your active device list.",
+  "@restoreDeviceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "scheduleSection": "Schedule",
+  "noSchedule": "No schedule (container only)",
+  "initialElapsed": "Already used toward this cycle",
+  "initialElapsedHint": "Default 0",
+  "childrenSection": "Parts & children",
+  "addChild": "Add child",
+  "markMaintained": "Mark maintained",
+  "updateUsage": "Update usage",
+  "logKind": "Log type",
+  "logKindMaintenance": "Maintenance done",
+  "logKindUsage": "Usage update",
+  "currentUsageLabel": "Current usage: {value} {unit}",
+  "@currentUsageLabel": {
+    "placeholders": {
+      "value": { "type": "int" },
+      "unit": { "type": "String" }
+    }
+  },
+  "scheduleSummary": "Every {value} {unit}",
+  "@scheduleSummary": {
+    "placeholders": {
+      "value": { "type": "int" },
+      "unit": { "type": "String" }
+    }
+  },
+  "noScheduleConfigured": "No schedule on this device",
+  "logHistory": "Log History",
+  "usageDelta": "Usage since last log",
+  "usageDeltaHint": "Optional, e.g. 120",
+  "activeMaintenanceRules": "Active Maintenance Rules",
+  "notes": "Notes",
+  "notesHint": "Enter maintenance notes...",
+  "notesRequired": "Notes are required",
+  "logCost": "Cost",
+  "logCostHint": "Optional, e.g. 49.99",
+  "logCostCurrency": "Currency label",
+  "logCostCurrencyHint": "Optional — uses locale currency if empty",
+  "logVendor": "Vendor / service provider",
+  "logVendorHint": "Optional, e.g. Auto shop",
+  "logPhoto": "Photo",
+  "logPhotoAttach": "Attach photo",
+  "logPhotoRemove": "Remove photo",
+  "logInvalidCost": "Enter a valid cost amount",
+  "date": "Date",
+  "lastLog": "Last Log: {value}",
+  "@lastLog": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "lastLogMinutesAgo": "{count} mins ago",
+  "@lastLogMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogDaysAgo": "{count} days ago",
+  "@lastLogDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastLogWeeksAgo": "{count} week ago",
+  "@lastLogWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleEvery3Months": "Every 3 Months",
+  "ruleEvery500Hours": "Every 500 Hours",
+  "ruleEvery6Months": "Every 6 Months",
+  "sampleDeviceAc": "AC Unit - Living Room",
+  "sampleDeviceCar": "Car",
+  "sampleDeviceLaptop": "Laptop",
+  "sampleLogFilterReplaced": "Filter Replaced",
+  "sampleLogOilChange": "Oil Change",
+  "sampleLogGeneralCheck": "General check",
+  "data": "Data",
+  "exportImport": "Export & Import",
+  "exportImportHint": "Back up or restore devices, birthdays, and places.",
+  "exportSection": "Export",
+  "importSection": "Import",
+  "exportScope": "What to export",
+  "exportScopeAll": "All data",
+  "exportScopeOne": "One device",
+  "exportScopeSelected": "Selected devices",
+  "exportFormat": "Format",
+  "formatJson": "JSON",
+  "formatCsv": "CSV",
+  "formatPlainText": "Plain text",
+  "selectDevices": "Select devices",
+  "share": "Share",
+  "saveFile": "Save",
+  "chooseFile": "Choose file",
+  "importAction": "Import",
+  "importPreview": "Ready to import: {devices} devices, {logs} logs, {birthdays} birthdays, {places} places",
+  "@importPreview": {
+    "placeholders": {
+      "devices": { "type": "int" },
+      "logs": { "type": "int" },
+      "birthdays": { "type": "int" },
+      "places": { "type": "int" }
+    }
+  },
+  "ruleEvery1000Km": "Every 1000 Kilometers",
+  "exportSuccess": "Export ready",
+  "exportSaved": "Saved to {path}",
+  "@exportSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "exportCopied": "Export copied to clipboard (share not available on this platform)",
+  "importSuccess": "Imported {devices} devices, {birthdays} birthdays, {places} places",
+  "@importSuccess": {
+    "placeholders": {
+      "devices": { "type": "int" },
+      "birthdays": { "type": "int" },
+      "places": { "type": "int" }
+    }
+  },
+  "exportNoDevices": "No devices selected to export",
+  "importInvalid": "Could not read this file",
+  "noDevicesForExport": "No devices available to export",
+  "noDataForExport": "Nothing to export yet",
+  "about": "About",
+  "whatsNew": "What's New",
+  "whatsNewHint": "See what's new in this version",
+  "appVersionLabel": "Version {version}",
+  "@appVersionLabel": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "gotIt": "Got it",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "birthdays": "Birthdays",
+  "addBirthday": "Add birthday",
+  "editBirthday": "Edit birthday",
+  "personName": "Name",
+  "personNameHint": "Person's name...",
+  "personNameRequired": "Name is required",
+  "birthMonthDay": "Birthday",
+  "birthMonthDayHint": "Month and day",
+  "birthMonthDayRequired": "Choose a month and day",
+  "pickMonthDay": "Choose month and day",
+  "month": "Month",
+  "day": "Day",
+  "noBirthdaysTitle": "No birthdays yet",
+  "noBirthdaysHint": "Add someone to remember their birthday.",
+  "deleteBirthdayTitle": "Delete birthday?",
+  "deleteBirthdayBody": "{name} will be removed from this device.",
+  "@deleteBirthdayBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "calendarSystem": "Date calendar",
+  "calendarGregorian": "Gregorian",
+  "calendarPersian": "Persian (Shamsi)",
+  "calendarSystemHint": "Used for birthday dates. Independent of language.",
+  "remindersSection": "Reminders",
+  "featuresSection": "Features",
+  "deviceManagement": "Device management",
+  "deviceManagementHint": "Track devices, parts, and maintenance schedules.",
+  "birthdaysFeatureHint": "Remember birthdays for people you care about.",
+  "places": "Places",
+  "placesFeatureHint": "Save points, paths, and areas on a map for offline use.",
+  "addPlace": "Add place",
+  "editPlace": "Edit place",
+  "placeName": "Name",
+  "placeNameHint": "Place name…",
+  "placeNameRequired": "Name is required",
+  "placeGeometryRequired": "Add the required points on the map",
+  "placeKindPoint": "Point",
+  "placeKindLine": "Line",
+  "placeKindArea": "Area",
+  "placeKindLineWithCount": "Line · {count} points",
+  "@placeKindLineWithCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeKindAreaWithCount": "Area · {count} points",
+  "@placeKindAreaWithCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeCoordinateSummary": "{lat}, {lng}",
+  "@placeCoordinateSummary": {
+    "placeholders": {
+      "lat": { "type": "double" },
+      "lng": { "type": "double" }
+    }
+  },
+  "placeMapHintPoint": "Tap the map to set the point",
+  "placeMapHintLine": "Tap to add points ({count} so far). Need at least 2.",
+  "@placeMapHintLine": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeMapHintArea": "Tap to add points ({count} so far). Need at least 3.",
+  "@placeMapHintArea": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "placeUseMyLocation": "Use my location",
+  "placeUndoPoint": "Undo point",
+  "placeLocationDenied": "Location permission is needed to use your position.",
+  "noPlacesTitle": "No places yet",
+  "noPlacesHint": "Add a point, path, or area to find it again offline.",
+  "deletePlaceTitle": "Delete place?",
+  "deletePlaceBody": "{name} will be removed from this device.",
+  "@deletePlaceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "reminderFilterAll": "All",
+  "reminderFilterDevices": "Devices",
+  "reminderFilterBirthdays": "Birthdays",
+  "noRemindersTitle": "Nothing needs attention",
+  "noRemindersHint": "Due maintenance and upcoming birthdays will show up here.",
+  "reminderDeviceDue": "Maintenance is due",
+  "reminderDeviceSoon": "Maintenance due soon",
+  "reminderBirthdayToday": "Birthday is today",
+  "reminderBirthdayTomorrow": "Birthday is tomorrow",
+  "reminderBirthdayInDays": "Birthday in {days} days",
+  "@reminderBirthdayInDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "reminderBadgeDue": "Due",
+  "reminderBadgeSoon": "Soon",
+  "reminderBadgeUpcoming": "Upcoming",
+  "reminderNotificationsSection": "Due reminders",
+  "reminderNotificationsEnabled": "Local due reminders",
+  "reminderNotificationsHint": "Notify when maintenance is due or a birthday is coming up.",
+  "reminderNotificationTime": "Notification time",
+  "reminderNotificationTimeHint": "Daily time for maintenance reminders and birthday alerts.",
+  "reminderQuickActionsMenu": "Quick actions",
+  "reminderSnooze": "Snooze",
+  "reminderSnoozeTitle": "Snooze reminder",
+  "reminderSnoozeOneDay": "1 day",
+  "reminderSnoozeThreeDays": "3 days",
+  "reminderSnoozeSevenDays": "7 days",
+  "reminderSnoozedForDays": "Snoozed for {days} days",
+  "@reminderSnoozedForDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "soonWindowSevenDays": "7 days",
+  "soonWindowFourteenDays": "14 days",
+  "soonWindowHint": "Birthday and home reminder badges use this window for \"Soon\".",
+  "checkForUpdates": "Check for updates",
+  "checkForUpdatesHint": "Download the latest release from GitHub",
+  "updateChecking": "Checking for updates…",
+  "updateUpToDate": "You're on the latest version",
+  "updateUnsupportedPlatform": "In-app updates aren't available on this platform",
+  "updateAvailableTitle": "Update available",
+  "updateAvailableBody": "Version {version} is ready ({size}).",
+  "@updateAvailableBody": {
+    "placeholders": {
+      "version": { "type": "String" },
+      "size": { "type": "String" }
+    }
+  },
+  "updateReleaseNotes": "Release notes",
+  "updateDownload": "Download",
+  "updateInstall": "Install update",
+  "updateDownloadProgress": "Downloading… {percent}%",
+  "@updateDownloadProgress": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "updateReadyToInstall": "Download complete. Install to finish updating.",
+  "updateBannerMessage": "Version {version} is available",
+  "@updateBannerMessage": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateErrorOffline": "Couldn't reach GitHub. Check your connection and try again.",
+  "updateSizeKb": "{size} KB",
+  "@updateSizeKb": {
+    "placeholders": {
+      "size": { "type": "int" }
+    }
+  },
+  "updateSizeMb": "{size} MB",
+  "@updateSizeMb": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "dismiss": "Dismiss",
+  "search": "Search",
+  "searchHint": "Search by name…",
+  "searchPromptTitle": "Find devices, birthdays, and places",
+  "searchPromptHint": "Type a name to search your devices, birthdays, and places.",
+  "searchNoResultsTitle": "No matches",
+  "searchNoResultsHint": "Try a different name or check your spelling.",
+  "searchDevicesSection": "Devices",
+  "searchBirthdaysSection": "Birthdays",
+  "searchPlacesSection": "Places",
+  "searchPathSeparator": " › ",
+  "syncSection": "Sync",
+  "syncWithRemote": "Sync with remote",
+  "syncWithRemoteHint": "When enabled and online, the app may sync with your server. Turn off to keep data only on this device. Everything still works offline.",
+  "syncStatusOff": "Sync off — data stays on this device only.",
+  "syncStatusOffline": "Offline — local data only until you reconnect.",
+  "syncStatusReady": "Ready — local-only until a server sync is available.",
+  "navHome": "Home",
+  "navProfile": "Profile",
+  "introTitle": "Welcome to Nasyad",
+  "introBody": "Sign in to sync your account across devices. You can also continue offline — everything works on this device without an account.",
+  "introSignInWithPhone": "Sign in with phone",
+  "introContinueOffline": "Continue offline",
+  "authSignInTitle": "Sign in",
+  "authPhoneBody": "Enter your mobile number. We’ll send a one-time code.",
+  "authPhoneLabel": "Phone number",
+  "authPhoneHint": "+98912… or 0912…",
+  "authSendCode": "Send code",
+  "authOtpTitle": "Enter code",
+  "authOtpBody": "Enter the code sent to {phone}.",
+  "@authOtpBody": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "authOtpLabel": "Verification code",
+  "authOtpHint": "6-digit code",
+  "authVerify": "Verify",
+  "authResendCode": "Resend code",
+  "authResendCooldown": "Resend in {seconds}s",
+  "@authResendCooldown": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "authInvalidPhone": "Enter a valid phone number",
+  "authInvalidCode": "Enter a valid verification code",
+  "authGenericError": "Something went wrong. Try again.",
+  "authSyncing": "Syncing your data…",
+  "authSyncFailed": "Signed in. Couldn’t sync now — your local data is safe.",
+  "authSyncConflictTitle": "Data differs on this device and the server",
+  "authSyncConflictBody": "Some items exist in both places with different values ({count}). Continuing keeps this device’s data and updates the server. Local data will not be replaced.",
+  "@authSyncConflictBody": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "authSyncConflictConfirm": "Keep device data",
+  "authSyncConflictCancel": "Skip sync",
+  "authSyncCancelled": "Signed in. Sync skipped — your local data is unchanged.",
+  "authSignOut": "Sign out",
+  "appLockResetSuccess": "App lock turned off. You can set a new lock in Preferences.",
+  "profileTitle": "Profile",
+  "profileGuestTitle": "You’re signed out",
+  "profileGuestBody": "Sign in with your phone to manage your profile. Local data keeps working offline either way.",
+  "profileEditTitle": "Edit profile",
+  "profileNameLabel": "Name",
+  "profileNameHint": "Your display name",
+  "profileNameEmpty": "No name set",
+  "profileIdLabel": "Account ID",
+  "profileIdHint": "Server-issued ID (read-only)",
+  "profileChangePhoto": "Change photo",
+  "profileSaved": "Profile saved",
+  "appLockSection": "App lock",
+  "languageAndRegion": "Language & region",
+  "appLockMethodOff": "Off",
+  "appLockMethodPassword": "Password",
+  "appLockMethodPin": "PIN",
+  "appLockMethodBiometric": "Fingerprint",
+  "appLockTimeout": "Lock after",
+  "appLockTimeoutImmediate": "Immediately",
+  "appLockTimeoutOneMinute": "1 minute",
+  "appLockTimeoutFiveMinutes": "5 minutes",
+  "appLockTimeoutFifteenMinutes": "15 minutes",
+  "appLockTimeoutThirtyMinutes": "30 minutes",
+  "appLockTimeoutOneHour": "1 hour",
+  "appLockUnlockTitle": "Unlock Nasyad",
+  "appLockUnlock": "Unlock",
+  "appLockPasswordLabel": "Password",
+  "appLockPasswordHint": "Enter password",
+  "appLockPinLabel": "PIN",
+  "appLockPinHint": "4–8 digits",
+  "appLockUseBiometric": "Use fingerprint",
+  "appLockBiometricPrompt": "Unlock Nasyad",
+  "appLockForgot": "Forgot lock?",
+  "appLockForgotPhoneBody": "Verify your phone to remove the app lock. Your data stays on this device.",
+  "appLockResetSuccess": "App lock turned off",
+  "appLockCreatePassword": "Create password",
+  "appLockCreatePin": "Create PIN",
+  "appLockConfirmLabel": "Confirm",
+  "appLockConfirmHint": "Enter again",
+  "appLockMismatch": "Entries don’t match",
+  "appLockPasswordTooShort": "Use at least 4 characters",
+  "appLockPinTooShort": "Use 4 to 8 digits",
+  "appLockWrongSecret": "That’s not correct",
+  "appLockBiometricUnavailable": "Fingerprint isn’t available on this device",
+  "appLockBiometricFailed": "Fingerprint didn’t work. Try again.",
+  "appLockVerifyToContinue": "Unlock to continue"
+}

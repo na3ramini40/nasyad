@@ -1,0 +1,35 @@
+---
+description: Semver bump, en/fa changelog, and GitHub tag/release flow
+alwaysApply: false
+---
+
+# Release
+
+One version in `client/pubspec.yaml` covers the whole repo (coupled client + server tags). The agent **decides** the bump from scope — ask only if genuinely ambiguous; an explicit user override always wins.
+
+## Bump kind
+
+| Kind | When |
+|------|------|
+| patch | Bug fixes, refactors, CI, copy/a11y polish, performance, non-breaking migrations |
+| minor | New user-facing capability, screen, flow; additive schema enabling new behavior |
+| major | Breaking backup/import, removed feature/language, data-model break users must act on |
+
+In doubt: **minor** if users would notice a new capability, else patch. No bump for WIP, docs-only, or CI-only work unless releasing.
+
+## Procedure
+
+1. `cd client && dart run tool/bump_version.dart <kind>` (also sets server OpenAPI `VERSION`)
+2. Prepend a `ChangelogEntry` in `client/lib/core/version/app_changelog.dart` — newest first, **en + fa** bullets, end-user tone (**client-only**).
+3. Add `docs/domain/releases/vX.Y.Z.md` — **Client** + **Server** sections for the GitHub Release body.
+4. `./tool/ci_verify.sh` → exit 0.
+5. Commit with the feature (or dedicated release commit on `main`).
+
+## Tag (only when user wants a release, after green CI on main)
+
+```bash
+./tool/ci_verify.sh --tag vX.Y.Z   # must match AppVersion.name
+git tag vX.Y.Z && git push origin vX.Y.Z
+```
+
+Tag CI builds signed APK + Linux + Windows and publishes the GitHub Release (needs owner signing secrets — `docs/domain/release.md`). Report one line: bump kind, why, new version, tag pushed or not.

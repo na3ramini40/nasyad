@@ -1,0 +1,6 @@
+# Copied to `.env/android/key.properties` for local release builds.
+# storeFile is relative to client/android/ after env_apply (or absolute under .env/android/).
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=nasyad
+storeFile=keystore/nasyad-release.jks

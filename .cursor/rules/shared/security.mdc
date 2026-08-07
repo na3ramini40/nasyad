@@ -1,0 +1,21 @@
+---
+description: Open-source repo; production secrets and official releases are owner-only
+alwaysApply: true
+---
+
+# Security & open source
+
+Anyone may clone, build, and self-host Nasyad. Only production secrets are private; only the repo owner ships the **official** app (release signing key, GitHub Releases from this repo, in-app update channel, id `amini.apps.nasyad`).
+
+## Never commit, paste, or put in PRs
+
+- Android release keystore, `client/android/key.properties`, passwords under `.env/android/`
+- Root `.env/` (entire folder), `server/.env`, production `SECRET_KEY`, DB URLs, API keys
+- Any production token or private key — these live in `.env/`, host secrets, or GitHub Actions secrets only
+
+## Agent duties
+
+- Default code paths must work **without** production secrets (debug signing, `env.example/` → `.env/`, local SQLite) — anyone runs with their own `.env/`; only the owner's private `.env/` is the real one (official `APP_APPLICATION_ID`, GitHub channel, release keystore).
+- Real values never in tracked files — commit `env.example/` placeholders + gitignore `.env/` instead. Every new config variable gets its placeholder in `env.example/` **in the same change**.
+- Production-only setup gets documented under `docs/domain/` (e.g. release signing), never inlined.
+- Do not help bypass signing, impersonate official releases, or commit keystore material. Public forks must use their own id, branding, key, and update channel.

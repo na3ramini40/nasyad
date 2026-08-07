@@ -1,0 +1,30 @@
+---
+description: Coding standards and definition of done — working, tested code, not plausible-looking code
+alwaysApply: false
+---
+
+# Quality
+
+This app is AI-implemented end to end. The bar is a product that **works**, proven by execution — never code that merely looks right.
+
+## Before writing
+
+- **Domain bible:** `docs/domain.md` + `docs/domain/` define application structure and correctness for any stack. Rules are tagged Where: both | client | server. Open the matching shard before entities, schemas, sync, surfaces, or invariant changes.
+- Read the code you're changing and its neighbors; match existing patterns, naming, and layer conventions (skills define them). Don't invent new patterns when one exists in the repo.
+- Smallest change that fully solves the problem — no speculative abstractions, feature flags, or dead code.
+
+## While writing
+
+- Complete implementations only: no stubs, placeholder returns, `TODO` bodies, or hard-coded fake data left in shipped paths.
+- Handle the real boundaries: error, empty, and loading at UI edges; validation at use-case/form/serializer edges; trust internal code between them.
+- Follow the platform's idioms — Flutter/BLoC patterns on the client, Django/DRF conventions on the server — instead of home-grown equivalents. Never invent fields, enums, or lifecycle rules outside `docs/domain/`.
+
+## Definition of done (all required)
+
+1. Domain-affecting work still matches `docs/domain/` (or the matching shard was updated in the same change).
+2. Every new behavior has a test that would **fail without the change** — client per `skills/client/flutter/testing.md`, server per `skills/server/django/`.
+3. Tests were **executed and pass** — paste-worthy green output, not "should pass".
+4. The touched flow was exercised (test, run, or command) end to end at least once.
+5. `/verify` green before any PR claim (delivery rule).
+
+"It compiles", "analyze is clean", or "looks correct" is never done. If something could not be verified, say so explicitly instead of implying it works.
