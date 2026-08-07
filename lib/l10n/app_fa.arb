@@ -72,6 +72,18 @@
   "unitKm": "کیلومتر",
   "unitCycles": "سیکل",
   "archive": "بایگانی",
+  "archivedDevices": "دستگاه‌های بایگانی‌شده",
+  "archivedDevicesHint": "دستگاه‌ها و قطعات بایگانی‌شده را ببینید و بازیابی کنید.",
+  "noArchivedDevicesTitle": "چیزی بایگانی نشده",
+  "noArchivedDevicesHint": "وقتی دستگاهی را بایگانی کنید، آن و قطعاتش اینجا نمایش داده می‌شوند.",
+  "restore": "بازیابی",
+  "restoreDeviceTitle": "بازیابی دستگاه؟",
+  "restoreDeviceBody": "{name} و همه قطعاتش به فهرست دستگاه‌های فعال برمی‌گردند.",
+  "@restoreDeviceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
   "scheduleSection": "زمان‌بندی",
   "noSchedule": "بدون زمان‌بندی (فقط ظرف)",
   "initialElapsed": "از این دوره قبلاً گذشته",

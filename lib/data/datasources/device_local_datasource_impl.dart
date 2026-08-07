@@ -45,6 +45,13 @@ class DeviceLocalDataSourceImpl implements DeviceLocalDataSource {
   }
 
   @override
+  Stream<List<DeviceModel>> watchAllDevices() {
+    return _dao.watchAllDevices().map(
+      (rows) => rows.map(DeviceModel.fromTableData).toList(),
+    );
+  }
+
+  @override
   Future<DeviceModel?> getDevice(String id) async {
     final row = await _dao.getDeviceById(id);
     return row == null ? null : DeviceModel.fromTableData(row);

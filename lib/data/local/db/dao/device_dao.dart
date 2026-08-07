@@ -52,6 +52,12 @@ class DeviceDao extends DatabaseAccessor<AppDatabase> with _$DeviceDaoMixin {
         .watch();
   }
 
+  Stream<List<DevicesTableData>> watchAllDevices() {
+    return (select(
+      devicesTable,
+    )..orderBy([(t) => OrderingTerm.asc(t.name)])).watch();
+  }
+
   Future<DevicesTableData?> getDeviceById(String id) {
     return (select(
       devicesTable,

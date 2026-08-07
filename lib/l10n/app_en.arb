@@ -72,6 +72,18 @@
   "unitKm": "Kilometers",
   "unitCycles": "Cycles",
   "archive": "Archive",
+  "archivedDevices": "Archived devices",
+  "archivedDevicesHint": "Browse and restore archived devices and their parts.",
+  "noArchivedDevicesTitle": "Nothing archived",
+  "noArchivedDevicesHint": "When you archive a device, it and its parts will appear here.",
+  "restore": "Restore",
+  "restoreDeviceTitle": "Restore device?",
+  "restoreDeviceBody": "{name} and all its parts will return to your active device list.",
+  "@restoreDeviceBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
   "scheduleSection": "Schedule",
   "noSchedule": "No schedule (container only)",
   "initialElapsed": "Already used toward this cycle",

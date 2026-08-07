@@ -14,6 +14,8 @@ abstract class DeviceRepository {
 
   Stream<List<DeviceSummary>> watchRootDeviceSummaries();
 
+  Stream<List<Device>> watchArchivedRootDevices();
+
   Stream<DeviceSummary?> watchDeviceSummary(String deviceId);
 
   Future<Device?> getDevice(String id);

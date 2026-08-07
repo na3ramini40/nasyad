@@ -353,4 +353,85 @@ void main() {
     final all = await devices.getAllDevices();
     expect(all.map((d) => d.status).toSet(), {DeviceStatus.deleted});
   });
+
+  test('watchArchivedRootDevices lists archived roots only', () async {
+    await devices.createDevice(
+      sampleDevice(
+        id: 'car',
+        name: 'Car',
+        scheduleType: null,
+        intervalValue: null,
+        intervalUnit: null,
+      ),
+    );
+    await devices.createDevice(
+      sampleDevice(
+        id: 'oil',
+        parentId: 'car',
+        name: 'Oil',
+        scheduleType: null,
+        intervalValue: null,
+        intervalUnit: null,
+      ),
+    );
+    await devices.createDevice(
+      sampleDevice(
+        id: 'bike',
+        name: 'Bike',
+        scheduleType: null,
+        intervalValue: null,
+        intervalUnit: null,
+      ),
+    );
+
+    await devices.setDeviceStatus('car', DeviceStatus.archived);
+
+    final subtreeArchived = await devices
+        .watchArchivedRootDevices()
+        .first
+        .timeout(const Duration(seconds: 2));
+    expect(subtreeArchived.map((d) => d.id), ['car']);
+
+    await devices.setDeviceStatus('car', DeviceStatus.active);
+    await devices.setDeviceStatus('oil', DeviceStatus.archived);
+
+    final childArchived = await devices
+        .watchArchivedRootDevices()
+        .first
+        .timeout(const Duration(seconds: 2));
+    expect(childArchived.map((d) => d.id), ['oil']);
+  });
+
+  test('restore cascades active status to subtree', () async {
+    await devices.createDevice(
+      sampleDevice(
+        id: 'car',
+        scheduleType: null,
+        intervalValue: null,
+        intervalUnit: null,
+      ),
+    );
+    await devices.createDevice(
+      sampleDevice(
+        id: 'oil',
+        parentId: 'car',
+        name: 'Oil',
+        scheduleType: null,
+        intervalValue: null,
+        intervalUnit: null,
+      ),
+    );
+
+    await devices.setDeviceStatus('car', DeviceStatus.archived);
+    await devices.setDeviceStatus('car', DeviceStatus.active);
+
+    final all = await devices.getAllDevices();
+    expect(all.every((d) => d.status == DeviceStatus.active), isTrue);
+
+    final roots = await devices.watchRootDeviceSummaries().first.timeout(
+      const Duration(seconds: 2),
+    );
+    expect(roots, hasLength(1));
+    expect(roots.first.device.id, 'car');
+  });
 }

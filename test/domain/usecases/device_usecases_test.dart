@@ -6,7 +6,9 @@ import 'package:nasyad/domain/usecases/device/create_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_all_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
+import 'package:nasyad/domain/usecases/device/restore_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
+import 'package:nasyad/domain/usecases/device/watch_archived_root_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
 
@@ -97,6 +99,23 @@ void main() {
     await ArchiveDeviceUsecase(repository)('device-1');
     expect(repository.statusChanges.single.$1, 'device-1');
     expect(repository.statusChanges.single.$2, DeviceStatus.archived);
+  });
+
+  test('RestoreDeviceUsecase sets active status', () async {
+    await RestoreDeviceUsecase(repository)('device-1');
+    expect(repository.statusChanges.single.$1, 'device-1');
+    expect(repository.statusChanges.single.$2, DeviceStatus.active);
+  });
+
+  test('WatchArchivedRootDevicesUsecase exposes repository stream', () async {
+    final usecase = WatchArchivedRootDevicesUsecase(repository);
+    final future = usecase().first;
+    repository.emitArchivedRoots([
+      sampleDevice(id: 'archived-1', status: DeviceStatus.archived),
+    ]);
+    final items = await future;
+    expect(items, hasLength(1));
+    expect(items.first.id, 'archived-1');
   });
 
   test('GetDeviceUsecase returns device or null', () async {

@@ -198,6 +198,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archive => 'Archive';
 
   @override
+  String get archivedDevices => 'Archived devices';
+
+  @override
+  String get archivedDevicesHint =>
+      'Browse and restore archived devices and their parts.';
+
+  @override
+  String get noArchivedDevicesTitle => 'Nothing archived';
+
+  @override
+  String get noArchivedDevicesHint =>
+      'When you archive a device, it and its parts will appear here.';
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String get restoreDeviceTitle => 'Restore device?';
+
+  @override
+  String restoreDeviceBody(String name) {
+    return '$name and all its parts will return to your active device list.';
+  }
+
+  @override
   String get scheduleSection => 'Schedule';
 
   @override
