@@ -1112,6 +1112,36 @@ abstract class AppLocalizations {
   /// **'Upcoming'**
   String get reminderBadgeUpcoming;
 
+  /// No description provided for @reminderNotificationsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Due reminders'**
+  String get reminderNotificationsSection;
+
+  /// No description provided for @reminderNotificationsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Local due reminders'**
+  String get reminderNotificationsEnabled;
+
+  /// No description provided for @reminderNotificationsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when maintenance is due or a birthday is coming up.'**
+  String get reminderNotificationsHint;
+
+  /// No description provided for @reminderNotificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification time'**
+  String get reminderNotificationTime;
+
+  /// No description provided for @reminderNotificationTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily time for maintenance reminders and birthday alerts.'**
+  String get reminderNotificationTimeHint;
+
   /// No description provided for @checkForUpdates.
   ///
   /// In en, this message translates to:

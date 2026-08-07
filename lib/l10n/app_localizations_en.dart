@@ -548,6 +548,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderBadgeUpcoming => 'Upcoming';
 
   @override
+  String get reminderNotificationsSection => 'Due reminders';
+
+  @override
+  String get reminderNotificationsEnabled => 'Local due reminders';
+
+  @override
+  String get reminderNotificationsHint =>
+      'Notify when maintenance is due or a birthday is coming up.';
+
+  @override
+  String get reminderNotificationTime => 'Notification time';
+
+  @override
+  String get reminderNotificationTimeHint =>
+      'Daily time for maintenance reminders and birthday alerts.';
+
+  @override
   String get checkForUpdates => 'Check for updates';
 
   @override
