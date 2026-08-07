@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/locale_cubit.dart';
+import 'package:nasyad/core/preferences/soon_window_cubit.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/theme/season_theme_cubit.dart';
 import 'package:nasyad/core/theme/season_theme_l10n.dart';
@@ -12,6 +13,7 @@ import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/core/version/app_version.dart';
 import 'package:nasyad/domain/entities/calendar_system.dart';
 import 'package:nasyad/domain/entities/season_theme.dart';
+import 'package:nasyad/domain/entities/soon_window_days.dart';
 import 'package:nasyad/l10n/app_localizations.dart';
 import 'package:nasyad/presentation/app_update/bloc/app_update_bloc.dart';
 import 'package:nasyad/presentation/app_update/widgets/app_update_dialog.dart';
@@ -139,6 +141,37 @@ class PreferencesPage extends StatelessWidget {
                             secondary: const Icon(
                               Icons.calendar_today_outlined,
                             ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SectionHeader(title: l10n.remindersSection),
+              Card(
+                child: BlocBuilder<SoonWindowCubit, SoonWindowDays>(
+                  builder: (context, soonWindow) {
+                    return RadioGroup<SoonWindowDays>(
+                      groupValue: soonWindow,
+                      onChanged: (value) {
+                        if (value != null) {
+                          context.read<SoonWindowCubit>().setSoonWindow(value);
+                        }
+                      },
+                      child: Column(
+                        children: [
+                          RadioListTile<SoonWindowDays>(
+                            value: SoonWindowDays.seven,
+                            title: Text(l10n.soonWindowSevenDays),
+                            subtitle: Text(l10n.soonWindowHint),
+                            secondary: const Icon(Icons.notifications_outlined),
+                          ),
+                          const Divider(height: 1),
+                          RadioListTile<SoonWindowDays>(
+                            value: SoonWindowDays.fourteen,
+                            title: Text(l10n.soonWindowFourteenDays),
+                            secondary: const Icon(Icons.schedule_outlined),
                           ),
                         ],
                       ),

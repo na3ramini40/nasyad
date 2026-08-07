@@ -59,8 +59,10 @@ GoRouter createAppRouter() {
         builder: (context, state) {
           final services = AppServicesScope.of(context);
           return BlocProvider(
-            create: (_) =>
-                HomeBloc(services.watchHomeReminders)..add(const HomeStarted()),
+            create: (_) => HomeBloc(
+              services.watchHomeReminders,
+              services.snoozeHomeReminder,
+            )..add(const HomeStarted()),
             child: const HomePage(),
           );
         },

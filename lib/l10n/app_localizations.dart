@@ -1112,6 +1112,60 @@ abstract class AppLocalizations {
   /// **'Upcoming'**
   String get reminderBadgeUpcoming;
 
+  /// No description provided for @reminderSnooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get reminderSnooze;
+
+  /// No description provided for @reminderSnoozeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze reminder'**
+  String get reminderSnoozeTitle;
+
+  /// No description provided for @reminderSnoozeOneDay.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day'**
+  String get reminderSnoozeOneDay;
+
+  /// No description provided for @reminderSnoozeThreeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'3 days'**
+  String get reminderSnoozeThreeDays;
+
+  /// No description provided for @reminderSnoozeSevenDays.
+  ///
+  /// In en, this message translates to:
+  /// **'7 days'**
+  String get reminderSnoozeSevenDays;
+
+  /// No description provided for @reminderSnoozedForDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed for {days} days'**
+  String reminderSnoozedForDays(int days);
+
+  /// No description provided for @soonWindowSevenDays.
+  ///
+  /// In en, this message translates to:
+  /// **'7 days'**
+  String get soonWindowSevenDays;
+
+  /// No description provided for @soonWindowFourteenDays.
+  ///
+  /// In en, this message translates to:
+  /// **'14 days'**
+  String get soonWindowFourteenDays;
+
+  /// No description provided for @soonWindowHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday and home reminder badges use this window for \"Soon\".'**
+  String get soonWindowHint;
+
   /// No description provided for @checkForUpdates.
   ///
   /// In en, this message translates to:

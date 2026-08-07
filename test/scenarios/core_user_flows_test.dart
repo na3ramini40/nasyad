@@ -1,5 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
+import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/data/datasources/device_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource_impl.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
@@ -16,6 +18,7 @@ import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/domain/services/home_reminder_aggregator.dart';
 import 'package:nasyad/domain/usecases/birthday/watch_birthdays_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
+import 'package:nasyad/domain/usecases/home/snooze_home_reminder_usecase.dart';
 import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
@@ -339,6 +342,7 @@ void main() {
             ),
           ],
           filter: HomeReminderFilter.all,
+          snoozedReminderIds: const {},
           now: DateTime(2024, 6, 1),
         );
 
@@ -381,9 +385,18 @@ void main() {
         final birthdayRepo = FakeBirthdayRepository();
         addTearDown(() => birthdayRepo.dispose());
 
+        final snoozeStore = ReminderSnoozeStore.memory();
+        final soonWindowStore = SoonWindowPreferenceStore.memory();
+        addTearDown(() {
+          snoozeStore.dispose();
+          soonWindowStore.dispose();
+        });
+
         final usecase = WatchHomeRemindersUsecase(
           WatchDeviceSummariesUsecase(deviceRepo),
           WatchBirthdaysUsecase(birthdayRepo),
+          snoozeStore,
+          soonWindowStore,
         );
         final future = usecase(filter: HomeReminderFilter.all)
             .firstWhere((items) => items.isNotEmpty)
@@ -415,22 +428,30 @@ void main() {
       () async {
         final deviceRepo = FakeDeviceRepository();
         final birthdayRepo = FakeBirthdayRepository();
+        final snoozeStore = ReminderSnoozeStore.memory();
+        final soonWindowStore = SoonWindowPreferenceStore.memory();
         final bloc = HomeBloc(
           WatchHomeRemindersUsecase(
             WatchDeviceSummariesUsecase(deviceRepo),
             WatchBirthdaysUsecase(birthdayRepo),
+            snoozeStore,
+            soonWindowStore,
           ),
+          SnoozeHomeReminderUsecase(snoozeStore),
         );
         addTearDown(() async {
           await bloc.close();
           await deviceRepo.dispose();
           await birthdayRepo.dispose();
+          snoozeStore.dispose();
+          soonWindowStore.dispose();
         });
 
         expectLater(
           bloc.stream,
           emitsInOrder([
             const HomeLoading(),
+            isA<HomeLoaded>(),
             isA<HomeLoaded>()
                 .having((s) => s.visibleReminders, 'visible', hasLength(2))
                 .having(

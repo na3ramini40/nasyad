@@ -548,6 +548,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderBadgeUpcoming => 'Upcoming';
 
   @override
+  String get reminderSnooze => 'Snooze';
+
+  @override
+  String get reminderSnoozeTitle => 'Snooze reminder';
+
+  @override
+  String get reminderSnoozeOneDay => '1 day';
+
+  @override
+  String get reminderSnoozeThreeDays => '3 days';
+
+  @override
+  String get reminderSnoozeSevenDays => '7 days';
+
+  @override
+  String reminderSnoozedForDays(int days) {
+    return 'Snoozed for $days days';
+  }
+
+  @override
+  String get soonWindowSevenDays => '7 days';
+
+  @override
+  String get soonWindowFourteenDays => '14 days';
+
+  @override
+  String get soonWindowHint =>
+      'Birthday and home reminder badges use this window for \"Soon\".';
+
+  @override
   String get checkForUpdates => 'Check for updates';
 
   @override

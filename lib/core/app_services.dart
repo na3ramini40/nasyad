@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nasyad/core/calendar/calendar_preference_store.dart';
+import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
+import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
@@ -27,6 +29,7 @@ import 'package:nasyad/domain/usecases/device/get_all_devices_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
+import 'package:nasyad/domain/usecases/home/snooze_home_reminder_usecase.dart';
 import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summary_usecase.dart';
 import 'package:nasyad/domain/usecases/device_log/create_device_log_usecase.dart';
@@ -40,12 +43,17 @@ class AppServices {
     this.database, {
     LastSeenVersionStore? lastSeenVersionStore,
     CalendarPreferenceStore? calendarPreferenceStore,
+    SoonWindowPreferenceStore? soonWindowPreferenceStore,
+    ReminderSnoozeStore? reminderSnoozeStore,
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
     AppUpdateService? appUpdateService,
   }) : lastSeenVersionStore = lastSeenVersionStore ?? LastSeenVersionStore(),
        calendarPreferenceStore =
            calendarPreferenceStore ?? CalendarPreferenceStore(),
+       soonWindowPreferenceStore =
+           soonWindowPreferenceStore ?? SoonWindowPreferenceStore(),
+       reminderSnoozeStore = reminderSnoozeStore ?? ReminderSnoozeStore(),
        seasonThemePreferenceStore =
            seasonThemePreferenceStore ?? SeasonThemePreferenceStore(),
        themeModePreferenceStore =
@@ -85,12 +93,17 @@ class AppServices {
     watchHomeReminders = WatchHomeRemindersUsecase(
       watchDeviceSummaries,
       watchBirthdays,
+      this.reminderSnoozeStore,
+      this.soonWindowPreferenceStore,
     );
+    snoozeHomeReminder = SnoozeHomeReminderUsecase(this.reminderSnoozeStore);
   }
 
   final AppDatabase database;
   final LastSeenVersionStore lastSeenVersionStore;
   final CalendarPreferenceStore calendarPreferenceStore;
+  final SoonWindowPreferenceStore soonWindowPreferenceStore;
+  final ReminderSnoozeStore reminderSnoozeStore;
   final SeasonThemePreferenceStore seasonThemePreferenceStore;
   final ThemeModePreferenceStore themeModePreferenceStore;
   final AppUpdateService appUpdateService;
@@ -117,6 +130,7 @@ class AppServices {
   late final UpdateBirthdayUsecase updateBirthday;
   late final DeleteBirthdayUsecase deleteBirthday;
   late final WatchHomeRemindersUsecase watchHomeReminders;
+  late final SnoozeHomeReminderUsecase snoozeHomeReminder;
 
   Future<void> dispose() => database.close();
 }

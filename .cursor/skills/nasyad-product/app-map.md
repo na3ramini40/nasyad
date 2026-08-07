@@ -27,13 +27,14 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 - App bar: logo mark, app title, settings icon
 - **Reminders** section: filter chips (All / Devices / Birthdays)
 - Optional **update available** banner when a newer GitHub release exists (tap → update dialog)
-- Reminder rows: title, subtitle (due/soon/today/tomorrow/in N days), urgency badge (Due / Soon / Upcoming), kind icon
+- Reminder rows: title, subtitle (due/soon/today/tomorrow/in N days), urgency badge (Due / Soon / Upcoming), kind icon; snooze action hides a row for 1/3/7 days
 - Empty reminders: check icon, “nothing due” title + hint
 - **Features** section: menu tiles
 - Loading spinner while data loads; error message on failure
 
 **Actions:**
 - Filter chips narrow the reminder list
+- Snooze reminder (1 / 3 / 7 days) — row returns after the snooze period
 - Tap reminder → device detail (maintenance) or birthday edit (birthday)
 - Device management tile → device list
 - Birthdays tile → birthday list
@@ -90,7 +91,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ## Preferences
 
 **Entry:** Home settings icon  
-**Shows:** Language (en/fa); calendar system (Gregorian/Persian); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); data links (birthdays, export/import); about (app name + version, what's new, check for updates with status)  
+**Shows:** Language (en/fa); calendar system (Gregorian/Persian); soon window for reminder badges (7 / 14 days); season theme (default / spring / summer / autumn / winter, each with light and dark variants); brightness (system/light/dark); data links (birthdays, export/import); about (app name + version, what's new, check for updates with status)  
 **Actions:** Change settings; open birthdays; open export/import; open what's new dialog; check for updates (manual)  
 **Leaves to:** Birthday list, export/import, what's new modal, update download/install dialog
 

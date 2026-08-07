@@ -13,6 +13,8 @@ class ReminderListItem extends StatelessWidget {
     required this.icon,
     this.badgeVariant = StatusBadgeVariant.neutral,
     this.onTap,
+    this.onSnooze,
+    this.snoozeTooltip,
   });
 
   final String title;
@@ -21,6 +23,8 @@ class ReminderListItem extends StatelessWidget {
   final IconData icon;
   final StatusBadgeVariant badgeVariant;
   final VoidCallback? onTap;
+  final VoidCallback? onSnooze;
+  final String? snoozeTooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,15 @@ class ReminderListItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                if (onSnooze != null) ...[
+                  IconButton(
+                    onPressed: onSnooze,
+                    icon: const Icon(Icons.snooze_outlined),
+                    tooltip: snoozeTooltip,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+                const SizedBox(width: AppSpacing.xxs),
                 StatusBadge(label: badgeLabel, variant: badgeVariant),
               ],
             ),

@@ -1,8 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
+import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/domain/entities/home_reminder_filter.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 import 'package:nasyad/domain/usecases/birthday/watch_birthdays_usecase.dart';
 import 'package:nasyad/domain/usecases/device/watch_device_summaries_usecase.dart';
+import 'package:nasyad/domain/usecases/home/snooze_home_reminder_usecase.dart';
 import 'package:nasyad/domain/usecases/home/watch_home_reminders_usecase.dart';
 import 'package:nasyad/presentation/home/bloc/home_bloc.dart';
 
@@ -13,16 +16,23 @@ import 'birthday_list_bloc_test.dart';
 void main() {
   late FakeDeviceRepository deviceRepository;
   late FakeBirthdayRepository birthdayRepository;
+  late ReminderSnoozeStore snoozeStore;
+  late SoonWindowPreferenceStore soonWindowStore;
   late HomeBloc bloc;
 
   setUp(() {
     deviceRepository = FakeDeviceRepository();
     birthdayRepository = FakeBirthdayRepository();
+    snoozeStore = ReminderSnoozeStore.memory();
+    soonWindowStore = SoonWindowPreferenceStore.memory();
     bloc = HomeBloc(
       WatchHomeRemindersUsecase(
         WatchDeviceSummariesUsecase(deviceRepository),
         WatchBirthdaysUsecase(birthdayRepository),
+        snoozeStore,
+        soonWindowStore,
       ),
+      SnoozeHomeReminderUsecase(snoozeStore),
     );
   });
 
@@ -30,6 +40,8 @@ void main() {
     await bloc.close();
     await deviceRepository.dispose();
     await birthdayRepository.dispose();
+    snoozeStore.dispose();
+    soonWindowStore.dispose();
   });
 
   test('starts as HomeInitial', () {
@@ -41,6 +53,7 @@ void main() {
       bloc.stream,
       emitsInOrder([
         const HomeLoading(),
+        isA<HomeLoaded>(),
         isA<HomeLoaded>().having(
           (s) => s.allReminders,
           'allReminders',
@@ -88,4 +101,23 @@ void main() {
       expect(state.visibleReminders, hasLength(2));
     },
   );
+
+  test('snooze removes reminder from loaded list', () async {
+    bloc.add(const HomeStarted());
+    await Future<void>.delayed(Duration.zero);
+    deviceRepository.emitSummaries([
+      sampleSummary(
+        device: sampleDevice(id: 'device-1'),
+        status: MaintenanceStatus.due,
+      ),
+    ]);
+    birthdayRepository.emit();
+    await Future<void>.delayed(Duration.zero);
+
+    bloc.add(const HomeReminderSnoozed(reminderId: 'device-device-1', days: 3));
+    await Future<void>.delayed(Duration.zero);
+
+    final state = bloc.state as HomeLoaded;
+    expect(state.allReminders, isEmpty);
+  });
 }

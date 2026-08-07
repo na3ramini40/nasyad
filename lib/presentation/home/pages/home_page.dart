@@ -132,7 +132,9 @@ class _HomeBody extends StatelessWidget {
                 icon: item.kind == HomeReminderKind.device
                     ? Icons.devices_other
                     : Icons.cake_outlined,
+                snoozeTooltip: l10n.reminderSnooze,
                 onTap: () => _openReminder(context, item),
+                onSnooze: () => _showSnoozeSheet(context, item),
               ),
             ),
           ),
@@ -161,6 +163,60 @@ class _HomeBody extends StatelessWidget {
       case HomeReminderKind.birthday:
         context.push('/birthdays/${item.birthdayId}/edit');
     }
+  }
+
+  Future<void> _showSnoozeSheet(BuildContext context, HomeReminder item) async {
+    final l10n = AppLocalizations.of(context);
+    final selectedDays = await showModalBottomSheet<int>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                  AppSpacing.xs,
+                ),
+                child: Text(
+                  l10n.reminderSnoozeTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.today_outlined),
+                title: Text(l10n.reminderSnoozeOneDay),
+                onTap: () => Navigator.of(context).pop(1),
+              ),
+              ListTile(
+                leading: const Icon(Icons.date_range_outlined),
+                title: Text(l10n.reminderSnoozeThreeDays),
+                onTap: () => Navigator.of(context).pop(3),
+              ),
+              ListTile(
+                leading: const Icon(Icons.event_outlined),
+                title: Text(l10n.reminderSnoozeSevenDays),
+                onTap: () => Navigator.of(context).pop(7),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!context.mounted || selectedDays == null) return;
+    context.read<HomeBloc>().add(
+      HomeReminderSnoozed(reminderId: item.id, days: selectedDays),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.reminderSnoozedForDays(selectedDays))),
+    );
   }
 
   String _reminderSubtitle(AppLocalizations l10n, HomeReminder item) {

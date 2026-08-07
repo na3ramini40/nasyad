@@ -250,6 +250,20 @@
   "reminderBadgeDue": "سررسید",
   "reminderBadgeSoon": "به زودی",
   "reminderBadgeUpcoming": "نزدیک",
+  "reminderSnooze": "تعویق",
+  "reminderSnoozeTitle": "تعویق یادآور",
+  "reminderSnoozeOneDay": "۱ روز",
+  "reminderSnoozeThreeDays": "۳ روز",
+  "reminderSnoozeSevenDays": "۷ روز",
+  "reminderSnoozedForDays": "به مدت {days} روز تعویق شد",
+  "@reminderSnoozedForDays": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "soonWindowSevenDays": "۷ روز",
+  "soonWindowFourteenDays": "۱۴ روز",
+  "soonWindowHint": "نشان «به زودی» برای تولد و یادآورهای خانه بر اساس این بازه است.",
   "checkForUpdates": "بررسی به‌روزرسانی",
   "checkForUpdatesHint": "آخرین نسخه را از گیت‌هاب دریافت کنید",
   "updateChecking": "در حال بررسی به‌روزرسانی…",
