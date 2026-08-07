@@ -250,6 +250,7 @@
   "reminderBadgeDue": "Due",
   "reminderBadgeSoon": "Soon",
   "reminderBadgeUpcoming": "Upcoming",
+  "reminderQuickActionsMenu": "Quick actions",
   "checkForUpdates": "Check for updates",
   "checkForUpdatesHint": "Download the latest release from GitHub",
   "updateChecking": "Checking for updates…",

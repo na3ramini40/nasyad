@@ -548,6 +548,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderBadgeUpcoming => 'Upcoming';
 
   @override
+  String get reminderQuickActionsMenu => 'Quick actions';
+
+  @override
   String get checkForUpdates => 'Check for updates';
 
   @override

@@ -13,6 +13,8 @@ class ReminderListItem extends StatelessWidget {
     required this.icon,
     this.badgeVariant = StatusBadgeVariant.neutral,
     this.onTap,
+    this.onQuickActions,
+    this.quickActionsTooltip,
   });
 
   final String title;
@@ -21,46 +23,61 @@ class ReminderListItem extends StatelessWidget {
   final IconData icon;
   final StatusBadgeVariant badgeVariant;
   final VoidCallback? onTap;
+  final VoidCallback? onQuickActions;
+  final String? quickActionsTooltip;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Semantics(
-      button: onTap != null,
-      label: '$title. $subtitle',
-      child: Card(
-        margin: EdgeInsets.zero,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: AppRadius.borderMd,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(
-              children: [
-                Icon(icon, color: scheme.secondary),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            Expanded(
+              child: Semantics(
+                button: onTap != null,
+                label: '$title. $subtitle',
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: AppRadius.borderMd,
+                  child: Row(
                     children: [
-                      Text(title, style: theme.textTheme.titleSmall),
-                      const SizedBox(height: AppSpacing.xxs),
-                      Text(
-                        subtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: scheme.onSurfaceVariant,
+                      Icon(icon, color: scheme.secondary),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(title, style: theme.textTheme.titleSmall),
+                            const SizedBox(height: AppSpacing.xxs),
+                            Text(
+                              subtitle,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                StatusBadge(label: badgeLabel, variant: badgeVariant),
-              ],
+              ),
             ),
-          ),
+            if (onQuickActions != null) ...[
+              IconButton(
+                onPressed: onQuickActions,
+                icon: const Icon(Icons.more_vert),
+                tooltip: quickActionsTooltip,
+              ),
+            ],
+            const SizedBox(width: AppSpacing.sm),
+            StatusBadge(label: badgeLabel, variant: badgeVariant),
+          ],
         ),
       ),
     );

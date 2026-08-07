@@ -35,6 +35,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 **Actions:**
 - Filter chips narrow the reminder list
 - Tap reminder → device detail (maintenance) or birthday edit (birthday)
+- Device reminder overflow (⋮) → quick actions sheet: log maintenance or update usage (opens add-log with kind preselected)
 - Device management tile → device list
 - Birthdays tile → birthday list
 - Settings → preferences

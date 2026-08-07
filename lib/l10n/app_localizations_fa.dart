@@ -548,6 +548,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get reminderBadgeUpcoming => 'نزدیک';
 
   @override
+  String get reminderQuickActionsMenu => 'اقدام‌های سریع';
+
+  @override
   String get checkForUpdates => 'بررسی به‌روزرسانی';
 
   @override
