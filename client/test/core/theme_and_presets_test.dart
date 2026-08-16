@@ -68,7 +68,16 @@ void main() {
       SeasonTheme.winter,
       Brightness.light,
     );
+    final colorBlind = SeasonThemePalette.forSeason(
+      SeasonTheme.colorBlind,
+      Brightness.light,
+    );
     expect(spring.primary, isNot(winter.primary));
+    expect(colorBlind.primary, isNot(winter.primary));
+    expect(
+      colorBlind.statusColors.success,
+      isNot(colorBlind.statusColors.warning),
+    );
   });
 
   test('Persian locale uses Vazir font family', () {

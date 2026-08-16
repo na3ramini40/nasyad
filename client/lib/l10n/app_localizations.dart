@@ -242,6 +242,36 @@ abstract class AppLocalizations {
   /// **'Winter'**
   String get seasonWinter;
 
+  /// No description provided for @seasonColorBlind.
+  ///
+  /// In en, this message translates to:
+  /// **'Color blind'**
+  String get seasonColorBlind;
+
+  /// No description provided for @seasonColorBlindHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps status colors clear without red vs green'**
+  String get seasonColorBlindHint;
+
+  /// No description provided for @displaySize.
+  ///
+  /// In en, this message translates to:
+  /// **'Display size'**
+  String get displaySize;
+
+  /// No description provided for @displaySizeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinch with two fingers, or use the slider'**
+  String get displaySizeHint;
+
+  /// No description provided for @displaySizeReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get displaySizeReset;
+
   /// No description provided for @brightness.
   ///
   /// In en, this message translates to:

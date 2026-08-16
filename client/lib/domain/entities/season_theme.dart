@@ -3,7 +3,8 @@ enum SeasonTheme {
   spring,
   summer,
   autumn,
-  winter;
+  winter,
+  colorBlind;
 
   String get storageValue => name;
 
@@ -13,6 +14,7 @@ enum SeasonTheme {
       'summer' => SeasonTheme.summer,
       'autumn' => SeasonTheme.autumn,
       'winter' => SeasonTheme.winter,
+      'colorBlind' => SeasonTheme.colorBlind,
       _ => SeasonTheme.classic,
     };
   }
@@ -23,5 +25,6 @@ enum SeasonTheme {
     SeasonTheme.summer,
     SeasonTheme.autumn,
     SeasonTheme.winter,
+    SeasonTheme.colorBlind,
   ];
 }

@@ -49,3 +49,4 @@ Calm, short, concrete. Action verbs. Status: Needs Service / Due Soon / Up to Da
 - Sync conflict on sign-in: warn before override; local (this device) wins when confirmed.
 - Empty birthdays: invite first person, one CTA.
 - Sign-out: one tap, no confirmation.
+- Appearance: two-finger pinch or a slider scales the whole UI; color-blind theme keeps status colors clear without red vs green.

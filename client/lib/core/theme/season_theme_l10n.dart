@@ -10,6 +10,7 @@ extension SeasonThemeL10n on SeasonTheme {
       SeasonTheme.summer => l10n.seasonSummer,
       SeasonTheme.autumn => l10n.seasonAutumn,
       SeasonTheme.winter => l10n.seasonWinter,
+      SeasonTheme.colorBlind => l10n.seasonColorBlind,
     };
   }
 
@@ -20,6 +21,7 @@ extension SeasonThemeL10n on SeasonTheme {
       SeasonTheme.summer => Icons.wb_sunny_outlined,
       SeasonTheme.autumn => Icons.park_outlined,
       SeasonTheme.winter => Icons.ac_unit_outlined,
+      SeasonTheme.colorBlind => Icons.visibility_outlined,
     };
   }
 }

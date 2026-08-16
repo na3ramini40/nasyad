@@ -11,6 +11,7 @@ import 'package:nasyad/core/sync/network_status_reader.dart';
 import 'package:nasyad/core/sync/sync_state_store.dart';
 import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
+import 'package:nasyad/core/theme/ui_scale_preference_store.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
 import 'package:nasyad/domain/services/local_sync_coordinator.dart';
 import 'package:nasyad/data/datasources/app_config_remote_datasource.dart';
@@ -107,6 +108,7 @@ class AppServices {
     ReminderSnoozeStore? reminderSnoozeStore,
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
+    UiScalePreferenceStore? uiScalePreferenceStore,
     AppUpdateService? appUpdateService,
     ReminderNotificationPreferenceStore? reminderNotificationPreferenceStore,
     SyncPreferenceStore? syncPreferenceStore,
@@ -140,6 +142,8 @@ class AppServices {
            seasonThemePreferenceStore ?? SeasonThemePreferenceStore(),
        themeModePreferenceStore =
            themeModePreferenceStore ?? ThemeModePreferenceStore(),
+       uiScalePreferenceStore =
+           uiScalePreferenceStore ?? UiScalePreferenceStore(),
        reminderNotificationPreferenceStore =
            reminderNotificationPreferenceStore ??
            ReminderNotificationPreferenceStore(),
@@ -302,6 +306,7 @@ class AppServices {
     ReminderSnoozeStore? reminderSnoozeStore,
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
+    UiScalePreferenceStore? uiScalePreferenceStore,
     ReminderNotificationPreferenceStore? reminderNotificationPreferenceStore,
     SyncPreferenceStore? syncPreferenceStore,
     AppLockStore? appLockStore,
@@ -345,6 +350,7 @@ class AppServices {
       reminderSnoozeStore: reminderSnoozeStore,
       seasonThemePreferenceStore: seasonThemePreferenceStore,
       themeModePreferenceStore: themeModePreferenceStore,
+      uiScalePreferenceStore: uiScalePreferenceStore,
       reminderNotificationPreferenceStore: reminderNotificationPreferenceStore,
       syncPreferenceStore: prefs,
       appLockStore: appLockStore ?? AppLockStore.memory(),
@@ -390,6 +396,7 @@ class AppServices {
   final ReminderSnoozeStore reminderSnoozeStore;
   final SeasonThemePreferenceStore seasonThemePreferenceStore;
   final ThemeModePreferenceStore themeModePreferenceStore;
+  final UiScalePreferenceStore uiScalePreferenceStore;
   final ReminderNotificationPreferenceStore reminderNotificationPreferenceStore;
   final SyncPreferenceStore syncPreferenceStore;
   final AppLockStore appLockStore;

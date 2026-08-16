@@ -164,7 +164,7 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 - **App lock** — method (Off / Password / PIN / Fingerprint), idle timeout; setup/change/disable
 - **Language & region** — language (en/fa); calendar system (Gregorian/Persian)
 - **Reminders** — soon window (7 / 14 days); due reminder notifications (enable + daily time, on supported platforms)
-- **Appearance** — season theme (default / spring / summer / autumn / winter); brightness (system/light/dark)
+- **Appearance** — season theme (default / spring / summer / autumn / winter / color blind); brightness (system/light/dark); display size (slider + two-finger pinch; reset)
 - **Sync** — sync with remote toggle (default on) + status
 - **Data** — birthdays, archived devices, export/import links
 - **About** — app name + version, what's new, check for updates with status

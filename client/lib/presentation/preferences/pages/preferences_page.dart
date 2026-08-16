@@ -14,6 +14,8 @@ import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/theme/season_theme_cubit.dart';
 import 'package:nasyad/core/theme/season_theme_l10n.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
+import 'package:nasyad/core/theme/ui_scale.dart';
+import 'package:nasyad/core/theme/ui_scale_cubit.dart';
 import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/core/version/app_version.dart';
 import 'package:nasyad/domain/entities/calendar_system.dart';
@@ -305,9 +307,15 @@ class PreferencesPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                subtitle: index == 0
-                                    ? Text(l10n.seasonThemeHint)
-                                    : null,
+                                subtitle: switch (season) {
+                                  SeasonTheme.classic => Text(
+                                    l10n.seasonThemeHint,
+                                  ),
+                                  SeasonTheme.colorBlind => Text(
+                                    l10n.seasonColorBlindHint,
+                                  ),
+                                  _ => null,
+                                },
                                 secondary: Icon(season.icon),
                               ),
                             ],
@@ -348,6 +356,42 @@ class PreferencesPage extends StatelessWidget {
                             ),
                           ],
                         ),
+                      );
+                    },
+                  ),
+                  BlocBuilder<UiScaleCubit, double>(
+                    builder: (context, scale) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.text_fields_outlined),
+                            title: Text(l10n.displaySize),
+                            subtitle: Text(l10n.displaySizeHint),
+                            trailing: TextButton(
+                              onPressed: scale == UiScale.defaultValue
+                                  ? null
+                                  : () => context.read<UiScaleCubit>().reset(),
+                              child: Text(l10n.displaySizeReset),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: AppSpacing.lg,
+                              end: AppSpacing.lg,
+                              bottom: AppSpacing.sm,
+                            ),
+                            child: Slider(
+                              value: scale,
+                              min: UiScale.min,
+                              max: UiScale.max,
+                              divisions: 12,
+                              label: '${(scale * 100).round()}%',
+                              onChanged: (value) =>
+                                  context.read<UiScaleCubit>().setScale(value),
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
