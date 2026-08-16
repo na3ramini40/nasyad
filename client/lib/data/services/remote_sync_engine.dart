@@ -310,8 +310,6 @@ class RemoteSyncEngine implements RemoteSyncPort {
   }
 }
 
-String _linkKey(String deviceId, String tagId) => '$deviceId\u0000$tagId';
-
 /// Sync-relevant equality: all wire fields except timestamps.
 bool devicesMeaningfullyEqual(DeviceModel a, DeviceModel b) {
   return _syncPayloadEqual(a.toSyncJson(), b.toSyncJson());
