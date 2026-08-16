@@ -104,6 +104,21 @@
   "childrenSection": "Parts & children",
   "addChild": "Add child",
   "markMaintained": "Mark maintained",
+  "maintainAction": "Maintain",
+  "remainingUsageLabel": "Remaining: {remaining}",
+  "@remainingUsageLabel": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "targetUsageLabel": "Target: {target}",
+  "@targetUsageLabel": {
+    "placeholders": {
+      "target": { "type": "String" }
+    }
+  },
+  "useParentUsage": "Use parent usage",
+  "useParentUsageSubtitle": "Inherit the parent's usage reading. Turn off to track separately.",
   "updateUsage": "Update usage",
   "logKind": "Log type",
   "logKindMaintenance": "Maintenance done",
@@ -274,6 +289,29 @@
   "birthdaysFeatureHint": "Remember birthdays for people you care about.",
   "places": "Places",
   "placesFeatureHint": "Save points, paths, and areas on a map for offline use.",
+  "tags": "Tags",
+  "tagsFeatureHint": "Label devices for Home grouping. Tags are not devices.",
+  "addTag": "Add tag",
+  "editTag": "Edit tag",
+  "tagName": "Tag name",
+  "tagNameHint": "Tag name…",
+  "tagNameRequired": "Tag name is required",
+  "createTag": "Create tag",
+  "noTagsTitle": "No tags yet",
+  "noTagsHint": "Create tags to group devices on Home.",
+  "deleteTagTitle": "Delete tag?",
+  "deleteTagBody": "{name} will be removed. Device assignments are cleared.",
+  "@deleteTagBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "deviceTagsSection": "Tags",
+  "deviceTagsHint": "Optional labels for Home tag grouping.",
+  "homeGroupingByDevice": "By device",
+  "homeGroupingByTag": "By tag",
+  "homeGroupingLabel": "Group reminders",
+  "reminderTagRollup": "Tag rollup · worst of assigned devices",
   "addPlace": "Add place",
   "editPlace": "Edit place",
   "placeName": "Name",

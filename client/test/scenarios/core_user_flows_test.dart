@@ -210,13 +210,19 @@ void main() {
       expect(summary.single.status, MaintenanceStatus.due);
 
       await logs.createLog(
-        sampleLog(kind: DeviceLogKind.maintenanceDone, usageValue: null),
+        sampleLog(
+          kind: DeviceLogKind.maintenanceDone,
+          usageValue: 1000,
+          usageUnit: UsageIntervalUnit.km,
+        ),
       );
 
       summary = await devices.watchRootDeviceSummaries().first.timeout(
         const Duration(seconds: 2),
       );
       expect(summary.single.status, MaintenanceStatus.upToDate);
+      expect(summary.single.remainingUsage, 1000);
+      expect(summary.single.targetUsage, 2000);
     });
 
     test(
@@ -280,17 +286,24 @@ void main() {
           id: 'log-oil',
           deviceId: 'oil',
           kind: DeviceLogKind.maintenanceDone,
+          usageValue: 9000,
+          usageUnit: UsageIntervalUnit.km,
         ),
       );
 
       final oil = await devices.getDevice('oil');
       expect(oil?.usageAtLastMaintenance, 9000);
 
+      final car = await devices.getDevice('car');
+      expect(car?.currentUsage, 9000);
+
       final childSummary = await devices
           .watchDeviceSummary('oil')
           .first
           .timeout(const Duration(seconds: 2));
       expect(childSummary?.status, MaintenanceStatus.upToDate);
+      expect(childSummary?.remainingUsage, 1000);
+      expect(childSummary?.targetUsage, 10000);
     });
   });
 

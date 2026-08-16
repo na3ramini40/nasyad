@@ -17,7 +17,7 @@ abstract final class LocalReminderPlanner {
 
     for (final reminder in reminders) {
       final plan = switch (reminder.kind) {
-        HomeReminderKind.device => _planDeviceReminder(
+        HomeReminderKind.device || HomeReminderKind.tag => _planDeviceReminder(
           reminder: reminder,
           now: current,
           hour: hour,

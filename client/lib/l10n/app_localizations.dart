@@ -632,6 +632,36 @@ abstract class AppLocalizations {
   /// **'Mark maintained'**
   String get markMaintained;
 
+  /// No description provided for @maintainAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain'**
+  String get maintainAction;
+
+  /// No description provided for @remainingUsageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining: {remaining}'**
+  String remainingUsageLabel(String remaining);
+
+  /// No description provided for @targetUsageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target: {target}'**
+  String targetUsageLabel(String target);
+
+  /// No description provided for @useParentUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use parent usage'**
+  String get useParentUsage;
+
+  /// No description provided for @useParentUsageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherit the parent\'s usage reading. Turn off to track separately.'**
+  String get useParentUsageSubtitle;
+
   /// No description provided for @updateUsage.
   ///
   /// In en, this message translates to:
@@ -1231,6 +1261,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save points, paths, and areas on a map for offline use.'**
   String get placesFeatureHint;
+
+  /// No description provided for @tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags;
+
+  /// No description provided for @tagsFeatureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Label devices for Home grouping. Tags are not devices.'**
+  String get tagsFeatureHint;
+
+  /// No description provided for @addTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get addTag;
+
+  /// No description provided for @editTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit tag'**
+  String get editTag;
+
+  /// No description provided for @tagName.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag name'**
+  String get tagName;
+
+  /// No description provided for @tagNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag name…'**
+  String get tagNameHint;
+
+  /// No description provided for @tagNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag name is required'**
+  String get tagNameRequired;
+
+  /// No description provided for @createTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Create tag'**
+  String get createTag;
+
+  /// No description provided for @noTagsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No tags yet'**
+  String get noTagsTitle;
+
+  /// No description provided for @noTagsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create tags to group devices on Home.'**
+  String get noTagsHint;
+
+  /// No description provided for @deleteTagTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete tag?'**
+  String get deleteTagTitle;
+
+  /// No description provided for @deleteTagBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} will be removed. Device assignments are cleared.'**
+  String deleteTagBody(String name);
+
+  /// No description provided for @deviceTagsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get deviceTagsSection;
+
+  /// No description provided for @deviceTagsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional labels for Home tag grouping.'**
+  String get deviceTagsHint;
+
+  /// No description provided for @homeGroupingByDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'By device'**
+  String get homeGroupingByDevice;
+
+  /// No description provided for @homeGroupingByTag.
+  ///
+  /// In en, this message translates to:
+  /// **'By tag'**
+  String get homeGroupingByTag;
+
+  /// No description provided for @homeGroupingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Group reminders'**
+  String get homeGroupingLabel;
+
+  /// No description provided for @reminderTagRollup.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag rollup · worst of assigned devices'**
+  String get reminderTagRollup;
 
   /// No description provided for @addPlace.
   ///

@@ -26,7 +26,10 @@ final class DeviceEditState extends Equatable {
     this.initialElapsed = '0',
     this.fixedDueAt,
     this.usageUnit,
+    this.useParentUsage = true,
     this.templates = const [],
+    this.availableTags = const [],
+    this.selectedTagIds = const [],
     this.appliedTemplateId,
     this.errorMessage,
   });
@@ -45,12 +48,17 @@ final class DeviceEditState extends Equatable {
   final String initialElapsed;
   final DateTime? fixedDueAt;
   final UsageIntervalUnit? usageUnit;
+  final bool useParentUsage;
   final List<ScheduleTemplate> templates;
+  final List<Tag> availableTags;
+  final List<String> selectedTagIds;
   final String? appliedTemplateId;
   final String? errorMessage;
 
   bool get isBusy =>
       status == DeviceEditStatus.loading || status == DeviceEditStatus.saving;
+
+  bool get isChild => parentId != null;
 
   DeviceEditState copyWith({
     DeviceEditStatus? status,
@@ -66,7 +74,10 @@ final class DeviceEditState extends Equatable {
     String? initialElapsed,
     DateTime? fixedDueAt,
     UsageIntervalUnit? usageUnit,
+    bool? useParentUsage,
     List<ScheduleTemplate>? templates,
+    List<Tag>? availableTags,
+    List<String>? selectedTagIds,
     String? appliedTemplateId,
     String? errorMessage,
     bool clearScheduleType = false,
@@ -94,7 +105,10 @@ final class DeviceEditState extends Equatable {
       initialElapsed: initialElapsed ?? this.initialElapsed,
       fixedDueAt: clearFixedDueAt ? null : (fixedDueAt ?? this.fixedDueAt),
       usageUnit: clearUsageUnit ? null : (usageUnit ?? this.usageUnit),
+      useParentUsage: useParentUsage ?? this.useParentUsage,
       templates: templates ?? this.templates,
+      availableTags: availableTags ?? this.availableTags,
+      selectedTagIds: selectedTagIds ?? this.selectedTagIds,
       appliedTemplateId: appliedTemplateId,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
@@ -116,7 +130,10 @@ final class DeviceEditState extends Equatable {
     initialElapsed,
     fixedDueAt,
     usageUnit,
+    useParentUsage,
     templates,
+    availableTags,
+    selectedTagIds,
     appliedTemplateId,
     errorMessage,
   ];

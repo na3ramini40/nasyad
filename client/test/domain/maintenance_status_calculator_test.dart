@@ -87,6 +87,44 @@ void main() {
       final result = calculator.evaluateDevice(device: oil, usageOwner: car);
       expect(result.progress, closeTo(0.8, 0.001));
       expect(result.status, MaintenanceStatus.soon);
+      expect(result.targetUsage, 1000);
+      expect(result.remainingUsage, 200);
+    });
+
+    test('exposes remaining and target from baseline plus interval', () {
+      final device = sampleDevice(
+        scheduleType: ScheduleType.usageInterval,
+        intervalValue: 1000,
+        intervalUnit: 'km',
+        usageUnit: UsageIntervalUnit.km,
+        currentUsage: 12500,
+        usageAtLastMaintenance: 12000,
+      );
+      final result = calculator.evaluateDevice(
+        device: device,
+        usageOwner: device,
+      );
+      expect(result.targetUsage, 13000);
+      expect(result.remainingUsage, 500);
+      expect(result.progress, closeTo(0.5, 0.001));
+    });
+
+    test('remainingUsage floors at zero when overdue', () {
+      final device = sampleDevice(
+        scheduleType: ScheduleType.usageInterval,
+        intervalValue: 1000,
+        intervalUnit: 'km',
+        usageUnit: UsageIntervalUnit.km,
+        currentUsage: 14000,
+        usageAtLastMaintenance: 12000,
+      );
+      final result = calculator.evaluateDevice(
+        device: device,
+        usageOwner: device,
+      );
+      expect(result.targetUsage, 13000);
+      expect(result.remainingUsage, 0);
+      expect(result.status, MaintenanceStatus.due);
     });
 
     test('returns upToDate when interval missing', () {
@@ -98,6 +136,8 @@ void main() {
         ),
       );
       expect(result.status, MaintenanceStatus.upToDate);
+      expect(result.remainingUsage, isNull);
+      expect(result.targetUsage, isNull);
     });
   });
 

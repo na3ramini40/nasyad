@@ -104,6 +104,21 @@
   "childrenSection": "قطعات و زیرمجموعه‌ها",
   "addChild": "افزودن زیرمجموعه",
   "markMaintained": "ثبت سرویس",
+  "maintainAction": "سرویس",
+  "remainingUsageLabel": "باقی‌مانده: {remaining}",
+  "@remainingUsageLabel": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "targetUsageLabel": "هدف: {target}",
+  "@targetUsageLabel": {
+    "placeholders": {
+      "target": { "type": "String" }
+    }
+  },
+  "useParentUsage": "استفاده از مصرف والد",
+  "useParentUsageSubtitle": "خوانش مصرف از والد به ارث می‌رسد. برای ردیابی جداگانه خاموش کنید.",
   "updateUsage": "به‌روزرسانی مصرف",
   "logKind": "نوع گزارش",
   "logKindMaintenance": "سرویس انجام شد",
@@ -274,6 +289,29 @@
   "birthdaysFeatureHint": "تولد افراد مهم را به خاطر بسپارید.",
   "places": "مکان‌ها",
   "placesFeatureHint": "نقطه، مسیر و محدوده را روی نقشه ذخیره کنید تا آفلاین در دسترس باشد.",
+  "tags": "برچسب‌ها",
+  "tagsFeatureHint": "دستگاه‌ها را برای گروه‌بندی صفحهٔ خانه برچسب بزنید. برچسب دستگاه نیست.",
+  "addTag": "افزودن برچسب",
+  "editTag": "ویرایش برچسب",
+  "tagName": "نام برچسب",
+  "tagNameHint": "نام برچسب…",
+  "tagNameRequired": "نام برچسب الزامی است",
+  "createTag": "ایجاد برچسب",
+  "noTagsTitle": "هنوز برچسبی نیست",
+  "noTagsHint": "برچسب بسازید تا دستگاه‌ها را در صفحهٔ خانه گروه کنید.",
+  "deleteTagTitle": "حذف برچسب؟",
+  "deleteTagBody": "{name} حذف می‌شود و انتساب دستگاه‌ها پاک می‌شود.",
+  "@deleteTagBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "deviceTagsSection": "برچسب‌ها",
+  "deviceTagsHint": "برچسب‌های اختیاری برای گروه‌بندی یادآورها.",
+  "homeGroupingByDevice": "بر اساس دستگاه",
+  "homeGroupingByTag": "بر اساس برچسب",
+  "homeGroupingLabel": "گروه‌بندی یادآورها",
+  "reminderTagRollup": "جمع‌بندی برچسب · بدترین وضعیت دستگاه‌های مرتبط",
   "addPlace": "افزودن مکان",
   "editPlace": "ویرایش مکان",
   "placeName": "نام",

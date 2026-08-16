@@ -235,8 +235,9 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                       ),
                     ),
                   ),
-                  if (state.kind == DeviceLogKind.usageUpdate &&
-                      owner != null) ...[
+                  if (owner != null &&
+                      (state.kind == DeviceLogKind.usageUpdate ||
+                          state.kind == DeviceLogKind.maintenanceDone)) ...[
                     const SizedBox(height: AppSpacing.lg),
                     if (unit != null)
                       Text(
@@ -259,9 +260,6 @@ class _DeviceLogPageState extends State<DeviceLogPage> {
                         DeviceLogUsageValueChanged(value),
                       ),
                       validator: (value) {
-                        if (state.kind != DeviceLogKind.usageUpdate) {
-                          return null;
-                        }
                         if (value == null ||
                             int.tryParse(value.trim()) == null) {
                           return l10n.usageReadingRequired;

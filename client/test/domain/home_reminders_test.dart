@@ -2,9 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
 import 'package:nasyad/domain/entities/birthday.dart';
 import 'package:nasyad/domain/entities/calendar_system.dart';
+import 'package:nasyad/domain/entities/device_tag_link.dart';
+import 'package:nasyad/domain/entities/home_grouping.dart';
 import 'package:nasyad/domain/entities/home_reminder.dart';
 import 'package:nasyad/domain/entities/home_reminder_filter.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
+import 'package:nasyad/domain/entities/tag.dart';
 import 'package:nasyad/domain/services/birthday_upcoming.dart';
 import 'package:nasyad/domain/services/home_reminder_aggregator.dart';
 import 'package:nasyad/domain/services/home_reminder_sorter.dart';
@@ -238,6 +241,78 @@ void main() {
       );
 
       expect(widerWindow.single.urgency, HomeReminderUrgency.soon);
+    });
+
+    test('tag mode rolls up worst status across tagged devices', () {
+      final tags = [
+        Tag(id: 'tag-garage', name: 'Garage', createdAt: t0, updatedAt: t0),
+      ];
+      final reminders = HomeReminderAggregator.build(
+        deviceSummaries: [
+          sampleSummary(
+            device: sampleDevice(id: 'root-a', name: 'Car'),
+            status: MaintenanceStatus.soon,
+            progress: 0.8,
+          ),
+          sampleSummary(
+            device: sampleDevice(id: 'root-b', name: 'Bike'),
+            status: MaintenanceStatus.due,
+            progress: 1.2,
+          ),
+        ],
+        birthdays: const [],
+        filter: HomeReminderFilter.devices,
+        snoozedReminderIds: const {},
+        grouping: HomeGrouping.tag,
+        tags: tags,
+        deviceTagLinks: const [
+          DeviceTagLink(deviceId: 'root-a', tagId: 'tag-garage'),
+          DeviceTagLink(deviceId: 'root-b', tagId: 'tag-garage'),
+        ],
+        now: DateTime(2024, 6, 1),
+      );
+
+      expect(reminders, hasLength(1));
+      expect(reminders.single.kind, HomeReminderKind.tag);
+      expect(reminders.single.title, 'Garage');
+      expect(reminders.single.deviceStatus, MaintenanceStatus.due);
+      expect(reminders.single.deviceId, 'root-b');
+    });
+
+    test('tag mode surfaces child due via tagged parent aggregate', () {
+      final parent = sampleSummary(
+        device: sampleDevice(id: 'parent', name: 'HVAC'),
+        status: MaintenanceStatus.due,
+        progress: 1.0,
+        children: [
+          sampleSummary(
+            device: sampleDevice(
+              id: 'child',
+              name: 'Filter',
+              parentId: 'parent',
+            ),
+            status: MaintenanceStatus.due,
+            progress: 1.0,
+          ),
+        ],
+      );
+      final reminders = HomeReminderAggregator.build(
+        deviceSummaries: [parent],
+        birthdays: const [],
+        filter: HomeReminderFilter.all,
+        snoozedReminderIds: const {},
+        grouping: HomeGrouping.tag,
+        tags: [Tag(id: 'tag-1', name: 'Home', createdAt: t0, updatedAt: t0)],
+        deviceTagLinks: const [
+          DeviceTagLink(deviceId: 'parent', tagId: 'tag-1'),
+        ],
+        now: DateTime(2024, 6, 1),
+      );
+
+      expect(reminders, hasLength(1));
+      expect(reminders.single.kind, HomeReminderKind.tag);
+      expect(reminders.single.deviceStatus, MaintenanceStatus.due);
+      expect(reminders.single.deviceId, 'parent');
     });
   });
 

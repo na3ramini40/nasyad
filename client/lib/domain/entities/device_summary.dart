@@ -8,6 +8,8 @@ class DeviceSummary extends Equatable {
   final DeviceLog? latestLog;
   final MaintenanceStatus status;
   final double progress;
+  final int? remainingUsage;
+  final int? targetUsage;
   final List<DeviceSummary> children;
 
   const DeviceSummary({
@@ -15,9 +17,19 @@ class DeviceSummary extends Equatable {
     this.latestLog,
     required this.status,
     required this.progress,
+    this.remainingUsage,
+    this.targetUsage,
     this.children = const [],
   });
 
   @override
-  List<Object?> get props => [device, latestLog, status, progress, children];
+  List<Object?> get props => [
+    device,
+    latestLog,
+    status,
+    progress,
+    remainingUsage,
+    targetUsage,
+    children,
+  ];
 }

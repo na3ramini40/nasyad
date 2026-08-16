@@ -13,5 +13,6 @@ Where: **both** — every client and server must use these exact strings.
 | usage `usage_unit` / log unit | `km`, `hours`, `cycles` |
 | place `kind` (local) | `point`, `line`, `polygon` |
 | `lock_method` (local) | `password`, `pin`, `biometric` |
+| `home_grouping` (local) | `device`, `tag` |
 
 Index: [../domain.md](../domain.md)

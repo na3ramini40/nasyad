@@ -6,8 +6,15 @@ import 'package:nasyad/domain/entities/schedule_type.dart';
 class RuleStatusResult {
   final MaintenanceStatus status;
   final double progress;
+  final int? remainingUsage;
+  final int? targetUsage;
 
-  const RuleStatusResult({required this.status, required this.progress});
+  const RuleStatusResult({
+    required this.status,
+    required this.progress,
+    this.remainingUsage,
+    this.targetUsage,
+  });
 }
 
 class MaintenanceStatusCalculator {
@@ -122,12 +129,19 @@ class MaintenanceStatusCalculator {
       );
     }
 
+    final targetUsage = device.usageAtLastMaintenance + value;
+    final remainingUsage = (targetUsage - usageOwner.currentUsage).clamp(
+      0,
+      1 << 30,
+    );
     final used = (usageOwner.currentUsage - device.usageAtLastMaintenance)
         .clamp(0, 1 << 30);
     final progress = (used / value).clamp(0.0, 1.0);
     return RuleStatusResult(
       status: _statusFromProgress(progress),
       progress: progress,
+      remainingUsage: remainingUsage,
+      targetUsage: targetUsage,
     );
   }
 

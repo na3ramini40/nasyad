@@ -284,6 +284,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get markMaintained => 'Mark maintained';
 
   @override
+  String get maintainAction => 'Maintain';
+
+  @override
+  String remainingUsageLabel(String remaining) {
+    return 'Remaining: $remaining';
+  }
+
+  @override
+  String targetUsageLabel(String target) {
+    return 'Target: $target';
+  }
+
+  @override
+  String get useParentUsage => 'Use parent usage';
+
+  @override
+  String get useParentUsageSubtitle =>
+      'Inherit the parent\'s usage reading. Turn off to track separately.';
+
+  @override
   String get updateUsage => 'Update usage';
 
   @override
@@ -610,6 +630,63 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get placesFeatureHint =>
       'Save points, paths, and areas on a map for offline use.';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get tagsFeatureHint =>
+      'Label devices for Home grouping. Tags are not devices.';
+
+  @override
+  String get addTag => 'Add tag';
+
+  @override
+  String get editTag => 'Edit tag';
+
+  @override
+  String get tagName => 'Tag name';
+
+  @override
+  String get tagNameHint => 'Tag name…';
+
+  @override
+  String get tagNameRequired => 'Tag name is required';
+
+  @override
+  String get createTag => 'Create tag';
+
+  @override
+  String get noTagsTitle => 'No tags yet';
+
+  @override
+  String get noTagsHint => 'Create tags to group devices on Home.';
+
+  @override
+  String get deleteTagTitle => 'Delete tag?';
+
+  @override
+  String deleteTagBody(String name) {
+    return '$name will be removed. Device assignments are cleared.';
+  }
+
+  @override
+  String get deviceTagsSection => 'Tags';
+
+  @override
+  String get deviceTagsHint => 'Optional labels for Home tag grouping.';
+
+  @override
+  String get homeGroupingByDevice => 'By device';
+
+  @override
+  String get homeGroupingByTag => 'By tag';
+
+  @override
+  String get homeGroupingLabel => 'Group reminders';
+
+  @override
+  String get reminderTagRollup => 'Tag rollup · worst of assigned devices';
 
   @override
   String get addPlace => 'Add place';

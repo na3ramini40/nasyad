@@ -69,7 +69,11 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
         case DeviceLogKind.usageUpdate:
           await _applyUsageUpdate(device: device, log: persisted, byId: byId);
         case DeviceLogKind.maintenanceDone:
-          await _applyMaintenanceDone(device: device, byId: byId);
+          await _applyMaintenanceDone(
+            device: device,
+            log: persisted,
+            byId: byId,
+          );
       }
     });
   }
@@ -85,13 +89,7 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
     if (owner == null) {
       throw StateError('No usage owner found for device ${device.id}');
     }
-    final value = log.usageValue;
-    if (value == null || value < 0) {
-      throw ArgumentError('Usage value is required');
-    }
-    if (value < owner.currentUsage) {
-      throw ArgumentError('Usage value cannot be less than current usage');
-    }
+    final value = _requireAbsoluteUsage(log.usageValue, owner.currentUsage);
 
     final updated = owner.copyWith(
       currentUsage: value,
@@ -102,16 +100,54 @@ class DeviceLogRepositoryImpl extends DeviceLogRepository {
 
   Future<void> _applyMaintenanceDone({
     required Device device,
+    required DeviceLog log,
     required Map<String, Device> byId,
   }) async {
     final now = DateTime.now();
     final owner = _calculator.resolveUsageOwner(device, byId);
-    final updated = device.copyWith(
+
+    if (owner == null) {
+      final updated = device.copyWith(
+        lastMaintainedAt: now,
+        usageAtLastMaintenance: device.currentUsage,
+        updatedAt: now,
+      );
+      await _devices.updateDevice(DeviceModel.fromEntity(updated));
+      return;
+    }
+
+    final value = _requireAbsoluteUsage(log.usageValue, owner.currentUsage);
+
+    if (owner.id == device.id) {
+      final updated = device.copyWith(
+        currentUsage: value,
+        lastMaintainedAt: now,
+        usageAtLastMaintenance: value,
+        updatedAt: now,
+      );
+      await _devices.updateDevice(DeviceModel.fromEntity(updated));
+      return;
+    }
+
+    final updatedOwner = owner.copyWith(currentUsage: value, updatedAt: now);
+    await _devices.updateDevice(DeviceModel.fromEntity(updatedOwner));
+
+    final updatedDevice = device.copyWith(
       lastMaintainedAt: now,
-      usageAtLastMaintenance: owner?.currentUsage ?? device.currentUsage,
+      usageAtLastMaintenance: value,
       updatedAt: now,
     );
-    await _devices.updateDevice(DeviceModel.fromEntity(updated));
+    await _devices.updateDevice(DeviceModel.fromEntity(updatedDevice));
+  }
+
+  int _requireAbsoluteUsage(int? value, int currentUsage) {
+    if (value == null || value < 0) {
+      throw ArgumentError('Usage value is required');
+    }
+    if (value < currentUsage) {
+      throw ArgumentError('Usage value cannot be less than current usage');
+    }
+    return value;
   }
 
   @override

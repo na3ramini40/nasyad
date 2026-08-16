@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nasyad/core/calendar/calendar_preference_store.dart';
 import 'package:nasyad/core/notifications/reminder_notification_preference_store.dart';
 import 'package:nasyad/core/preferences/app_lock_store.dart';
+import 'package:nasyad/core/preferences/home_grouping_preference_store.dart';
 import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
 import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/core/preferences/sync_preference_store.dart';
@@ -19,6 +20,7 @@ import 'package:nasyad/data/datasources/device_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/place_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/sync_remote_datasource.dart';
+import 'package:nasyad/data/datasources/tag_local_datasource_impl.dart';
 import 'package:nasyad/data/local/app_config_store.dart';
 import 'package:nasyad/data/local/auth_session_store.dart';
 import 'package:nasyad/data/local/device_registration_store.dart';
@@ -29,6 +31,7 @@ import 'package:nasyad/data/repositories/birthday_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
 import 'package:nasyad/data/repositories/place_repository_impl.dart';
+import 'package:nasyad/data/repositories/tag_repository_impl.dart';
 import 'package:nasyad/data/services/app_update_service_impl.dart';
 import 'package:nasyad/data/services/fcm_registration_sync.dart';
 import 'package:nasyad/data/services/local_reminder_notification_service.dart';
@@ -41,6 +44,7 @@ import 'package:nasyad/domain/repositories/birthday_repository.dart';
 import 'package:nasyad/domain/repositories/device_log_repository.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
 import 'package:nasyad/domain/repositories/place_repository.dart';
+import 'package:nasyad/domain/repositories/tag_repository.dart';
 import 'package:nasyad/domain/services/app_update_service.dart';
 import 'package:nasyad/domain/services/remote_sync_port.dart';
 import 'package:nasyad/domain/usecases/auth/complete_intro_usecase.dart';
@@ -78,11 +82,19 @@ import 'package:nasyad/domain/usecases/place/get_place_usecase.dart';
 import 'package:nasyad/domain/usecases/place/update_place_usecase.dart';
 import 'package:nasyad/domain/usecases/place/watch_places_usecase.dart';
 import 'package:nasyad/domain/usecases/search/search_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/create_tag_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/delete_tag_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/set_device_tags_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/update_tag_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/watch_device_tag_links_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/watch_tags_for_device_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/watch_tags_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/export_data_usecase.dart';
 import 'package:nasyad/domain/usecases/transfer/import_data_usecase.dart';
 import 'package:nasyad/domain/services/transfer/birthday_transfer_handler.dart';
 import 'package:nasyad/domain/services/transfer/device_transfer_handler.dart';
 import 'package:nasyad/domain/services/transfer/place_transfer_handler.dart';
+import 'package:nasyad/domain/services/transfer/tag_transfer_handler.dart';
 import 'package:nasyad/domain/services/transfer/transfer_service.dart';
 
 class AppServices {
@@ -91,6 +103,7 @@ class AppServices {
     LastSeenVersionStore? lastSeenVersionStore,
     CalendarPreferenceStore? calendarPreferenceStore,
     SoonWindowPreferenceStore? soonWindowPreferenceStore,
+    HomeGroupingPreferenceStore? homeGroupingPreferenceStore,
     ReminderSnoozeStore? reminderSnoozeStore,
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
@@ -120,6 +133,8 @@ class AppServices {
            calendarPreferenceStore ?? CalendarPreferenceStore(),
        soonWindowPreferenceStore =
            soonWindowPreferenceStore ?? SoonWindowPreferenceStore(),
+       homeGroupingPreferenceStore =
+           homeGroupingPreferenceStore ?? HomeGroupingPreferenceStore(),
        reminderSnoozeStore = reminderSnoozeStore ?? ReminderSnoozeStore(),
        seasonThemePreferenceStore =
            seasonThemePreferenceStore ?? SeasonThemePreferenceStore(),
@@ -157,6 +172,9 @@ class AppServices {
        ),
        placeRepository = PlaceRepositoryImpl(
          PlaceLocalDataSourceImpl(database.placeDao),
+       ),
+       tagRepository = TagRepositoryImpl(
+         TagLocalDataSourceImpl(database.tagDao),
        ) {
     final deviceLocal = DeviceLocalDataSourceImpl(database.deviceDao);
     final logLocal = DeviceLogLocalDataSourceImpl(database.deviceLogDao);
@@ -228,6 +246,7 @@ class AppServices {
       ),
       BirthdayTransferHandler(birthdayRepository),
       PlaceTransferHandler(placeRepository),
+      TagTransferHandler(tagRepository),
     ]);
     exportData = ExportDataUsecase(transferService);
     importData = ImportDataUsecase(transferService);
@@ -241,11 +260,21 @@ class AppServices {
     createPlace = CreatePlaceUsecase(placeRepository);
     updatePlace = UpdatePlaceUsecase(placeRepository);
     deletePlace = DeletePlaceUsecase(placeRepository);
+    watchTags = WatchTagsUsecase(tagRepository);
+    createTag = CreateTagUsecase(tagRepository);
+    updateTag = UpdateTagUsecase(tagRepository);
+    deleteTag = DeleteTagUsecase(tagRepository);
+    setDeviceTags = SetDeviceTagsUsecase(tagRepository);
+    watchTagsForDevice = WatchTagsForDeviceUsecase(tagRepository);
+    watchDeviceTagLinks = WatchDeviceTagLinksUsecase(tagRepository);
     watchHomeReminders = WatchHomeRemindersUsecase(
       watchDeviceSummaries,
       watchBirthdays,
       this.reminderSnoozeStore,
       this.soonWindowPreferenceStore,
+      watchTags: watchTags,
+      watchDeviceTagLinks: watchDeviceTagLinks,
+      homeGroupingStore: this.homeGroupingPreferenceStore,
     );
     this.localReminderNotificationService =
         localReminderNotificationService ?? LocalReminderNotificationService();
@@ -269,6 +298,7 @@ class AppServices {
     LastSeenVersionStore? lastSeenVersionStore,
     CalendarPreferenceStore? calendarPreferenceStore,
     SoonWindowPreferenceStore? soonWindowPreferenceStore,
+    HomeGroupingPreferenceStore? homeGroupingPreferenceStore,
     ReminderSnoozeStore? reminderSnoozeStore,
     SeasonThemePreferenceStore? seasonThemePreferenceStore,
     ThemeModePreferenceStore? themeModePreferenceStore,
@@ -310,6 +340,8 @@ class AppServices {
       lastSeenVersionStore: lastSeenVersionStore,
       calendarPreferenceStore: calendarPreferenceStore,
       soonWindowPreferenceStore: soonWindowPreferenceStore,
+      homeGroupingPreferenceStore:
+          homeGroupingPreferenceStore ?? HomeGroupingPreferenceStore.memory(),
       reminderSnoozeStore: reminderSnoozeStore,
       seasonThemePreferenceStore: seasonThemePreferenceStore,
       themeModePreferenceStore: themeModePreferenceStore,
@@ -354,6 +386,7 @@ class AppServices {
   final LastSeenVersionStore lastSeenVersionStore;
   final CalendarPreferenceStore calendarPreferenceStore;
   final SoonWindowPreferenceStore soonWindowPreferenceStore;
+  final HomeGroupingPreferenceStore homeGroupingPreferenceStore;
   final ReminderSnoozeStore reminderSnoozeStore;
   final SeasonThemePreferenceStore seasonThemePreferenceStore;
   final ThemeModePreferenceStore themeModePreferenceStore;
@@ -376,6 +409,7 @@ class AppServices {
   final DeviceLogRepository deviceLogRepository;
   final BirthdayRepository birthdayRepository;
   final PlaceRepository placeRepository;
+  final TagRepository tagRepository;
 
   late final WatchAuthSessionUsecase watchAuthSession;
   late final RequestOtpUsecase requestOtp;
@@ -411,6 +445,13 @@ class AppServices {
   late final CreatePlaceUsecase createPlace;
   late final UpdatePlaceUsecase updatePlace;
   late final DeletePlaceUsecase deletePlace;
+  late final WatchTagsUsecase watchTags;
+  late final CreateTagUsecase createTag;
+  late final UpdateTagUsecase updateTag;
+  late final DeleteTagUsecase deleteTag;
+  late final SetDeviceTagsUsecase setDeviceTags;
+  late final WatchTagsForDeviceUsecase watchTagsForDevice;
+  late final WatchDeviceTagLinksUsecase watchDeviceTagLinks;
   late final WatchHomeRemindersUsecase watchHomeReminders;
   late final LocalReminderNotificationService localReminderNotificationService;
   late final LocalReminderScheduler localReminderScheduler;
@@ -421,6 +462,7 @@ class AppServices {
     await localReminderScheduler.dispose();
     await fcmRegistrationSync.dispose();
     syncPreferenceStore.dispose();
+    homeGroupingPreferenceStore.dispose();
     authSessionStore.dispose();
     final auth = authRepository;
     if (auth is AuthRepositoryImpl) {

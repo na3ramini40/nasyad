@@ -142,6 +142,36 @@ class DevicePage extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.md),
                   ],
+                  if (summary.remainingUsage != null &&
+                      summary.targetUsage != null) ...[
+                    Text(
+                      l10n.remainingUsageLabel(
+                        NumberFormat.decimalPattern(
+                          locale.toString(),
+                        ).format(summary.remainingUsage),
+                      ),
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      l10n.targetUsageLabel(
+                        NumberFormat.decimalPattern(
+                          locale.toString(),
+                        ).format(summary.targetUsage),
+                      ),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  if (_canMaintain(summary)) ...[
+                    AppButton(
+                      label: l10n.maintainAction,
+                      onPressed: () => context.push('/device/$deviceId/log'),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
                   SectionHeader(title: l10n.scheduleSection),
                   Card(
                     child: ListTile(
@@ -240,6 +270,14 @@ class DevicePage extends StatelessWidget {
     final unit = device.intervalUnit;
     if (value == null || unit == null) return l10n.noScheduleConfigured;
     return scheduleDisplayName(l10n: l10n, value: value, unitStorage: unit);
+  }
+
+  bool _canMaintain(DeviceSummary summary) {
+    if (summary.device.hasSchedule) return true;
+    for (final child in summary.children) {
+      if (_canMaintain(child)) return true;
+    }
+    return false;
   }
 
   String _logTitle(AppLocalizations l10n, DeviceLogKind kind, String? notes) {

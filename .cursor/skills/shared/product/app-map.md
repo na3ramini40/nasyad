@@ -40,15 +40,17 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 **Entry:** Shell Home tab; back from sub-features  
 **Shows:**
 - App bar: logo mark, app title, search icon, settings icon
-- **Reminders** section: filter chips (All / Devices / Birthdays)
+- **Reminders** section: filter chips (All / Devices / Birthdays); grouping control (by device / by tag)
 - Optional **update available** banner when a newer GitHub release exists (tap → update dialog)
-- Reminder rows: title, subtitle (due/soon/today/tomorrow/in N days), urgency badge (Due / Soon / Upcoming), kind icon; snooze action hides a row for 1/3/7 days
+- Reminder rows: title, subtitle (due/soon/today/tomorrow/in N days; usage remaining/target when relevant), urgency badge (Due / Soon / Upcoming), kind icon; snooze action hides a row for 1/3/7 days
+- Tag-mode rows: tag name + rollup warning (not a device); tap expands or opens first due device in the tag
 - Empty reminders: check icon, “nothing due” title + hint
 - **Features** section: menu tiles
 - Loading spinner while data loads; error message on failure
 
 **Actions:**
 - Filter chips narrow the reminder list
+- Switch Home grouping (device vs tag)
 - Snooze reminder (1 / 3 / 7 days) — row returns after the snooze period
 - Tap reminder → device detail (maintenance) or birthday edit (birthday)
 - Device reminder overflow (⋮) → quick actions sheet: log maintenance or update usage (opens add-log with kind preselected)
@@ -105,19 +107,19 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 
 ### Add / edit device
 **Entry:** Device list FAB; device detail edit; add child from device detail  
-**Shows:** Name; optional category icon preset; optional location label; optional device notes; optional schedule (type, interval, initial elapsed); usage unit for usage-based roots; **schedule templates** picker when schedule is enabled (bundled presets with en/fa labels, e.g. oil change, HVAC filter)  
-**Actions:** Save; pick a template to fill schedule fields; delete (edit only, confirms)  
+**Shows:** Name; optional category icon preset; optional location label; optional device notes; optional schedule (type, interval, initial elapsed); usage unit for roots; for children, “use parent usage” (default on) or own usage unit; optional tags; **schedule templates** picker when schedule is enabled (bundled presets with en/fa labels, e.g. oil change, HVAC filter)  
+**Actions:** Save; pick a template to fill schedule fields; manage tags; delete (edit only, confirms)  
 **Leaves to:** Previous screen
 
 ### Device detail
 **Entry:** Device list; home reminder; child card from parent  
-**Shows:** Name, category icon, optional location label, optional device notes, status badge, progress bar (if scheduled), schedule card, children list (or add-child row), log history (date, cost, vendor, photo thumbnail when present)  
-**Actions:** Archive (subtree); edit; FAB → add log; tap child → child detail; add child  
+**Shows:** Name, category icon, optional location label, optional device notes, status badge, progress bar (if scheduled), remaining + target when usage schedule, schedule card or add-schedule hint, children list (or add-child row), log history (date, cost, vendor, photo thumbnail when present)  
+**Actions:** Archive (subtree); edit; primary Maintain (confirm + current usage when linked); FAB → add log / update usage; tap child → child detail; add child  
 **Leaves to:** Edit device, add log, child detail, Home (after archive)
 
 ### Add log
-**Entry:** Device detail FAB (maintenance default; usage if linked)  
-**Shows:** Kind (maintenance done / usage update), date, optional notes; optional cost (amount + currency label), vendor/service provider, photo attachment; usage field when relevant  
+**Entry:** Device detail FAB (maintenance default; usage if linked); Maintain CTA  
+**Shows:** Kind (maintenance done / usage update), date, optional notes; usage field required for usage update and for maintain when a usage owner exists; optional cost (amount + currency label), vendor/service provider, photo attachment  
 **Actions:** Save; attach or remove photo  
 **Leaves to:** Device detail
 

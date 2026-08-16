@@ -13,6 +13,7 @@ import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/entities/device_summary.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
+import 'package:nasyad/domain/entities/schedule_type.dart';
 import 'package:nasyad/domain/repositories/device_repository.dart';
 import 'package:nasyad/domain/services/device_schedule_baseline.dart';
 import 'package:nasyad/domain/services/maintenance_status_calculator.dart';
@@ -142,6 +143,9 @@ class DeviceRepositoryImpl extends DeviceRepository {
       device.id,
     ))?.toEntity();
 
+    final ownUsageSchedule =
+        device.hasSchedule && device.scheduleType == ScheduleType.usageInterval;
+
     return DeviceSummary(
       device: device,
       latestLog: latestLog,
@@ -151,6 +155,8 @@ class DeviceRepositoryImpl extends DeviceRepository {
       progress: device.hasSchedule || childSummaries.isNotEmpty
           ? aggregate.progress
           : 0,
+      remainingUsage: ownUsageSchedule ? own.remainingUsage : null,
+      targetUsage: ownUsageSchedule ? own.targetUsage : null,
       children: childSummaries,
     );
   }

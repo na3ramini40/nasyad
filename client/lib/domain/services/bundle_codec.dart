@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:nasyad/domain/entities/birthday.dart';
 import 'package:nasyad/domain/entities/calendar_system.dart';
 import 'package:nasyad/domain/entities/device.dart';
+import 'package:nasyad/domain/entities/device_tag_link.dart';
 import 'package:nasyad/domain/entities/geo_point.dart';
 import 'package:nasyad/domain/entities/place.dart';
 import 'package:nasyad/domain/entities/place_geometry_kind.dart';
@@ -14,6 +15,7 @@ import 'package:nasyad/domain/entities/export_bundle.dart';
 import 'package:nasyad/domain/entities/export_format.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
+import 'package:nasyad/domain/entities/tag.dart';
 
 class BundleCodecException implements Exception {
   BundleCodecException(this.message);
@@ -49,19 +51,27 @@ abstract final class BundleCodec {
         trimmed.startsWith('#birthdays') ||
         trimmed.startsWith('# birthdays') ||
         trimmed.startsWith('#places') ||
-        trimmed.startsWith('# places')) {
+        trimmed.startsWith('# places') ||
+        trimmed.startsWith('#tags') ||
+        trimmed.startsWith('# tags') ||
+        trimmed.startsWith('#device_tags') ||
+        trimmed.startsWith('# device_tags')) {
       return ExportFormat.csv;
     }
     if (trimmed.startsWith('Nasyad export') ||
         trimmed.startsWith('Device') ||
         trimmed.startsWith('Birthday') ||
-        trimmed.startsWith('Place')) {
+        trimmed.startsWith('Place') ||
+        trimmed.startsWith('Tag') ||
+        trimmed.startsWith('DeviceTag')) {
       return ExportFormat.plainText;
     }
     if (trimmed.contains('#devices') ||
         trimmed.contains('#rules') ||
         trimmed.contains('#birthdays') ||
         trimmed.contains('#places') ||
+        trimmed.contains('#tags') ||
+        trimmed.contains('#device_tags') ||
         trimmed.contains('#logs')) {
       return ExportFormat.csv;
     }
@@ -88,6 +98,8 @@ abstract final class BundleCodec {
       'devices': bundle.devices.map(_deviceBundleToJson).toList(),
       'birthdays': bundle.birthdays.map(_birthdayToJson).toList(),
       'places': bundle.places.map(_placeToJson).toList(),
+      'tags': bundle.tags.map(_tagToJson).toList(),
+      'deviceTags': bundle.deviceTags.map(_deviceTagToJson).toList(),
     };
     return const JsonEncoder.withIndent('  ').convert(map);
   }
@@ -130,6 +142,16 @@ abstract final class BundleCodec {
               .map((e) => _placeFromJson(e as Map<String, dynamic>))
               .toList()
         : <Place>[];
+    final tagsRaw = raw['tags'];
+    final tags = tagsRaw is List
+        ? tagsRaw.map((e) => _tagFromJson(e as Map<String, dynamic>)).toList()
+        : <Tag>[];
+    final deviceTagsRaw = raw['deviceTags'] ?? raw['device_tags'];
+    final deviceTags = deviceTagsRaw is List
+        ? deviceTagsRaw
+              .map((e) => _deviceTagFromJson(e as Map<String, dynamic>))
+              .toList()
+        : <DeviceTagLink>[];
     return ExportBundle(
       format: format,
       version: ExportBundle.currentVersion,
@@ -137,6 +159,8 @@ abstract final class BundleCodec {
       devices: devices,
       birthdays: birthdays,
       places: places,
+      tags: tags,
+      deviceTags: deviceTags,
     );
   }
 
@@ -279,6 +303,25 @@ abstract final class BundleCodec {
       );
     }
 
+    buffer.writeln('#tags');
+    buffer.writeln(_csvRow(['id', 'name', 'createdAt', 'updatedAt']));
+    for (final tag in bundle.tags) {
+      buffer.writeln(
+        _csvRow([
+          tag.id,
+          tag.name,
+          tag.createdAt.toUtc().toIso8601String(),
+          tag.updatedAt.toUtc().toIso8601String(),
+        ]),
+      );
+    }
+
+    buffer.writeln('#device_tags');
+    buffer.writeln(_csvRow(['deviceId', 'tagId']));
+    for (final link in bundle.deviceTags) {
+      buffer.writeln(_csvRow([link.deviceId, link.tagId]));
+    }
+
     return buffer.toString();
   }
 
@@ -294,6 +337,8 @@ abstract final class BundleCodec {
     final logsByDevice = <String, List<DeviceLog>>{};
     final birthdays = <Birthday>[];
     final places = <Place>[];
+    final tags = <Tag>[];
+    final deviceTags = <DeviceTagLink>[];
 
     String? section;
     List<String>? headers;
@@ -330,12 +375,20 @@ abstract final class BundleCodec {
           birthdays.add(_birthdayFromMap(row));
         case 'places':
           places.add(_placeFromMap(row));
+        case 'tags':
+          tags.add(_tagFromMap(row));
+        case 'device_tags':
+          deviceTags.add(_deviceTagFromMap(row));
         default:
           throw BundleCodecException('Unknown CSV section: $section');
       }
     }
 
-    if (devices.isEmpty && birthdays.isEmpty && places.isEmpty) {
+    if (devices.isEmpty &&
+        birthdays.isEmpty &&
+        places.isEmpty &&
+        tags.isEmpty &&
+        deviceTags.isEmpty) {
       throw BundleCodecException('CSV contains no transferable data');
     }
 
@@ -350,6 +403,8 @@ abstract final class BundleCodec {
       }).toList(),
       birthdays: birthdays,
       places: places,
+      tags: tags,
+      deviceTags: deviceTags,
     );
   }
 
@@ -447,6 +502,22 @@ abstract final class BundleCodec {
       buffer.writeln();
     }
 
+    for (final tag in bundle.tags) {
+      buffer.writeln('Tag');
+      buffer.writeln('id: ${tag.id}');
+      buffer.writeln('name: ${tag.name}');
+      buffer.writeln('createdAt: ${tag.createdAt.toUtc().toIso8601String()}');
+      buffer.writeln('updatedAt: ${tag.updatedAt.toUtc().toIso8601String()}');
+      buffer.writeln();
+    }
+
+    for (final link in bundle.deviceTags) {
+      buffer.writeln('DeviceTag');
+      buffer.writeln('deviceId: ${link.deviceId}');
+      buffer.writeln('tagId: ${link.tagId}');
+      buffer.writeln();
+    }
+
     return buffer.toString();
   }
 
@@ -457,6 +528,8 @@ abstract final class BundleCodec {
     final logsByDevice = <String, List<DeviceLog>>{};
     final birthdays = <Birthday>[];
     final places = <Place>[];
+    final tags = <Tag>[];
+    final deviceTags = <DeviceTagLink>[];
 
     String? blockType;
     final fields = <String, String>{};
@@ -483,6 +556,10 @@ abstract final class BundleCodec {
           birthdays.add(_birthdayFromMap(fields));
         case 'Place':
           places.add(_placeFromMap(fields));
+        case 'Tag':
+          tags.add(_tagFromMap(fields));
+        case 'DeviceTag':
+          deviceTags.add(_deviceTagFromMap(fields));
       }
       fields.clear();
       blockType = null;
@@ -499,7 +576,9 @@ abstract final class BundleCodec {
           trimmed == 'Rule' ||
           trimmed == 'Log' ||
           trimmed == 'Birthday' ||
-          trimmed == 'Place') {
+          trimmed == 'Place' ||
+          trimmed == 'Tag' ||
+          trimmed == 'DeviceTag') {
         flush();
         blockType = trimmed;
         continue;
@@ -518,7 +597,11 @@ abstract final class BundleCodec {
     }
     flush();
 
-    if (devices.isEmpty && birthdays.isEmpty && places.isEmpty) {
+    if (devices.isEmpty &&
+        birthdays.isEmpty &&
+        places.isEmpty &&
+        tags.isEmpty &&
+        deviceTags.isEmpty) {
       throw BundleCodecException('Plain text contains no transferable data');
     }
 
@@ -533,6 +616,8 @@ abstract final class BundleCodec {
       }).toList(),
       birthdays: birthdays,
       places: places,
+      tags: tags,
+      deviceTags: deviceTags,
     );
   }
 
@@ -890,6 +975,57 @@ abstract final class BundleCodec {
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
+  }
+
+  static Map<String, dynamic> _tagToJson(Tag tag) => {
+    'id': tag.id,
+    'name': tag.name,
+    'createdAt': tag.createdAt.toUtc().toIso8601String(),
+    'updatedAt': tag.updatedAt.toUtc().toIso8601String(),
+  };
+
+  static Tag _tagFromJson(Map<String, dynamic> json) {
+    return _tagFromMap({
+      'id': '${json['id']}',
+      'name': '${json['name']}',
+      'createdAt': '${json['createdAt']}',
+      'updatedAt': '${json['updatedAt']}',
+    });
+  }
+
+  static Tag _tagFromMap(Map<String, String> map) {
+    final id = map['id']?.trim() ?? '';
+    final name = map['name']?.trim() ?? '';
+    if (id.isEmpty || name.isEmpty) {
+      throw BundleCodecException('Tag requires id and name');
+    }
+    final createdAt = _parseDate(map['createdAt']);
+    final updatedAt = _parseDate(map['updatedAt']);
+    if (createdAt == null || updatedAt == null) {
+      throw BundleCodecException('Tag requires createdAt and updatedAt');
+    }
+    return Tag(id: id, name: name, createdAt: createdAt, updatedAt: updatedAt);
+  }
+
+  static Map<String, dynamic> _deviceTagToJson(DeviceTagLink link) => {
+    'deviceId': link.deviceId,
+    'tagId': link.tagId,
+  };
+
+  static DeviceTagLink _deviceTagFromJson(Map<String, dynamic> json) {
+    return _deviceTagFromMap({
+      'deviceId': '${json['deviceId']}',
+      'tagId': '${json['tagId']}',
+    });
+  }
+
+  static DeviceTagLink _deviceTagFromMap(Map<String, String> map) {
+    final deviceId = map['deviceId']?.trim() ?? '';
+    final tagId = map['tagId']?.trim() ?? '';
+    if (deviceId.isEmpty || tagId.isEmpty) {
+      throw BundleCodecException('DeviceTag requires deviceId and tagId');
+    }
+    return DeviceTagLink(deviceId: deviceId, tagId: tagId);
   }
 
   static String _encodePointsJson(List<GeoPoint> points) {

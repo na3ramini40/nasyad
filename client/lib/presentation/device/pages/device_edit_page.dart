@@ -32,6 +32,7 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
   final _notesController = TextEditingController();
   final _intervalController = TextEditingController();
   final _initialElapsedController = TextEditingController(text: '0');
+  final _newTagController = TextEditingController();
 
   @override
   void dispose() {
@@ -40,6 +41,7 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
     _notesController.dispose();
     _intervalController.dispose();
     _initialElapsedController.dispose();
+    _newTagController.dispose();
     super.dispose();
   }
 
@@ -231,6 +233,66 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
+                  Text(l10n.deviceTagsSection, style: muted),
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text(
+                    l10n.deviceTagsHint,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  if (state.availableTags.isNotEmpty)
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
+                      children: [
+                        for (final tag in state.availableTags)
+                          FilterChip(
+                            label: Text(tag.name),
+                            selected: state.selectedTagIds.contains(tag.id),
+                            onSelected: (_) => context
+                                .read<DeviceEditBloc>()
+                                .add(DeviceEditTagToggled(tag.id)),
+                          ),
+                      ],
+                    ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: AppTextField(
+                          controller: _newTagController,
+                          label: l10n.tagName,
+                          hintText: l10n.tagNameHint,
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (value) {
+                            context.read<DeviceEditBloc>().add(
+                              DeviceEditTagCreateRequested(value),
+                            );
+                            _newTagController.clear();
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.md),
+                        child: TextButton(
+                          onPressed: () {
+                            context.read<DeviceEditBloc>().add(
+                              DeviceEditTagCreateRequested(
+                                _newTagController.text,
+                              ),
+                            );
+                            _newTagController.clear();
+                          },
+                          child: Text(l10n.createTag),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
                   Text(l10n.scheduleSection, style: muted),
                   const SizedBox(height: AppSpacing.xs),
                   SelectableOptionTile(
@@ -356,6 +418,33 @@ class _DeviceEditPageState extends State<DeviceEditPage> {
                           ),
                         ),
                       ),
+                  ] else ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(l10n.useParentUsage),
+                      subtitle: Text(l10n.useParentUsageSubtitle),
+                      value: state.useParentUsage,
+                      onChanged: (value) => context.read<DeviceEditBloc>().add(
+                        DeviceEditUseParentUsageChanged(value),
+                      ),
+                    ),
+                    if (!state.useParentUsage) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(l10n.usageUnit, style: muted),
+                      const SizedBox(height: AppSpacing.xs),
+                      for (final unit in UsageIntervalUnit.values)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                          child: SelectableOptionTile(
+                            label: usageUnitLabel(l10n, unit),
+                            selected: state.usageUnit == unit,
+                            onTap: () => context.read<DeviceEditBloc>().add(
+                              DeviceEditUsageUnitChanged(unit),
+                            ),
+                          ),
+                        ),
+                    ],
                   ],
                   const SizedBox(height: AppSpacing.xl),
                   AppButton(
