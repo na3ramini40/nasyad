@@ -5,12 +5,14 @@ import 'package:nasyad/core/sync/sync_state_store.dart';
 import 'package:nasyad/data/datasources/birthday_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
+import 'package:nasyad/data/datasources/place_local_datasource.dart';
 import 'package:nasyad/data/datasources/sync_remote_datasource.dart';
 import 'package:nasyad/data/datasources/tag_local_datasource.dart';
 import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
 import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/place_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
 import 'package:nasyad/data/services/remote_sync_engine.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
@@ -30,12 +32,14 @@ void main() {
       await store.writeDeviceLogsCreatedSince(stamp);
       await store.writeBirthdaysUpdatedSince(stamp);
       await store.writeTagsUpdatedSince(stamp);
+      await store.writePlacesUpdatedSince(stamp);
       await store.writeDeviceTagLinksCreatedSince(stamp);
 
       expect(await store.readDevicesUpdatedSince(), stamp);
       expect(await store.readDeviceLogsCreatedSince(), stamp);
       expect(await store.readBirthdaysUpdatedSince(), stamp);
       expect(await store.readTagsUpdatedSince(), stamp);
+      expect(await store.readPlacesUpdatedSince(), stamp);
       expect(await store.readDeviceTagLinksCreatedSince(), stamp);
     });
   });
@@ -73,6 +77,16 @@ void main() {
               ),
             ),
           );
+        final places = _MemoryPlaces()
+          ..seed(
+            PlaceModel.fromEntity(
+              samplePlace(
+                id: 'p1',
+                name: 'Local P',
+                updatedAt: DateTime.utc(2026, 1, 1),
+              ),
+            ),
+          );
         final remote = _RecordingRemote()
           ..pulledDevices = [
             DeviceModel.fromEntity(
@@ -102,6 +116,16 @@ void main() {
             BirthdayModel.fromEntity(
               sampleBirthday(id: 'b2', name: 'Remote only B'),
             ),
+          ]
+          ..pulledPlaces = [
+            PlaceModel.fromEntity(
+              samplePlace(
+                id: 'p1',
+                name: 'Remote P',
+                updatedAt: DateTime.utc(2026, 3, 1),
+              ),
+            ),
+            PlaceModel.fromEntity(samplePlace(id: 'p2', name: 'Remote only P')),
           ];
 
         final engine = RemoteSyncEngine(
@@ -109,6 +133,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: birthdays,
+          places: places,
           tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
@@ -116,7 +141,8 @@ void main() {
         final summary = await engine.detectConflicts(token: 'tok');
         expect(summary.deviceCount, 1);
         expect(summary.birthdayCount, 1);
-        expect(summary.total, 2);
+        expect(summary.placeCount, 1);
+        expect(summary.total, 3);
       },
     );
   });
@@ -204,6 +230,31 @@ void main() {
       );
       expect((await birthdays.getBirthday('b1'))!.name, 'Local');
     });
+
+    test('remote newer must NOT overwrite local place', () async {
+      final places = _MemoryPlaces();
+      await places.upsertPlace(
+        PlaceModel.fromEntity(
+          samplePlace(
+            id: 'p1',
+            name: 'Local',
+            updatedAt: DateTime.utc(2026, 2, 1),
+          ),
+        ),
+      );
+
+      await mergePlaceLocalWins(
+        localStore: places,
+        remote: PlaceModel.fromEntity(
+          samplePlace(
+            id: 'p1',
+            name: 'Remote newer',
+            updatedAt: DateTime.utc(2026, 3, 1),
+          ),
+        ),
+      );
+      expect((await places.getPlace('p1'))!.name, 'Local');
+    });
   });
 
   group('RemoteSyncEngine apply guards', () {
@@ -235,6 +286,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          places: _MemoryPlaces(),
           tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
@@ -280,6 +332,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          places: _MemoryPlaces(),
           tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
@@ -338,6 +391,7 @@ void main() {
         devices: devices,
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        places: _MemoryPlaces(),
         tags: _MemoryTags(),
         syncState: state,
       );
@@ -366,6 +420,7 @@ void main() {
         devices: devices,
         logs: logs,
         birthdays: birthdays,
+        places: _MemoryPlaces(),
         tags: _MemoryTags(),
         syncState: state,
       );
@@ -402,6 +457,11 @@ void main() {
             sampleBirthday(id: 'remote-b', updatedAt: DateTime.utc(2026, 4, 3)),
           ),
         ]
+        ..pulledPlaces = [
+          PlaceModel.fromEntity(
+            samplePlace(id: 'remote-p', updatedAt: DateTime.utc(2026, 4, 6)),
+          ),
+        ]
         ..pulledTags = [
           TagModel(
             id: 'remote-t',
@@ -423,6 +483,7 @@ void main() {
         devices: _MemoryDevices(),
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        places: _MemoryPlaces(),
         tags: _MemoryTags(),
         syncState: state,
       );
@@ -440,6 +501,71 @@ void main() {
         await state.readDeviceTagLinksCreatedSince(),
         DateTime.utc(2026, 4, 5),
       );
+      expect(await state.readPlacesUpdatedSince(), DateTime.utc(2026, 4, 6));
+    });
+  });
+
+  group('Place sync', () {
+    test('pushes local places and pulls remote-only places', () async {
+      final places = _MemoryPlaces()
+        ..seed(
+          PlaceModel.fromEntity(
+            samplePlace(
+              id: 'p-local',
+              name: 'Local park',
+              updatedAt: DateTime.utc(2026, 1, 1),
+            ),
+          ),
+        );
+      final remote = _RecordingRemote()
+        ..pulledPlaces = [
+          PlaceModel.fromEntity(
+            samplePlace(
+              id: 'p-remote',
+              name: 'Remote only',
+              updatedAt: DateTime.utc(2026, 4, 1),
+            ),
+          ),
+        ];
+      final state = SyncStateStore.memory();
+      final engine = RemoteSyncEngine(
+        remote: remote,
+        devices: _MemoryDevices(),
+        logs: _MemoryLogs(),
+        birthdays: _MemoryBirthdays(),
+        places: places,
+        tags: _MemoryTags(),
+        syncState: state,
+      );
+
+      await engine.sync(token: 'tok');
+
+      expect(remote.calls, contains('upsertPlace'));
+      expect(remote.lastUpsertedPlace?.id, 'p-local');
+      expect((await places.getPlace('p-remote'))?.name, 'Remote only');
+      expect(await state.readPlacesUpdatedSince(), DateTime.utc(2026, 4, 1));
+    });
+
+    test('place sync json round-trip', () {
+      final place = PlaceModel.fromEntity(
+        samplePlace(
+          id: 'p1',
+          name: 'Cafe',
+          notes: 'corner',
+          createdAt: DateTime.utc(2026, 2, 1, 10),
+          updatedAt: DateTime.utc(2026, 2, 2, 11),
+        ),
+      );
+      final restored = PlaceModel.fromSyncJson(place.toSyncJson());
+      expect(restored.id, place.id);
+      expect(restored.name, place.name);
+      expect(restored.kind, place.kind);
+      expect(restored.points.length, place.points.length);
+      expect(restored.points.first.latitude, place.points.first.latitude);
+      expect(restored.points.first.longitude, place.points.first.longitude);
+      expect(restored.notes, place.notes);
+      expect(restored.createdAt, place.createdAt);
+      expect(restored.updatedAt, place.updatedAt);
     });
   });
 
@@ -469,6 +595,7 @@ void main() {
         devices: _MemoryDevices(),
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        places: _MemoryPlaces(),
         tags: tags,
         syncState: state,
       );
@@ -516,6 +643,7 @@ void main() {
         devices: devices,
         logs: logs,
         birthdays: birthdays,
+        places: _MemoryPlaces(),
         tags: tags,
         syncState: SyncStateStore.memory(),
       );
@@ -603,6 +731,7 @@ void main() {
           devices: _MemoryDevices(),
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          places: _MemoryPlaces(),
           tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
@@ -649,6 +778,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          places: _MemoryPlaces(),
           tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         ),
@@ -693,6 +823,7 @@ void main() {
         devices: devices,
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        places: _MemoryPlaces(),
         tags: _MemoryTags(),
         syncState: SyncStateStore.memory(),
       );
@@ -732,9 +863,11 @@ class _RecordingRemote implements SyncRemoteDataSource {
   List<DeviceModel> pulledDevices = const [];
   List<DeviceLogModel> pulledLogs = const [];
   List<BirthdayModel> pulledBirthdays = const [];
+  List<PlaceModel> pulledPlaces = const [];
   List<TagModel> pulledTags = const [];
   List<DeviceTagLinkModel> pulledLinks = const [];
   DeviceModel? lastUpsertedDevice;
+  PlaceModel? lastUpsertedPlace;
   TagModel? lastUpsertedTag;
   final deletedTagIds = <String>[];
   final deletedLinkKeys = <String>[];
@@ -792,6 +925,25 @@ class _RecordingRemote implements SyncRemoteDataSource {
   }) async {
     calls.add('upsertBirthday');
     return birthday;
+  }
+
+  @override
+  Future<List<PlaceModel>> listPlaces({
+    required String token,
+    DateTime? updatedSince,
+  }) async {
+    calls.add('listPlaces');
+    return pulledPlaces;
+  }
+
+  @override
+  Future<PlaceModel> upsertPlace({
+    required String token,
+    required PlaceModel place,
+  }) async {
+    calls.add('upsertPlace');
+    lastUpsertedPlace = place;
+    return place;
   }
 
   @override
@@ -982,6 +1134,40 @@ class _MemoryBirthdays implements BirthdayLocalDataSource {
 
   @override
   Future<List<BirthdayModel>> searchBirthdaysByName(String query) async => [];
+}
+
+class _MemoryPlaces implements PlaceLocalDataSource {
+  final map = <String, PlaceModel>{};
+
+  void seed(PlaceModel place) => map[place.id] = place;
+
+  @override
+  Future<List<PlaceModel>> getAllPlaces() async => map.values.toList();
+
+  @override
+  Future<PlaceModel?> getPlace(String id) async => map[id];
+
+  @override
+  Future<void> upsertPlace(PlaceModel place) async {
+    map[place.id] = place;
+  }
+
+  @override
+  Stream<List<PlaceModel>> watchPlaces() => Stream.value(const <PlaceModel>[]);
+
+  @override
+  Future<void> insertPlace(PlaceModel place) => upsertPlace(place);
+
+  @override
+  Future<void> updatePlace(PlaceModel place) => upsertPlace(place);
+
+  @override
+  Future<void> deletePlace(String id) async {
+    map.remove(id);
+  }
+
+  @override
+  Future<List<PlaceModel>> searchPlacesByName(String query) async => [];
 }
 
 class _MemoryTags implements TagLocalDataSource {

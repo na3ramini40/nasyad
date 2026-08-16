@@ -8,9 +8,11 @@ import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
 import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/place_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
 
-/// HTTP adapter for syncable resources (devices, logs, birthdays, tags, links).
+/// HTTP adapter for syncable resources (devices, logs, birthdays, places,
+/// tags, links).
 abstract class SyncRemoteDataSource {
   Future<List<DeviceModel>> listDevices({
     required String token,
@@ -40,6 +42,16 @@ abstract class SyncRemoteDataSource {
   Future<BirthdayModel> upsertBirthday({
     required String token,
     required BirthdayModel birthday,
+  });
+
+  Future<List<PlaceModel>> listPlaces({
+    required String token,
+    DateTime? updatedSince,
+  });
+
+  Future<PlaceModel> upsertPlace({
+    required String token,
+    required PlaceModel place,
   });
 
   Future<List<TagModel>> listTags({
@@ -182,6 +194,35 @@ class HttpSyncRemoteDataSource implements SyncRemoteDataSource {
       body: jsonEncode(birthday.toSyncJson()),
     );
     return BirthdayModel.fromSyncJson(_expectMap(response));
+  }
+
+  @override
+  Future<List<PlaceModel>> listPlaces({
+    required String token,
+    DateTime? updatedSince,
+  }) async {
+    final query = <String, String>{
+      if (updatedSince != null)
+        'updated_since': updatedSince.toUtc().toIso8601String(),
+    };
+    final response = await _client.get(
+      _uri('/api/places/', query),
+      headers: _jsonHeaders(token),
+    );
+    return _parseResults(response, (map) => PlaceModel.fromSyncJson(map));
+  }
+
+  @override
+  Future<PlaceModel> upsertPlace({
+    required String token,
+    required PlaceModel place,
+  }) async {
+    final response = await _client.put(
+      _uri('/api/places/${place.id}/'),
+      headers: _jsonHeaders(token),
+      body: jsonEncode(place.toSyncJson()),
+    );
+    return PlaceModel.fromSyncJson(_expectMap(response));
   }
 
   @override

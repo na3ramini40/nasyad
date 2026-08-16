@@ -4,19 +4,22 @@ import 'package:nasyad/core/sync/sync_state_store.dart';
 import 'package:nasyad/data/datasources/birthday_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
+import 'package:nasyad/data/datasources/place_local_datasource.dart';
 import 'package:nasyad/data/datasources/sync_remote_datasource.dart';
 import 'package:nasyad/data/datasources/tag_local_datasource.dart';
 import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
 import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/place_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
 import 'package:nasyad/domain/services/remote_sync_port.dart';
 
 /// Push-then-pull sync engine. Drift stays the UI source of truth.
 ///
-/// Conflict policy: **local wins** for devices/birthdays/tags after confirm;
-/// logs and device–tag links are append-only (insert if missing id / pair).
+/// Conflict policy: **local wins** for devices/birthdays/tags/places after
+/// confirm; logs and device–tag links are append-only (insert if missing id /
+/// pair).
 ///
 /// Tags and links: push **upserts only** (never DELETE remote-only rows). An
 /// empty second install must not wipe the account catalog; deletions do not
@@ -31,12 +34,14 @@ class RemoteSyncEngine implements RemoteSyncPort {
     required DeviceLocalDataSource devices,
     required DeviceLogLocalDataSource logs,
     required BirthdayLocalDataSource birthdays,
+    required PlaceLocalDataSource places,
     required TagLocalDataSource tags,
     required SyncStateStore syncState,
   }) : _remote = remote,
        _devices = devices,
        _logs = logs,
        _birthdays = birthdays,
+       _places = places,
        _tags = tags,
        _syncState = syncState;
 
@@ -44,6 +49,7 @@ class RemoteSyncEngine implements RemoteSyncPort {
   final DeviceLocalDataSource _devices;
   final DeviceLogLocalDataSource _logs;
   final BirthdayLocalDataSource _birthdays;
+  final PlaceLocalDataSource _places;
   final TagLocalDataSource _tags;
   final SyncStateStore _syncState;
 
@@ -73,6 +79,18 @@ class RemoteSyncEngine implements RemoteSyncPort {
       }
     }
 
+    final remotePlaces = await _remote.listPlaces(token: token);
+    final localPlaces = await _places.getAllPlaces();
+    final localPlaceById = {for (final p in localPlaces) p.id: p};
+
+    var placeCount = 0;
+    for (final remote in remotePlaces) {
+      final local = localPlaceById[remote.id];
+      if (local != null && !placesMeaningfullyEqual(local, remote)) {
+        placeCount++;
+      }
+    }
+
     final remoteTags = await _remote.listTags(token: token);
     final localTags = await _tags.getAllTags();
     final localTagById = {for (final t in localTags) t.id: t};
@@ -89,6 +107,7 @@ class RemoteSyncEngine implements RemoteSyncPort {
       deviceCount: deviceCount,
       birthdayCount: birthdayCount,
       tagCount: tagCount,
+      placeCount: placeCount,
     );
   }
 
@@ -120,11 +139,13 @@ class RemoteSyncEngine implements RemoteSyncPort {
     await step(() => _pushDevices(token));
     await step(() => _pushLogs(token));
     await step(() => _pushBirthdays(token));
+    await step(() => _pushPlaces(token));
     await step(() => _pushTags(token));
     await step(() => _pushDeviceTagLinks(token));
     await step(() => _pullDevices(token));
     await step(() => _pullLogs(token));
     await step(() => _pullBirthdays(token));
+    await step(() => _pullPlaces(token));
     await step(() => _pullTags(token));
     await step(() => _pullDeviceTagLinks(token));
 
@@ -179,6 +200,27 @@ class RemoteSyncEngine implements RemoteSyncPort {
         await _birthdays.upsertBirthday(toPush);
       }
       await _remote.upsertBirthday(token: token, birthday: toPush);
+    }
+  }
+
+  Future<void> _pushPlaces(String token) async {
+    final remoteRows = await _remote.listPlaces(token: token);
+    final remoteById = {for (final p in remoteRows) p.id: p};
+    final local = await _places.getAllPlaces();
+
+    for (final place in local) {
+      var toPush = place;
+      final remote = remoteById[place.id];
+      if (remote != null &&
+          !placesMeaningfullyEqual(place, remote) &&
+          !place.updatedAt.toUtc().isAfter(remote.updatedAt.toUtc())) {
+        toPush = placeWithUpdatedAt(
+          place,
+          syncBumpUpdatedAt(place.updatedAt, remote.updatedAt),
+        );
+        await _places.upsertPlace(toPush);
+      }
+      await _remote.upsertPlace(token: token, place: toPush);
     }
   }
 
@@ -272,6 +314,23 @@ class RemoteSyncEngine implements RemoteSyncPort {
     }
   }
 
+  Future<void> _pullPlaces(String token) async {
+    final cursor = await _syncState.readPlacesUpdatedSince();
+    final remote = await _remote.listPlaces(token: token, updatedSince: cursor);
+    DateTime? maxUpdated = cursor;
+    for (final row in remote) {
+      await mergePlaceLocalWins(localStore: _places, remote: row);
+      final updated = row.updatedAt.toUtc();
+      if (maxUpdated == null || updated.isAfter(maxUpdated)) {
+        maxUpdated = updated;
+      }
+    }
+    if (maxUpdated != null &&
+        (cursor == null || maxUpdated.isAfter(cursor.toUtc()))) {
+      await _syncState.writePlacesUpdatedSince(maxUpdated);
+    }
+  }
+
   Future<void> _pullTags(String token) async {
     final cursor = await _syncState.readTagsUpdatedSince();
     final remote = await _remote.listTags(token: token, updatedSince: cursor);
@@ -316,6 +375,10 @@ bool devicesMeaningfullyEqual(DeviceModel a, DeviceModel b) {
 }
 
 bool birthdaysMeaningfullyEqual(BirthdayModel a, BirthdayModel b) {
+  return _syncPayloadEqual(a.toSyncJson(), b.toSyncJson());
+}
+
+bool placesMeaningfullyEqual(PlaceModel a, PlaceModel b) {
   return _syncPayloadEqual(a.toSyncJson(), b.toSyncJson());
 }
 
@@ -381,6 +444,18 @@ BirthdayModel birthdayWithUpdatedAt(
   );
 }
 
+PlaceModel placeWithUpdatedAt(PlaceModel place, DateTime updatedAt) {
+  return PlaceModel(
+    id: place.id,
+    name: place.name,
+    kind: place.kind,
+    points: place.points,
+    notes: place.notes,
+    createdAt: place.createdAt,
+    updatedAt: updatedAt,
+  );
+}
+
 TagModel tagWithUpdatedAt(TagModel tag, DateTime updatedAt) {
   return TagModel(
     id: tag.id,
@@ -419,6 +494,16 @@ Future<void> mergeBirthdayLocalWins({
   final local = await localStore.getBirthday(remote.id);
   if (local != null) return;
   await localStore.upsertBirthday(remote);
+}
+
+/// Keep local when id exists; insert remote only when missing (additive).
+Future<void> mergePlaceLocalWins({
+  required PlaceLocalDataSource localStore,
+  required PlaceModel remote,
+}) async {
+  final local = await localStore.getPlace(remote.id);
+  if (local != null) return;
+  await localStore.upsertPlace(remote);
 }
 
 /// Keep local when id exists; insert remote only when missing (additive).

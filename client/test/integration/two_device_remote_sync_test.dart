@@ -8,6 +8,7 @@ import 'package:nasyad/core/sync/sync_state_store.dart';
 import 'package:nasyad/data/datasources/birthday_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource_impl.dart';
+import 'package:nasyad/data/datasources/place_local_datasource_impl.dart';
 import 'package:nasyad/data/datasources/sync_remote_datasource.dart';
 import 'package:nasyad/data/datasources/tag_local_datasource_impl.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
@@ -15,6 +16,7 @@ import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
 import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/place_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
 import 'package:nasyad/data/repositories/device_log_repository_impl.dart';
 import 'package:nasyad/data/repositories/device_repository_impl.dart';
@@ -23,6 +25,7 @@ import 'package:nasyad/domain/entities/calendar_system.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
 import 'package:nasyad/domain/entities/export_bundle.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
+import 'package:nasyad/domain/entities/place_geometry_kind.dart';
 import 'package:nasyad/domain/entities/schedule_type.dart';
 
 import '../helpers/fake_log_photo_storage.dart';
@@ -75,6 +78,7 @@ void main() {
             devices: deviceA.devices,
             logs: deviceA.logs,
             birthdays: deviceA.birthdays,
+            places: deviceA.places,
             tags: deviceA.tags,
             syncState: SyncStateStore.memory(),
           ).sync(token: token);
@@ -89,6 +93,7 @@ void main() {
             devices: deviceB.devices,
             logs: deviceB.logs,
             birthdays: deviceB.birthdays,
+            places: deviceB.places,
             tags: deviceB.tags,
             syncState: SyncStateStore.memory(),
           ).sync(token: token);
@@ -106,6 +111,10 @@ void main() {
           expect(
             catalogB.birthdaysById.keys.toSet(),
             catalogA.birthdaysById.keys.toSet(),
+          );
+          expect(
+            catalogB.placesById.keys.toSet(),
+            catalogA.placesById.keys.toSet(),
           );
           expect(
             catalogB.tagsById.keys.toSet(),
@@ -143,6 +152,16 @@ void main() {
               ),
               isTrue,
               reason: 'birthday $id',
+            );
+          }
+          for (final id in catalogA.placesById.keys) {
+            expect(
+              _payloadEqual(
+                catalogA.placesById[id]!.toSyncJson(),
+                catalogB.placesById[id]!.toSyncJson(),
+              ),
+              isTrue,
+              reason: 'place $id',
             );
           }
           for (final id in catalogA.tagsById.keys) {
@@ -301,6 +320,18 @@ Future<void> _seedDeviceA(_DeviceHarness h) async {
     ),
   );
 
+  await h.places.upsertPlace(
+    PlaceModel.fromEntity(
+      samplePlace(
+        id: 'place-office',
+        name: 'Office',
+        kind: PlaceGeometryKind.point,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ),
+  );
+
   await h.tags.upsertTag(
     TagModel(id: 'tag-home', name: 'home', createdAt: now, updatedAt: now),
   );
@@ -345,6 +376,7 @@ class _Snapshot {
     required this.devicesById,
     required this.logsById,
     required this.birthdaysById,
+    required this.placesById,
     required this.tagsById,
     required this.linksByKey,
   });
@@ -352,6 +384,7 @@ class _Snapshot {
   final Map<String, DeviceModel> devicesById;
   final Map<String, DeviceLogModel> logsById;
   final Map<String, BirthdayModel> birthdaysById;
+  final Map<String, PlaceModel> placesById;
   final Map<String, TagModel> tagsById;
   final Map<String, DeviceTagLinkModel> linksByKey;
 
@@ -361,12 +394,14 @@ class _Snapshot {
     final devices = await h.devices.getAllDevices();
     final logs = await h.logs.getAllLogs();
     final birthdays = await h.birthdays.getAllBirthdays();
+    final places = await h.places.getAllPlaces();
     final tags = await h.tags.getAllTags();
     final links = await h.tags.getDeviceTagLinks();
     return _Snapshot(
       devicesById: {for (final d in devices) d.id: d},
       logsById: {for (final l in logs) l.id: l},
       birthdaysById: {for (final b in birthdays) b.id: b},
+      placesById: {for (final p in places) p.id: p},
       tagsById: {for (final t in tags) t.id: t},
       linksByKey: {
         for (final link in links) '${link.deviceId}\u0000${link.tagId}': link,
@@ -381,6 +416,7 @@ class _DeviceHarness {
     required this.devices,
     required this.logs,
     required this.birthdays,
+    required this.places,
     required this.tags,
     required this.deviceRepo,
     required this.logRepo,
@@ -390,6 +426,7 @@ class _DeviceHarness {
   final DeviceLocalDataSourceImpl devices;
   final DeviceLogLocalDataSourceImpl logs;
   final BirthdayLocalDataSourceImpl birthdays;
+  final PlaceLocalDataSourceImpl places;
   final TagLocalDataSourceImpl tags;
   final DeviceRepositoryImpl deviceRepo;
   final DeviceLogRepositoryImpl logRepo;
@@ -401,12 +438,14 @@ class _DeviceHarness {
     final devices = DeviceLocalDataSourceImpl(db.deviceDao);
     final logs = DeviceLogLocalDataSourceImpl(db.deviceLogDao);
     final birthdays = BirthdayLocalDataSourceImpl(db.birthdayDao);
+    final places = PlaceLocalDataSourceImpl(db.placeDao);
     final tags = TagLocalDataSourceImpl(db.tagDao);
     return _DeviceHarness(
       db: db,
       devices: devices,
       logs: logs,
       birthdays: birthdays,
+      places: places,
       tags: tags,
       deviceRepo: DeviceRepositoryImpl(
         db: db,

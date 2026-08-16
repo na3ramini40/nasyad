@@ -186,6 +186,7 @@ class AppServices {
     final deviceLocal = DeviceLocalDataSourceImpl(database.deviceDao);
     final logLocal = DeviceLogLocalDataSourceImpl(database.deviceLogDao);
     final birthdayLocal = BirthdayLocalDataSourceImpl(database.birthdayDao);
+    final placeLocal = PlaceLocalDataSourceImpl(database.placeDao);
     final tagLocal = TagLocalDataSourceImpl(database.tagDao);
     final resolvedAuthStore = this.authSessionStore;
     this.authRepository =
@@ -213,6 +214,7 @@ class AppServices {
           devices: deviceLocal,
           logs: logLocal,
           birthdays: birthdayLocal,
+          places: placeLocal,
           tags: tagLocal,
           syncState: this.syncStateStore,
         );

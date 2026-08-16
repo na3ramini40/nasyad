@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "accounts",
     "devices",
     "birthdays",
+    "places",
     "app_config",
 ]
 
