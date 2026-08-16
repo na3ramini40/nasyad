@@ -30,7 +30,7 @@ Every rule, skill, agent, and command in this repo is created through this skill
 | A genuinely distinct role needing its own context and delegation | **Agent** — rare; extend a skill first |
 | A one-off instruction for the current task | **Nothing** — session only |
 
-Living product data goes in the existing files: screens → `shared/product/app-map.md`, persona facts → `shared/product/end-user.md`.
+Living product data goes in `shared/product/`: screens → `app-map.md`, persona → `end-user.md`, bets/gaps/parked visions → `insights.md`. Pre-code consult and delivery UX are one skill (`product/`); `/product-design` is the consult command.
 
 ## Creation checklist (all asset types)
 

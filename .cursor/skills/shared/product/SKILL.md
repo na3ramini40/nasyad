@@ -1,39 +1,44 @@
 ---
 name: nasyad-product
 description: >-
-  What Nasyad users see and need — screen map, persona, jobs, en/fa copy, UX
-  states, and tone. Use when scoping any user-facing feature, designing flows
-  or strings, or updating product structure after UI ships.
+  Nasyad product person — screen map, persona, UX scoping, and pre-code product
+  consult (ideate / mature / audit). Use when scoping user-facing work, designing
+  flows or strings, updating product structure after UI ships, or when the user
+  asks for feature ideas, product advice, roadmap brainstorming, or runs
+  /product-design; consult modes never write app code.
 ---
 
-# Product & UX
+# Product (one person)
 
-Two living documents — read before scoping, update in the same delivery that changes them:
+Owns what users see and need **and** pre-code consult. Domain acceptance → `docs/domain/structure.md`.
 
-- [app-map.md](app-map.md) — every screen: entry, shows, actions, leaves-to. **Wins** for UX chrome when screen descriptions disagree. Acceptance / capabilities → `docs/domain/structure.md`.
-- [end-user.md](end-user.md) — persona, jobs, mental model, learned patterns.
+| Need | Shard |
+|------|--------|
+| Screens, nav, actions | [app-map.md](app-map.md) |
+| Persona, jobs, tone, learned | [end-user.md](end-user.md) |
+| Bets / gaps / parked visions / next-feature order | [insights.md](insights.md) |
 
-## Scoping a feature (intake)
+Also for consult: `.cursor/rules/shared/scope.mdc`, `docs/domain/structure.md`. Domain wins behavior; app-map wins chrome.
 
-1. Restate the goal in one sentence against the current app-map.
-2. Flag scope: client / server / both. Both → match `docs/domain.md` (open the shard), then API contract (`../api-contract/`).
-3. Define done: PR only, or coupled release tag.
+## Stance
 
-## UX deliverables (before building UI)
+- Local-first, calm en/fa; optional sync never blocks core jobs.
+- Deepen due → maintain → trust data before new domains; smallest change that proves the job.
 
-1. **Job** — one outcome-focused sentence.
-2. **Happy path** — ≤3 steps from entry to done.
-3. **Copy plan** — en + fa strings (become ARB keys).
-4. **States** — empty, loading, error, destructive confirm.
-5. One obvious primary action per screen.
+## Consult (no app code) — `/product-design`
 
-## Tone gates
+Detect **ideate** / **mature** / **audit** (ask once if unclear). Ideate: 2–4 ranked options (job, why now, surfaces, risk). Mature: goal → in/out → ≤3-step path → states → en/fa copy → done-when; flag client/server/both. Audit: friction vs map + jobs; use [insights.md](insights.md).
 
-- Calm, short, concrete; action verbs; no jargon, no fake cloud/sync promises.
-- Status labels: Needs Service / Due Soon / Up to Date (devices); Due / Soon / Upcoming (home).
-- Destructive and import flows state the consequence explicitly.
+Short; end with **Next**. Asked what to do next → recite insights **When asked “what we have to do”** in order. Durable bet/gap → update insights same turn; don’t invent screens in consult.
 
-## Updating the living docs
+## Delivery scoping (intake)
 
-- **app-map.md** — when screens, sections, primary actions, navigation entries, or visible states change. One bullet per visible element, present tense, ≤8 bullets per block, no implementation detail. Skip for copy-only/refactor/backend work. Capability changes also update `docs/domain/structure.md`.
-- **end-user.md** — durable facts only (new job, learned pattern, model change) — never one-off task notes, never screen lists.
+1. Goal vs app-map · 2. Scope client/server/both (+ domain shard + `../api-contract/` if both) · 3. Done = PR or release tag.
+4. Before UI: job, ≤3-step path, en/fa copy, empty/loading/error/destructive, one primary action.
+5. Tone: calm, concrete; status labels as today; destructive states the consequence.
+
+## Updating living docs (same delivery)
+
+- **app-map.md** — visible structure; ≤8 bullets/block; also `docs/domain/structure.md` for capabilities.
+- **end-user.md** — durable jobs/model/learned only.
+- **insights.md** — bets/gaps/parked when consult or ship settles them.

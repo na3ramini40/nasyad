@@ -51,16 +51,16 @@ Client/server gates attach automatically when their files are touched (`.cursor/
 
 | Kind | Path | Contents |
 |------|------|----------|
-| Skills — shared | `.cursor/skills/shared/` | product (app-map, end-user), api-contract, meta |
+| Skills — shared | `.cursor/skills/shared/` | product (app-map, end-user, insights), api-contract, meta |
 | Skills — client | `.cursor/skills/client/flutter/` | stack, layers, ui, l10n, testing, domains, deeplink |
 | Skills — server | `.cursor/skills/server/django/` | workflow, domains |
 | Agents | `.cursor/agents/` | conductor, flutter-agent, django-agent |
-| Commands | `.cursor/commands/` | deliver-feature, verify, ship-pr, release, save-progress |
+| Commands | `.cursor/commands/` | product-design, deliver-feature, verify, ship-pr, release, save-progress |
 
 ## Working style
 
 - Brief and teaching-first; smallest change that ships; prefer packages over rewrites.
-- Feature delivery entry: `/deliver-feature` (conductor routes the rest).
+- Product ideas / mature a suggestion before code: `/product-design` (product skill consult). Feature delivery: `/deliver-feature` (conductor routes the rest).
 - Stack-shaping dependency additions (DI, network clients, codegen) require updating this file in the same change.
 
 ## Current Stack (client extras)
