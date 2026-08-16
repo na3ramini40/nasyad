@@ -1,4 +1,5 @@
 import 'package:nasyad/data/datasources/tag_local_datasource.dart';
+import 'package:nasyad/data/models/device_tag_link_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
 import 'package:nasyad/domain/entities/device_tag_link.dart';
 import 'package:nasyad/domain/entities/tag.dart';
@@ -69,17 +70,20 @@ class TagRepositoryImpl implements TagRepository {
 
   @override
   Stream<List<DeviceTagLink>> watchDeviceTagLinks() {
-    return _source.watchDeviceTagLinks();
+    return _source.watchDeviceTagLinks().map(
+      (models) => models.map((m) => m.toEntity()).toList(growable: false),
+    );
   }
 
   @override
-  Future<List<DeviceTagLink>> getDeviceTagLinks() {
-    return _source.getDeviceTagLinks();
+  Future<List<DeviceTagLink>> getDeviceTagLinks() async {
+    final models = await _source.getDeviceTagLinks();
+    return models.map((m) => m.toEntity()).toList(growable: false);
   }
 
   @override
   Future<void> upsertDeviceTagLink(DeviceTagLink link) {
-    return _source.upsertDeviceTagLink(link);
+    return _source.upsertDeviceTagLink(DeviceTagLinkModel.fromEntity(link));
   }
 
   @override

@@ -5,7 +5,7 @@ import 'package:sqlite3/sqlite3.dart' as sqlite;
 
 import '../sqlite_test_setup.dart';
 
-NativeDatabase openV7Database() {
+NativeDatabase openV8Database() {
   final handle = sqlite.sqlite3.openInMemory();
   handle.execute('PRAGMA foreign_keys = ON');
 
@@ -68,26 +68,40 @@ NativeDatabase openV7Database() {
       updated_at INTEGER NOT NULL
     )
   ''');
-
   handle.execute('''
-    INSERT INTO devices_table (
-      id, name, status, current_usage, usage_at_last_maintenance,
-      created_at, updated_at
-    ) VALUES (
-      'dev-1', 'Pump A', 'active', 100, 50,
-      1700000000000, 1700000000000
+    CREATE TABLE tags_table (
+      id TEXT NOT NULL PRIMARY KEY,
+      name TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    )
+  ''');
+  handle.execute('''
+    CREATE TABLE device_tags_table (
+      device_id TEXT NOT NULL,
+      tag_id TEXT NOT NULL,
+      PRIMARY KEY (device_id, tag_id)
     )
   ''');
 
-  handle.execute('PRAGMA user_version = 7');
+  handle.execute('''
+    INSERT INTO tags_table (id, name, created_at, updated_at)
+    VALUES ('tag-1', 'Garage', 1700000000000, 1700000000000)
+  ''');
+  handle.execute('''
+    INSERT INTO device_tags_table (device_id, tag_id)
+    VALUES ('dev-1', 'tag-1')
+  ''');
+
+  handle.execute('PRAGMA user_version = 8');
   return NativeDatabase.opened(handle);
 }
 
 void main() {
   setUpAll(setupSqliteForTests);
 
-  test('v7 database migrates to v8 and preserves devices', () async {
-    final executor = openV7Database();
+  test('v8 database migrates to v9 and preserves tags/links', () async {
+    final executor = openV8Database();
     addTearDown(executor.close);
 
     final database = AppDatabase(executor);
@@ -95,23 +109,15 @@ void main() {
 
     expect(database.schemaVersion, 9);
 
-    final devices = await database.select(database.devicesTable).get();
-    expect(devices, hasLength(1));
-    expect(devices.single.name, 'Pump A');
-
-    await database
-        .into(database.tagsTable)
-        .insert(
-          TagsTableCompanion.insert(
-            id: 'tag-1',
-            name: 'Garage',
-            createdAt: DateTime.utc(2024, 1, 1),
-            updatedAt: DateTime.utc(2024, 1, 1),
-          ),
-        );
-
     final tags = await database.select(database.tagsTable).get();
     expect(tags, hasLength(1));
+    expect(tags.single.id, 'tag-1');
     expect(tags.single.name, 'Garage');
+
+    final links = await database.select(database.deviceTagsTable).get();
+    expect(links, hasLength(1));
+    expect(links.single.deviceId, 'dev-1');
+    expect(links.single.tagId, 'tag-1');
+    expect(links.single.createdAt, DateTime.fromMillisecondsSinceEpoch(0));
   });
 }

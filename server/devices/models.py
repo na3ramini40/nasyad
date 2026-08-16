@@ -132,3 +132,48 @@ class DeviceLog(models.Model):
 
     def __str__(self) -> str:
         return f"{self.kind} ({self.id})"
+
+
+class Tag(models.Model):
+    id = models.CharField(primary_key=True, max_length=36)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="tags",
+    )
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "updated_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.id})"
+
+
+class DeviceTagLink(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="device_tag_links",
+    )
+    device_id = models.CharField(max_length=36)
+    tag_id = models.CharField(max_length=36)
+    created_at = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "device_id", "tag_id"],
+                name="devices_devicetaglink_user_device_tag_uniq",
+            ),
+        ]
+        indexes = [
+            models.Index(fields=["user", "created_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.device_id}+{self.tag_id}"

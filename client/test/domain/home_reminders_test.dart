@@ -265,9 +265,17 @@ void main() {
         snoozedReminderIds: const {},
         grouping: HomeGrouping.tag,
         tags: tags,
-        deviceTagLinks: const [
-          DeviceTagLink(deviceId: 'root-a', tagId: 'tag-garage'),
-          DeviceTagLink(deviceId: 'root-b', tagId: 'tag-garage'),
+        deviceTagLinks: [
+          DeviceTagLink(
+            deviceId: 'root-a',
+            tagId: 'tag-garage',
+            createdAt: DateTime.utc(2026, 1, 1),
+          ),
+          DeviceTagLink(
+            deviceId: 'root-b',
+            tagId: 'tag-garage',
+            createdAt: DateTime.utc(2026, 1, 1),
+          ),
         ],
         now: DateTime(2024, 6, 1),
       );
@@ -303,8 +311,12 @@ void main() {
         snoozedReminderIds: const {},
         grouping: HomeGrouping.tag,
         tags: [Tag(id: 'tag-1', name: 'Home', createdAt: t0, updatedAt: t0)],
-        deviceTagLinks: const [
-          DeviceTagLink(deviceId: 'parent', tagId: 'tag-1'),
+        deviceTagLinks: [
+          DeviceTagLink(
+            deviceId: 'parent',
+            tagId: 'tag-1',
+            createdAt: DateTime.utc(2026, 1, 1),
+          ),
         ],
         now: DateTime(2024, 6, 1),
       );

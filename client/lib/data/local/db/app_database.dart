@@ -30,7 +30,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'nasyad'));
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -82,9 +82,18 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(placesTable);
       }
 
-      if (from < 8) {
-        await m.createTable(tagsTable);
-        await m.createTable(deviceTagsTable);
+      if (from < 9) {
+        if (from < 8) {
+          await m.createTable(tagsTable);
+          await m.createTable(deviceTagsTable);
+        } else {
+          // v8 device_tags lacked created_at; new creates (from < 8) already
+          // include it via current schema.
+          await customStatement(
+            'ALTER TABLE device_tags_table '
+            'ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0',
+          );
+        }
       }
     },
   );

@@ -2979,8 +2979,19 @@ class $DeviceTagsTableTable extends DeviceTagsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [deviceId, tagId];
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [deviceId, tagId, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3009,6 +3020,14 @@ class $DeviceTagsTableTable extends DeviceTagsTable
     } else if (isInserting) {
       context.missing(_tagIdMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
     return context;
   }
 
@@ -3026,6 +3045,10 @@ class $DeviceTagsTableTable extends DeviceTagsTable
         DriftSqlType.string,
         data['${effectivePrefix}tag_id'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
     );
   }
 
@@ -3039,12 +3062,18 @@ class DeviceTagsTableData extends DataClass
     implements Insertable<DeviceTagsTableData> {
   final String deviceId;
   final String tagId;
-  const DeviceTagsTableData({required this.deviceId, required this.tagId});
+  final DateTime createdAt;
+  const DeviceTagsTableData({
+    required this.deviceId,
+    required this.tagId,
+    required this.createdAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['device_id'] = Variable<String>(deviceId);
     map['tag_id'] = Variable<String>(tagId);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -3052,6 +3081,7 @@ class DeviceTagsTableData extends DataClass
     return DeviceTagsTableCompanion(
       deviceId: Value(deviceId),
       tagId: Value(tagId),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -3063,6 +3093,7 @@ class DeviceTagsTableData extends DataClass
     return DeviceTagsTableData(
       deviceId: serializer.fromJson<String>(json['deviceId']),
       tagId: serializer.fromJson<String>(json['tagId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -3071,18 +3102,24 @@ class DeviceTagsTableData extends DataClass
     return <String, dynamic>{
       'deviceId': serializer.toJson<String>(deviceId),
       'tagId': serializer.toJson<String>(tagId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  DeviceTagsTableData copyWith({String? deviceId, String? tagId}) =>
-      DeviceTagsTableData(
-        deviceId: deviceId ?? this.deviceId,
-        tagId: tagId ?? this.tagId,
-      );
+  DeviceTagsTableData copyWith({
+    String? deviceId,
+    String? tagId,
+    DateTime? createdAt,
+  }) => DeviceTagsTableData(
+    deviceId: deviceId ?? this.deviceId,
+    tagId: tagId ?? this.tagId,
+    createdAt: createdAt ?? this.createdAt,
+  );
   DeviceTagsTableData copyWithCompanion(DeviceTagsTableCompanion data) {
     return DeviceTagsTableData(
       deviceId: data.deviceId.present ? data.deviceId.value : this.deviceId,
       tagId: data.tagId.present ? data.tagId.value : this.tagId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -3090,44 +3127,52 @@ class DeviceTagsTableData extends DataClass
   String toString() {
     return (StringBuffer('DeviceTagsTableData(')
           ..write('deviceId: $deviceId, ')
-          ..write('tagId: $tagId')
+          ..write('tagId: $tagId, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(deviceId, tagId);
+  int get hashCode => Object.hash(deviceId, tagId, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is DeviceTagsTableData &&
           other.deviceId == this.deviceId &&
-          other.tagId == this.tagId);
+          other.tagId == this.tagId &&
+          other.createdAt == this.createdAt);
 }
 
 class DeviceTagsTableCompanion extends UpdateCompanion<DeviceTagsTableData> {
   final Value<String> deviceId;
   final Value<String> tagId;
+  final Value<DateTime> createdAt;
   final Value<int> rowid;
   const DeviceTagsTableCompanion({
     this.deviceId = const Value.absent(),
     this.tagId = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DeviceTagsTableCompanion.insert({
     required String deviceId,
     required String tagId,
+    required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : deviceId = Value(deviceId),
-       tagId = Value(tagId);
+       tagId = Value(tagId),
+       createdAt = Value(createdAt);
   static Insertable<DeviceTagsTableData> custom({
     Expression<String>? deviceId,
     Expression<String>? tagId,
+    Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (deviceId != null) 'device_id': deviceId,
       if (tagId != null) 'tag_id': tagId,
+      if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3135,11 +3180,13 @@ class DeviceTagsTableCompanion extends UpdateCompanion<DeviceTagsTableData> {
   DeviceTagsTableCompanion copyWith({
     Value<String>? deviceId,
     Value<String>? tagId,
+    Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
     return DeviceTagsTableCompanion(
       deviceId: deviceId ?? this.deviceId,
       tagId: tagId ?? this.tagId,
+      createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3153,6 +3200,9 @@ class DeviceTagsTableCompanion extends UpdateCompanion<DeviceTagsTableData> {
     if (tagId.present) {
       map['tag_id'] = Variable<String>(tagId.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3164,6 +3214,7 @@ class DeviceTagsTableCompanion extends UpdateCompanion<DeviceTagsTableData> {
     return (StringBuffer('DeviceTagsTableCompanion(')
           ..write('deviceId: $deviceId, ')
           ..write('tagId: $tagId, ')
+          ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4901,12 +4952,14 @@ typedef $$DeviceTagsTableTableCreateCompanionBuilder =
     DeviceTagsTableCompanion Function({
       required String deviceId,
       required String tagId,
+      required DateTime createdAt,
       Value<int> rowid,
     });
 typedef $$DeviceTagsTableTableUpdateCompanionBuilder =
     DeviceTagsTableCompanion Function({
       Value<String> deviceId,
       Value<String> tagId,
+      Value<DateTime> createdAt,
       Value<int> rowid,
     });
 
@@ -4926,6 +4979,11 @@ class $$DeviceTagsTableTableFilterComposer
 
   ColumnFilters<String> get tagId => $composableBuilder(
     column: $table.tagId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -4948,6 +5006,11 @@ class $$DeviceTagsTableTableOrderingComposer
     column: $table.tagId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$DeviceTagsTableTableAnnotationComposer
@@ -4964,6 +5027,9 @@ class $$DeviceTagsTableTableAnnotationComposer
 
   GeneratedColumn<String> get tagId =>
       $composableBuilder(column: $table.tagId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$DeviceTagsTableTableTableManager
@@ -5005,20 +5071,24 @@ class $$DeviceTagsTableTableTableManager
               ({
                 Value<String> deviceId = const Value.absent(),
                 Value<String> tagId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DeviceTagsTableCompanion(
                 deviceId: deviceId,
                 tagId: tagId,
+                createdAt: createdAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String deviceId,
                 required String tagId,
+                required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => DeviceTagsTableCompanion.insert(
                 deviceId: deviceId,
                 tagId: tagId,
+                createdAt: createdAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

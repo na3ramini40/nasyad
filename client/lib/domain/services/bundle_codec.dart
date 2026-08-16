@@ -1010,12 +1010,14 @@ abstract final class BundleCodec {
   static Map<String, dynamic> _deviceTagToJson(DeviceTagLink link) => {
     'deviceId': link.deviceId,
     'tagId': link.tagId,
+    'createdAt': link.createdAt.toUtc().toIso8601String(),
   };
 
   static DeviceTagLink _deviceTagFromJson(Map<String, dynamic> json) {
     return _deviceTagFromMap({
       'deviceId': '${json['deviceId']}',
       'tagId': '${json['tagId']}',
+      if (json['createdAt'] != null) 'createdAt': '${json['createdAt']}',
     });
   }
 
@@ -1025,7 +1027,12 @@ abstract final class BundleCodec {
     if (deviceId.isEmpty || tagId.isEmpty) {
       throw BundleCodecException('DeviceTag requires deviceId and tagId');
     }
-    return DeviceTagLink(deviceId: deviceId, tagId: tagId);
+    final createdAt = _parseDate(map['createdAt']) ?? DateTime.now().toUtc();
+    return DeviceTagLink(
+      deviceId: deviceId,
+      tagId: tagId,
+      createdAt: createdAt,
+    );
   }
 
   static String _encodePointsJson(List<GeoPoint> points) {

@@ -1,12 +1,18 @@
 /// Counts of entity ids that exist on both sides with meaningfully different
-/// sync fields (devices / birthdays). Logs are append-only and never counted.
+/// sync fields (devices / birthdays / tags). Logs and tag links are
+/// append-only and never counted.
 class SyncConflictSummary {
-  const SyncConflictSummary({this.deviceCount = 0, this.birthdayCount = 0});
+  const SyncConflictSummary({
+    this.deviceCount = 0,
+    this.birthdayCount = 0,
+    this.tagCount = 0,
+  });
 
   final int deviceCount;
   final int birthdayCount;
+  final int tagCount;
 
-  int get total => deviceCount + birthdayCount;
+  int get total => deviceCount + birthdayCount + tagCount;
 
   bool get hasConflicts => total > 0;
 }

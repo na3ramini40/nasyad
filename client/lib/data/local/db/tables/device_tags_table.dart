@@ -5,6 +5,8 @@ class DeviceTagsTable extends Table {
 
   TextColumn get tagId => text()();
 
+  DateTimeColumn get createdAt => dateTime()();
+
   @override
   Set<Column> get primaryKey => {deviceId, tagId};
 }

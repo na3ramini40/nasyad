@@ -6,9 +6,12 @@ import 'package:nasyad/data/datasources/birthday_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
 import 'package:nasyad/data/datasources/sync_remote_datasource.dart';
+import 'package:nasyad/data/datasources/tag_local_datasource.dart';
 import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
+import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/tag_model.dart';
 import 'package:nasyad/data/services/remote_sync_engine.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
 import 'package:nasyad/domain/services/local_sync_coordinator.dart';
@@ -26,10 +29,14 @@ void main() {
       await store.writeDevicesUpdatedSince(stamp);
       await store.writeDeviceLogsCreatedSince(stamp);
       await store.writeBirthdaysUpdatedSince(stamp);
+      await store.writeTagsUpdatedSince(stamp);
+      await store.writeDeviceTagLinksCreatedSince(stamp);
 
       expect(await store.readDevicesUpdatedSince(), stamp);
       expect(await store.readDeviceLogsCreatedSince(), stamp);
       expect(await store.readBirthdaysUpdatedSince(), stamp);
+      expect(await store.readTagsUpdatedSince(), stamp);
+      expect(await store.readDeviceTagLinksCreatedSince(), stamp);
     });
   });
 
@@ -102,6 +109,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: birthdays,
+          tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
 
@@ -227,6 +235,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
 
@@ -271,6 +280,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
 
@@ -328,6 +338,7 @@ void main() {
         devices: devices,
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        tags: _MemoryTags(),
         syncState: state,
       );
 
@@ -355,6 +366,7 @@ void main() {
         devices: devices,
         logs: logs,
         birthdays: birthdays,
+        tags: _MemoryTags(),
         syncState: state,
       );
 
@@ -389,6 +401,21 @@ void main() {
           BirthdayModel.fromEntity(
             sampleBirthday(id: 'remote-b', updatedAt: DateTime.utc(2026, 4, 3)),
           ),
+        ]
+        ..pulledTags = [
+          TagModel(
+            id: 'remote-t',
+            name: 'Remote tag',
+            createdAt: DateTime.utc(2026, 4, 4),
+            updatedAt: DateTime.utc(2026, 4, 4),
+          ),
+        ]
+        ..pulledLinks = [
+          DeviceTagLinkModel(
+            deviceId: 'remote-d',
+            tagId: 'remote-t',
+            createdAt: DateTime.utc(2026, 4, 5),
+          ),
         ];
       final state = SyncStateStore.memory();
       final engine = RemoteSyncEngine(
@@ -396,6 +423,7 @@ void main() {
         devices: _MemoryDevices(),
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        tags: _MemoryTags(),
         syncState: state,
       );
 
@@ -407,6 +435,167 @@ void main() {
         DateTime.utc(2026, 4, 2),
       );
       expect(await state.readBirthdaysUpdatedSince(), DateTime.utc(2026, 4, 3));
+      expect(await state.readTagsUpdatedSince(), DateTime.utc(2026, 4, 4));
+      expect(
+        await state.readDeviceTagLinksCreatedSince(),
+        DateTime.utc(2026, 4, 5),
+      );
+    });
+  });
+
+  group('Tag / link sync', () {
+    test('pushes local tags and pulls remote-only tags', () async {
+      final tags = _MemoryTags()
+        ..seed(
+          TagModel(
+            id: 't-local',
+            name: 'Local',
+            createdAt: DateTime.utc(2026, 1, 1),
+            updatedAt: DateTime.utc(2026, 1, 1),
+          ),
+        );
+      final remote = _RecordingRemote()
+        ..pulledTags = [
+          TagModel(
+            id: 't-remote',
+            name: 'Remote only',
+            createdAt: DateTime.utc(2026, 4, 1),
+            updatedAt: DateTime.utc(2026, 4, 1),
+          ),
+        ];
+      final state = SyncStateStore.memory();
+      final engine = RemoteSyncEngine(
+        remote: remote,
+        devices: _MemoryDevices(),
+        logs: _MemoryLogs(),
+        birthdays: _MemoryBirthdays(),
+        tags: tags,
+        syncState: state,
+      );
+
+      await engine.sync(token: 'tok');
+
+      expect(remote.calls, contains('upsertTag'));
+      expect(remote.lastUpsertedTag?.id, 't-local');
+      expect((await tags.getTag('t-remote'))?.name, 'Remote only');
+      expect(await state.readTagsUpdatedSince(), DateTime.utc(2026, 4, 1));
+    });
+
+    test('deletes remote-only links and remote-only tags on push', () async {
+      final tags = _MemoryTags()
+        ..seed(
+          TagModel(
+            id: 't1',
+            name: 'Keep',
+            createdAt: DateTime.utc(2026, 1, 1),
+            updatedAt: DateTime.utc(2026, 1, 1),
+          ),
+        )
+        ..seedLink(
+          DeviceTagLinkModel(
+            deviceId: 'd1',
+            tagId: 't1',
+            createdAt: DateTime.utc(2026, 1, 1),
+          ),
+        );
+      final remote = _RecordingRemote()
+        ..pulledTags = [
+          TagModel(
+            id: 't1',
+            name: 'Keep',
+            createdAt: DateTime.utc(2026, 1, 1),
+            updatedAt: DateTime.utc(2026, 1, 1),
+          ),
+          TagModel(
+            id: 't-gone',
+            name: 'Remote only tag',
+            createdAt: DateTime.utc(2026, 1, 1),
+            updatedAt: DateTime.utc(2026, 1, 1),
+          ),
+        ]
+        ..pulledLinks = [
+          DeviceTagLinkModel(
+            deviceId: 'd1',
+            tagId: 't1',
+            createdAt: DateTime.utc(2026, 1, 1),
+          ),
+          DeviceTagLinkModel(
+            deviceId: 'd2',
+            tagId: 't-gone',
+            createdAt: DateTime.utc(2026, 1, 2),
+          ),
+        ];
+      final engine = RemoteSyncEngine(
+        remote: remote,
+        devices: _MemoryDevices(),
+        logs: _MemoryLogs(),
+        birthdays: _MemoryBirthdays(),
+        tags: tags,
+        syncState: SyncStateStore.memory(),
+      );
+
+      await engine.sync(token: 'tok');
+
+      expect(remote.deletedTagIds, contains('t-gone'));
+      expect(remote.deletedLinkKeys, contains('d2/t-gone'));
+      expect(remote.deletedLinkKeys, isNot(contains('d1/t1')));
+    });
+
+    test('pull links append-only by pair', () async {
+      final tags = _MemoryTags()
+        ..seedLink(
+          DeviceTagLinkModel(
+            deviceId: 'd1',
+            tagId: 't1',
+            createdAt: DateTime.utc(2026, 1, 1),
+          ),
+        );
+      await mergeLinkAppendOnly(
+        localStore: tags,
+        remote: DeviceTagLinkModel(
+          deviceId: 'd1',
+          tagId: 't1',
+          createdAt: DateTime.utc(2026, 5, 1),
+        ),
+      );
+      expect(
+        (await tags.getDeviceTagLink('d1', 't1'))!.createdAt,
+        DateTime.utc(2026, 1, 1),
+      );
+
+      await mergeLinkAppendOnly(
+        localStore: tags,
+        remote: DeviceTagLinkModel(
+          deviceId: 'd1',
+          tagId: 't2',
+          createdAt: DateTime.utc(2026, 5, 1),
+        ),
+      );
+      expect(await tags.getDeviceTagLink('d1', 't2'), isNotNull);
+    });
+
+    test('tag sync json round-trip', () {
+      final tag = TagModel(
+        id: 't1',
+        name: 'Garage',
+        createdAt: DateTime.utc(2026, 2, 1, 10),
+        updatedAt: DateTime.utc(2026, 2, 2, 11),
+      );
+      final restored = TagModel.fromSyncJson(tag.toSyncJson());
+      expect(restored.id, tag.id);
+      expect(restored.name, tag.name);
+      expect(restored.createdAt, tag.createdAt);
+      expect(restored.updatedAt, tag.updatedAt);
+
+      final link = DeviceTagLinkModel(
+        deviceId: 'd1',
+        tagId: 't1',
+        createdAt: DateTime.utc(2026, 3, 1),
+      );
+      final linkRestored = DeviceTagLinkModel.fromSyncJson(link.toSyncJson());
+      expect(linkRestored.deviceId, link.deviceId);
+      expect(linkRestored.tagId, link.tagId);
+      expect(linkRestored.createdAt, link.createdAt);
     });
   });
 
@@ -421,6 +610,7 @@ void main() {
           devices: _MemoryDevices(),
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         );
         final coordinator = LocalSyncCoordinator(
@@ -466,6 +656,7 @@ void main() {
           devices: devices,
           logs: _MemoryLogs(),
           birthdays: _MemoryBirthdays(),
+          tags: _MemoryTags(),
           syncState: SyncStateStore.memory(),
         ),
       );
@@ -509,6 +700,7 @@ void main() {
         devices: devices,
         logs: _MemoryLogs(),
         birthdays: _MemoryBirthdays(),
+        tags: _MemoryTags(),
         syncState: SyncStateStore.memory(),
       );
       final coordinator = LocalSyncCoordinator(
@@ -547,7 +739,12 @@ class _RecordingRemote implements SyncRemoteDataSource {
   List<DeviceModel> pulledDevices = const [];
   List<DeviceLogModel> pulledLogs = const [];
   List<BirthdayModel> pulledBirthdays = const [];
+  List<TagModel> pulledTags = const [];
+  List<DeviceTagLinkModel> pulledLinks = const [];
   DeviceModel? lastUpsertedDevice;
+  TagModel? lastUpsertedTag;
+  final deletedTagIds = <String>[];
+  final deletedLinkKeys = <String>[];
 
   @override
   Future<List<DeviceModel>> listDevices({
@@ -602,6 +799,59 @@ class _RecordingRemote implements SyncRemoteDataSource {
   }) async {
     calls.add('upsertBirthday');
     return birthday;
+  }
+
+  @override
+  Future<List<TagModel>> listTags({
+    required String token,
+    DateTime? updatedSince,
+  }) async {
+    calls.add('listTags');
+    return pulledTags;
+  }
+
+  @override
+  Future<TagModel> upsertTag({
+    required String token,
+    required TagModel tag,
+  }) async {
+    calls.add('upsertTag');
+    lastUpsertedTag = tag;
+    return tag;
+  }
+
+  @override
+  Future<void> deleteTag({required String token, required String id}) async {
+    calls.add('deleteTag');
+    deletedTagIds.add(id);
+  }
+
+  @override
+  Future<List<DeviceTagLinkModel>> listDeviceTagLinks({
+    required String token,
+    DateTime? createdSince,
+  }) async {
+    calls.add('listLinks');
+    return pulledLinks;
+  }
+
+  @override
+  Future<DeviceTagLinkModel> upsertDeviceTagLink({
+    required String token,
+    required DeviceTagLinkModel link,
+  }) async {
+    calls.add('upsertLink');
+    return link;
+  }
+
+  @override
+  Future<void> deleteDeviceTagLink({
+    required String token,
+    required String deviceId,
+    required String tagId,
+  }) async {
+    calls.add('deleteLink');
+    deletedLinkKeys.add('$deviceId/$tagId');
   }
 }
 
@@ -739,4 +989,74 @@ class _MemoryBirthdays implements BirthdayLocalDataSource {
 
   @override
   Future<List<BirthdayModel>> searchBirthdaysByName(String query) async => [];
+}
+
+class _MemoryTags implements TagLocalDataSource {
+  final tags = <String, TagModel>{};
+  final links = <String, DeviceTagLinkModel>{};
+
+  String _key(String deviceId, String tagId) => '$deviceId\u0000$tagId';
+
+  void seed(TagModel tag) => tags[tag.id] = tag;
+
+  void seedLink(DeviceTagLinkModel link) =>
+      links[_key(link.deviceId, link.tagId)] = link;
+
+  @override
+  Stream<List<TagModel>> watchTags() => Stream.value(tags.values.toList());
+
+  @override
+  Future<List<TagModel>> getAllTags() async => tags.values.toList();
+
+  @override
+  Future<TagModel?> getTag(String id) async => tags[id];
+
+  @override
+  Future<void> insertTag(TagModel tag) async => tags[tag.id] = tag;
+
+  @override
+  Future<void> updateTag(TagModel tag) async => tags[tag.id] = tag;
+
+  @override
+  Future<void> upsertTag(TagModel tag) async => tags[tag.id] = tag;
+
+  @override
+  Future<void> deleteTag(String id) async {
+    tags.remove(id);
+    links.removeWhere((_, link) => link.tagId == id);
+  }
+
+  @override
+  Stream<List<TagModel>> watchTagsForDevice(String deviceId) =>
+      Stream.value(const <TagModel>[]);
+
+  @override
+  Future<List<TagModel>> getTagsForDevice(String deviceId) async => [];
+
+  @override
+  Future<void> setDeviceTags(String deviceId, List<String> tagIds) async {}
+
+  @override
+  Stream<List<DeviceTagLinkModel>> watchDeviceTagLinks() =>
+      Stream.value(links.values.toList());
+
+  @override
+  Future<List<DeviceTagLinkModel>> getDeviceTagLinks() async =>
+      links.values.toList();
+
+  @override
+  Future<DeviceTagLinkModel?> getDeviceTagLink(
+    String deviceId,
+    String tagId,
+  ) async => links[_key(deviceId, tagId)];
+
+  @override
+  Future<void> upsertDeviceTagLink(DeviceTagLinkModel link) async {
+    links[_key(link.deviceId, link.tagId)] = link;
+  }
+
+  @override
+  Future<void> deleteLinksForDevice(String deviceId) async {
+    links.removeWhere((_, link) => link.deviceId == deviceId);
+  }
 }

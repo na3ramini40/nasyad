@@ -1,5 +1,5 @@
+import 'package:nasyad/data/models/device_tag_link_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
-import 'package:nasyad/domain/entities/device_tag_link.dart';
 
 abstract class TagLocalDataSource {
   Stream<List<TagModel>> watchTags();
@@ -22,11 +22,13 @@ abstract class TagLocalDataSource {
 
   Future<void> setDeviceTags(String deviceId, List<String> tagIds);
 
-  Stream<List<DeviceTagLink>> watchDeviceTagLinks();
+  Stream<List<DeviceTagLinkModel>> watchDeviceTagLinks();
 
-  Future<List<DeviceTagLink>> getDeviceTagLinks();
+  Future<List<DeviceTagLinkModel>> getDeviceTagLinks();
 
-  Future<void> upsertDeviceTagLink(DeviceTagLink link);
+  Future<DeviceTagLinkModel?> getDeviceTagLink(String deviceId, String tagId);
+
+  Future<void> upsertDeviceTagLink(DeviceTagLinkModel link);
 
   Future<void> deleteLinksForDevice(String deviceId);
 }
