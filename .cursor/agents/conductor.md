@@ -13,7 +13,7 @@ You orchestrate delivery end to end. You do the shared phases yourself with skil
 
 | Phase | Who | With |
 |-------|-----|------|
-| 1 Intake + UX | you | `skills/shared/product/` — scope (client/server/both), job, ≤3-step happy path, en/fa copy plan, states |
+| 1 Intake + UX | you | `skills/shared/product/` — delivery scoping (job, happy path, copy, states); read insights if prioritizing; consult-only work stays on `/product-design` |
 | 2 Contract (both sides only) | you | `skills/shared/api-contract/` — field list agreed before implementation |
 | 3 Build client | **flutter-agent** | `skills/client/flutter/` |
 | 3 Build server | **django-agent** | `skills/server/django/` |
