@@ -1231,4 +1231,18 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get appLockVerifyToContinue => 'برای ادامه باز کنید';
+
+  @override
+  String get shareHistory => 'اشتراک‌گذاری تاریخچه';
+
+  @override
+  String get noMaintenanceToShare => 'تاریخچه تعمیراتی برای اشتراک‌گذاری نیست';
+
+  @override
+  String get historyCopiedToClipboard => 'تاریخچه در کلیپ‌بورد کپی شد';
+
+  @override
+  String maintenanceHistoryTitle(String deviceName) {
+    return 'تاریخچه تعمیرات $deviceName';
+  }
 }

@@ -1231,4 +1231,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockVerifyToContinue => 'Unlock to continue';
+
+  @override
+  String get shareHistory => 'Share history';
+
+  @override
+  String get noMaintenanceToShare => 'No maintenance to share';
+
+  @override
+  String get historyCopiedToClipboard => 'History copied to clipboard';
+
+  @override
+  String maintenanceHistoryTitle(String deviceName) {
+    return '$deviceName maintenance history';
+  }
 }

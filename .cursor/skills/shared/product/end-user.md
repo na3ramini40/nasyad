@@ -21,6 +21,7 @@ Update when facts are stated or proven. Short bullets only.
 8. Save map places (point / path / area) for offline reference.
 9. Optionally sign in with phone OTP (then sync local ↔ server when enabled); view/edit a simple profile (name, photo, read-only id); sign out in one tap.
 10. Optionally lock the app (password, PIN, or fingerprint) and auto-lock after idle; unlock to continue; forgot lock via phone OTP resets lock to off.
+11. Hand a service person a readable PDF of what was maintained so far on one device (and its parts) via OS share — not Transfer backup.
 
 ## Model
 
@@ -37,6 +38,7 @@ Update when facts are stated or proven. Short bullets only.
 - Online account = phone OTP only; profile id is a server-issued read-only hash.
 - On sign-in (when sync preference is on and online), local syncable data is reconciled with the server: conflicts require confirmation; local wins and can override server; skip leaves both sides unchanged; sync failure/skip does not block staying signed in.
 - App lock is local-only (not synced); Preferences groups settings in expandable categories.
+- Device history share = PDF of maintenanceDone logs for a device subtree (clipboard plain-text fallback); separate from Transfer export and account sync.
 
 ## Tone
 

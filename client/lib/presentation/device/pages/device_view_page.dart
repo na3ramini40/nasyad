@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:nasyad/core/app_services.dart';
+import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/ui/log_photo_thumbnail.dart';
 import 'package:nasyad/core/ui/ui.dart';
+import 'package:nasyad/core/utils/device_history_share_coordinator.dart';
 import 'package:nasyad/core/utils/log_cost_formatter.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
 import 'package:nasyad/domain/entities/device_log_kind.dart';
@@ -16,16 +19,24 @@ import 'package:nasyad/presentation/device/bloc/device_detail_bloc.dart';
 import 'package:nasyad/presentation/device/device_category_presets.dart';
 import 'package:nasyad/presentation/device/schedule_presets.dart';
 
-class DevicePage extends StatelessWidget {
+class DevicePage extends StatefulWidget {
   final String deviceId;
 
   const DevicePage({super.key, required this.deviceId});
+
+  @override
+  State<DevicePage> createState() => _DevicePageState();
+}
+
+class _DevicePageState extends State<DevicePage> {
+  var _sharingHistory = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
+    final deviceId = widget.deviceId;
 
     return BlocConsumer<DeviceDetailBloc, DeviceDetailState>(
       listener: (context, state) {
@@ -60,6 +71,19 @@ class DevicePage extends StatelessWidget {
                 tooltip: l10n.back,
               ),
               actions: [
+                IconButton(
+                  icon: _sharingHistory
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.share_outlined),
+                  onPressed: _sharingHistory
+                      ? null
+                      : () => _shareHistory(context, summary),
+                  tooltip: l10n.shareHistory,
+                ),
                 IconButton(
                   icon: const Icon(Icons.archive_outlined),
                   onPressed: () => context.read<DeviceDetailBloc>().add(
@@ -261,6 +285,39 @@ class DevicePage extends StatelessWidget {
         };
       },
     );
+  }
+
+  Future<void> _shareHistory(
+    BuildContext context,
+    DeviceSummary summary,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
+    final calendar = context.read<CalendarSystemCubit>().state;
+    final messenger = ScaffoldMessenger.of(context);
+    final share = AppServicesScope.of(context).shareDeviceHistory;
+
+    setState(() => _sharingHistory = true);
+    try {
+      final result = await share.share(
+        summary: summary,
+        calendar: calendar,
+        locale: locale,
+        documentTitle: l10n.maintenanceHistoryTitle(summary.device.name),
+      );
+      if (!mounted) return;
+      final message = switch (result) {
+        ShareDeviceHistoryResult.empty => l10n.noMaintenanceToShare,
+        ShareDeviceHistoryResult.shared => null,
+        ShareDeviceHistoryResult.copiedToClipboard =>
+          l10n.historyCopiedToClipboard,
+      };
+      if (message != null) {
+        messenger.showSnackBar(SnackBar(content: Text(message)));
+      }
+    } finally {
+      if (mounted) setState(() => _sharingHistory = false);
+    }
   }
 
   String _scheduleLabel(AppLocalizations l10n, DeviceSummary summary) {

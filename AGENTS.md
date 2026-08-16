@@ -69,4 +69,5 @@ Active packages live in `client/pubspec.yaml`. Notable additions beyond the Flut
 
 - `local_auth`, `flutter_secure_storage` — optional app lock (PIN/password/biometric); secrets stay on device
 - `shared_preferences` — non-secret prefs (locale, theme, lock method/timeout flags, …)
+- `pdf` — device maintenance-history share as PDF (plain-text clipboard fallback)
 - Do not assume `get_it` / `injectable` / `freezed`

@@ -557,5 +557,14 @@
   "appLockWrongSecret": "اشتباه است",
   "appLockBiometricUnavailable": "اثر انگشت روی این دستگاه در دسترس نیست",
   "appLockBiometricFailed": "اثر انگشت کار نکرد. دوباره تلاش کنید.",
-  "appLockVerifyToContinue": "برای ادامه باز کنید"
+  "appLockVerifyToContinue": "برای ادامه باز کنید",
+  "shareHistory": "اشتراک‌گذاری تاریخچه",
+  "noMaintenanceToShare": "تاریخچه تعمیراتی برای اشتراک‌گذاری نیست",
+  "historyCopiedToClipboard": "تاریخچه در کلیپ‌بورد کپی شد",
+  "maintenanceHistoryTitle": "تاریخچه تعمیرات {deviceName}",
+  "@maintenanceHistoryTitle": {
+    "placeholders": {
+      "deviceName": { "type": "String" }
+    }
+  }
 }

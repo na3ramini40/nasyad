@@ -114,8 +114,8 @@ Local-first maintenance tracker for devices/assets (tree) and personal birthdays
 ### Device detail
 **Entry:** Device list; home reminder; child card from parent  
 **Shows:** Name, category icon, optional location label, optional device notes, status badge, progress bar (if scheduled), remaining + target when usage schedule, schedule card or add-schedule hint, children list (or add-child row), log history (date, cost, vendor, photo thumbnail when present)  
-**Actions:** Archive (subtree); edit; primary Maintain (confirm + current usage when linked); FAB → add log / update usage; tap child → child detail; add child  
-**Leaves to:** Edit device, add log, child detail, Home (after archive)
+**Actions:** Share history (PDF of maintenanceDone for this device + nested parts via OS share; empty → snackbar, no file; PDF failure → plain text on clipboard); Archive (subtree); edit; primary Maintain (confirm + current usage when linked); FAB → add log / update usage; tap child → child detail; add child  
+**Leaves to:** Edit device, add log, child detail, OS share sheet, Home (after archive)
 
 ### Add log
 **Entry:** Device detail FAB (maintenance default; usage if linked); Maintain CTA  

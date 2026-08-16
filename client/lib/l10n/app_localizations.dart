@@ -2347,6 +2347,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unlock to continue'**
   String get appLockVerifyToContinue;
+
+  /// No description provided for @shareHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Share history'**
+  String get shareHistory;
+
+  /// No description provided for @noMaintenanceToShare.
+  ///
+  /// In en, this message translates to:
+  /// **'No maintenance to share'**
+  String get noMaintenanceToShare;
+
+  /// No description provided for @historyCopiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'History copied to clipboard'**
+  String get historyCopiedToClipboard;
+
+  /// No description provided for @maintenanceHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{deviceName} maintenance history'**
+  String maintenanceHistoryTitle(String deviceName);
 }
 
 class _AppLocalizationsDelegate
