@@ -71,15 +71,32 @@ class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
 
   Future<void> setDeviceTags(String deviceId, List<String> tagIds) async {
     await transaction(() async {
+      final existing = await (select(
+        deviceTagsTable,
+      )..where((t) => t.deviceId.equals(deviceId))).get();
+      final existingByTagId = {
+        for (final row in existing) row.tagId: row.createdAt,
+      };
       await (delete(
         deviceTagsTable,
       )..where((t) => t.deviceId.equals(deviceId))).go();
+      final now = DateTime.now().toUtc();
       for (final tagId in tagIds) {
         await into(deviceTagsTable).insert(
-          DeviceTagsTableCompanion.insert(deviceId: deviceId, tagId: tagId),
+          DeviceTagsTableCompanion.insert(
+            deviceId: deviceId,
+            tagId: tagId,
+            createdAt: existingByTagId[tagId] ?? now,
+          ),
         );
       }
     });
+  }
+
+  Future<DeviceTagsTableData?> getLink(String deviceId, String tagId) {
+    return (select(deviceTagsTable)
+          ..where((t) => t.deviceId.equals(deviceId) & t.tagId.equals(tagId)))
+        .getSingleOrNull();
   }
 
   Future<void> upsertLink(DeviceTagsTableCompanion link) {

@@ -20,6 +20,7 @@ Screen chrome and copy: `.cursor/skills/shared/product/` (app-map wins for UX de
 | Device | [domain/device.md](domain/device.md) |
 | DeviceLog | [domain/device-log.md](domain/device-log.md) |
 | Birthday | [domain/birthday.md](domain/birthday.md) |
+| Tag / device–tag links | [domain/tag.md](domain/tag.md) |
 | User (account / OTP / profile) | [domain/user.md](domain/user.md) |
 | App config / feature flags | [domain/app-config.md](domain/app-config.md) |
 | Local-only capabilities (tags, home grouping, …) | [domain/local.md](domain/local.md) |

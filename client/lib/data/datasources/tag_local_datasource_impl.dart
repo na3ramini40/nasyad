@@ -1,8 +1,7 @@
 import 'package:nasyad/data/datasources/tag_local_datasource.dart';
-import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/local/db/dao/tag_dao.dart';
+import 'package:nasyad/data/models/device_tag_link_model.dart';
 import 'package:nasyad/data/models/tag_model.dart';
-import 'package:nasyad/domain/entities/device_tag_link.dart';
 
 class TagLocalDataSourceImpl implements TagLocalDataSource {
   TagLocalDataSourceImpl(this._dao);
@@ -67,30 +66,30 @@ class TagLocalDataSourceImpl implements TagLocalDataSource {
   }
 
   @override
-  Stream<List<DeviceTagLink>> watchDeviceTagLinks() {
+  Stream<List<DeviceTagLinkModel>> watchDeviceTagLinks() {
     return _dao.watchAllLinks().map(
-      (rows) => rows
-          .map((row) => DeviceTagLink(deviceId: row.deviceId, tagId: row.tagId))
-          .toList(growable: false),
+      (rows) => rows.map(DeviceTagLinkModel.fromRow).toList(growable: false),
     );
   }
 
   @override
-  Future<List<DeviceTagLink>> getDeviceTagLinks() async {
+  Future<List<DeviceTagLinkModel>> getDeviceTagLinks() async {
     final rows = await _dao.getAllLinks();
-    return rows
-        .map((row) => DeviceTagLink(deviceId: row.deviceId, tagId: row.tagId))
-        .toList(growable: false);
+    return rows.map(DeviceTagLinkModel.fromRow).toList(growable: false);
   }
 
   @override
-  Future<void> upsertDeviceTagLink(DeviceTagLink link) {
-    return _dao.upsertLink(
-      DeviceTagsTableCompanion.insert(
-        deviceId: link.deviceId,
-        tagId: link.tagId,
-      ),
-    );
+  Future<DeviceTagLinkModel?> getDeviceTagLink(
+    String deviceId,
+    String tagId,
+  ) async {
+    final row = await _dao.getLink(deviceId, tagId);
+    return row == null ? null : DeviceTagLinkModel.fromRow(row);
+  }
+
+  @override
+  Future<void> upsertDeviceTagLink(DeviceTagLinkModel link) {
+    return _dao.upsertLink(link.toInsertCompanion());
   }
 
   @override

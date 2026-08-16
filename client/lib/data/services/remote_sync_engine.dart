@@ -5,32 +5,46 @@ import 'package:nasyad/data/datasources/birthday_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_local_datasource.dart';
 import 'package:nasyad/data/datasources/device_log_local_datasource.dart';
 import 'package:nasyad/data/datasources/sync_remote_datasource.dart';
+import 'package:nasyad/data/datasources/tag_local_datasource.dart';
 import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
+import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/tag_model.dart';
 import 'package:nasyad/domain/services/remote_sync_port.dart';
 
 /// Push-then-pull sync engine. Drift stays the UI source of truth.
 ///
-/// Conflict policy: **local wins** for devices/birthdays after confirm; logs
-/// are append-only (insert if missing id).
+/// Conflict policy: **local wins** for devices/birthdays/tags after confirm;
+/// logs and device–tag links are append-only (insert if missing id / pair).
+///
+/// Tags and links: this install’s local catalog is authoritative on push —
+/// upsert all local rows, then DELETE remote tags/links absent locally
+/// (same class of limitation as birthday delete; no tombstones).
+///
+/// Device log pull does **not** re-apply usage/maintenance side effects:
+/// server applies them on create and bumps device `updated_at`; device rows
+/// remain the field source of truth after push order devices → logs.
 class RemoteSyncEngine implements RemoteSyncPort {
   RemoteSyncEngine({
     required SyncRemoteDataSource remote,
     required DeviceLocalDataSource devices,
     required DeviceLogLocalDataSource logs,
     required BirthdayLocalDataSource birthdays,
+    required TagLocalDataSource tags,
     required SyncStateStore syncState,
   }) : _remote = remote,
        _devices = devices,
        _logs = logs,
        _birthdays = birthdays,
+       _tags = tags,
        _syncState = syncState;
 
   final SyncRemoteDataSource _remote;
   final DeviceLocalDataSource _devices;
   final DeviceLogLocalDataSource _logs;
   final BirthdayLocalDataSource _birthdays;
+  final TagLocalDataSource _tags;
   final SyncStateStore _syncState;
 
   @override
@@ -59,9 +73,22 @@ class RemoteSyncEngine implements RemoteSyncPort {
       }
     }
 
+    final remoteTags = await _remote.listTags(token: token);
+    final localTags = await _tags.getAllTags();
+    final localTagById = {for (final t in localTags) t.id: t};
+
+    var tagCount = 0;
+    for (final remote in remoteTags) {
+      final local = localTagById[remote.id];
+      if (local != null && !tagsMeaningfullyEqual(local, remote)) {
+        tagCount++;
+      }
+    }
+
     return SyncConflictSummary(
       deviceCount: deviceCount,
       birthdayCount: birthdayCount,
+      tagCount: tagCount,
     );
   }
 
@@ -93,9 +120,13 @@ class RemoteSyncEngine implements RemoteSyncPort {
     await step(() => _pushDevices(token));
     await step(() => _pushLogs(token));
     await step(() => _pushBirthdays(token));
+    await step(() => _pushTags(token));
+    await step(() => _pushDeviceTagLinks(token));
     await step(() => _pullDevices(token));
     await step(() => _pullLogs(token));
     await step(() => _pullBirthdays(token));
+    await step(() => _pullTags(token));
+    await step(() => _pullDeviceTagLinks(token));
 
     if (firstError != null) {
       throw firstError!;
@@ -148,6 +179,58 @@ class RemoteSyncEngine implements RemoteSyncPort {
         await _birthdays.upsertBirthday(toPush);
       }
       await _remote.upsertBirthday(token: token, birthday: toPush);
+    }
+  }
+
+  /// Local tag catalog wins: upsert all local, then DELETE remote-only ids.
+  Future<void> _pushTags(String token) async {
+    final remoteRows = await _remote.listTags(token: token);
+    final remoteById = {for (final t in remoteRows) t.id: t};
+    final local = await _tags.getAllTags();
+    final localIds = {for (final t in local) t.id};
+
+    for (final tag in local) {
+      var toPush = tag;
+      final remote = remoteById[tag.id];
+      if (remote != null &&
+          !tagsMeaningfullyEqual(tag, remote) &&
+          !tag.updatedAt.toUtc().isAfter(remote.updatedAt.toUtc())) {
+        toPush = tagWithUpdatedAt(
+          tag,
+          syncBumpUpdatedAt(tag.updatedAt, remote.updatedAt),
+        );
+        await _tags.upsertTag(toPush);
+      }
+      await _remote.upsertTag(token: token, tag: toPush);
+    }
+
+    for (final remote in remoteRows) {
+      if (!localIds.contains(remote.id)) {
+        await _remote.deleteTag(token: token, id: remote.id);
+      }
+    }
+  }
+
+  /// Local link set wins: upsert all local, then DELETE remote-only pairs.
+  Future<void> _pushDeviceTagLinks(String token) async {
+    final local = await _tags.getDeviceTagLinks();
+    final localKeys = {
+      for (final link in local) _linkKey(link.deviceId, link.tagId),
+    };
+
+    for (final link in local) {
+      await _remote.upsertDeviceTagLink(token: token, link: link);
+    }
+
+    final remoteRows = await _remote.listDeviceTagLinks(token: token);
+    for (final remote in remoteRows) {
+      if (!localKeys.contains(_linkKey(remote.deviceId, remote.tagId))) {
+        await _remote.deleteDeviceTagLink(
+          token: token,
+          deviceId: remote.deviceId,
+          tagId: remote.tagId,
+        );
+      }
     }
   }
 
@@ -210,7 +293,46 @@ class RemoteSyncEngine implements RemoteSyncPort {
       await _syncState.writeBirthdaysUpdatedSince(maxUpdated);
     }
   }
+
+  Future<void> _pullTags(String token) async {
+    final cursor = await _syncState.readTagsUpdatedSince();
+    final remote = await _remote.listTags(token: token, updatedSince: cursor);
+    DateTime? maxUpdated = cursor;
+    for (final row in remote) {
+      await mergeTagLocalWins(localStore: _tags, remote: row);
+      final updated = row.updatedAt.toUtc();
+      if (maxUpdated == null || updated.isAfter(maxUpdated)) {
+        maxUpdated = updated;
+      }
+    }
+    if (maxUpdated != null &&
+        (cursor == null || maxUpdated.isAfter(cursor.toUtc()))) {
+      await _syncState.writeTagsUpdatedSince(maxUpdated);
+    }
+  }
+
+  Future<void> _pullDeviceTagLinks(String token) async {
+    final cursor = await _syncState.readDeviceTagLinksCreatedSince();
+    final remote = await _remote.listDeviceTagLinks(
+      token: token,
+      createdSince: cursor,
+    );
+    DateTime? maxCreated = cursor;
+    for (final row in remote) {
+      await mergeLinkAppendOnly(localStore: _tags, remote: row);
+      final created = row.createdAt.toUtc();
+      if (maxCreated == null || created.isAfter(maxCreated)) {
+        maxCreated = created;
+      }
+    }
+    if (maxCreated != null &&
+        (cursor == null || maxCreated.isAfter(cursor.toUtc()))) {
+      await _syncState.writeDeviceTagLinksCreatedSince(maxCreated);
+    }
+  }
 }
+
+String _linkKey(String deviceId, String tagId) => '$deviceId\u0000$tagId';
 
 /// Sync-relevant equality: all wire fields except timestamps.
 bool devicesMeaningfullyEqual(DeviceModel a, DeviceModel b) {
@@ -218,6 +340,10 @@ bool devicesMeaningfullyEqual(DeviceModel a, DeviceModel b) {
 }
 
 bool birthdaysMeaningfullyEqual(BirthdayModel a, BirthdayModel b) {
+  return _syncPayloadEqual(a.toSyncJson(), b.toSyncJson());
+}
+
+bool tagsMeaningfullyEqual(TagModel a, TagModel b) {
   return _syncPayloadEqual(a.toSyncJson(), b.toSyncJson());
 }
 
@@ -279,6 +405,15 @@ BirthdayModel birthdayWithUpdatedAt(
   );
 }
 
+TagModel tagWithUpdatedAt(TagModel tag, DateTime updatedAt) {
+  return TagModel(
+    id: tag.id,
+    name: tag.name,
+    createdAt: tag.createdAt,
+    updatedAt: updatedAt,
+  );
+}
+
 /// Keep local when id exists; insert remote only when missing (additive).
 Future<void> mergeDeviceLocalWins({
   required DeviceLocalDataSource localStore,
@@ -290,6 +425,7 @@ Future<void> mergeDeviceLocalWins({
 }
 
 /// Append-only: insert remote only when id is missing locally.
+/// Does not apply device log side effects (devices are SoT after sync).
 Future<void> mergeLogAppendOnly({
   required DeviceLogLocalDataSource localStore,
   required DeviceLogModel remote,
@@ -307,4 +443,27 @@ Future<void> mergeBirthdayLocalWins({
   final local = await localStore.getBirthday(remote.id);
   if (local != null) return;
   await localStore.upsertBirthday(remote);
+}
+
+/// Keep local when id exists; insert remote only when missing (additive).
+Future<void> mergeTagLocalWins({
+  required TagLocalDataSource localStore,
+  required TagModel remote,
+}) async {
+  final local = await localStore.getTag(remote.id);
+  if (local != null) return;
+  await localStore.upsertTag(remote);
+}
+
+/// Append-only: insert remote link only when the pair is missing locally.
+Future<void> mergeLinkAppendOnly({
+  required TagLocalDataSource localStore,
+  required DeviceTagLinkModel remote,
+}) async {
+  final existing = await localStore.getDeviceTagLink(
+    remote.deviceId,
+    remote.tagId,
+  );
+  if (existing != null) return;
+  await localStore.upsertDeviceTagLink(remote);
 }

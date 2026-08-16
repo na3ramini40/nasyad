@@ -6,7 +6,6 @@ Not synced. Do not add server models unless this shard (and the [index](../domai
 |------------|---------|-------|
 | **Reminders** | Derived home queue (device due + upcoming birthdays); snooze/prefs on device; local notifications only — not cloud push | client |
 | **Home grouping** | Preference: reminders by **device** (default) or by **tag**; tag rows are virtual groups, not Device entities | client |
-| **Tag** | Named local label; many devices ↔ many tags; used only for Home rollup / organization — never a usage owner or schedule holder | client |
 | **Transfer** | Offline export/import backup (JSON / CSV / text; photos included); import is high-stakes and must state consequences | client |
 | **Place** | Named geo point/line/polygon (`kind` + `points[]`); local map — `kind` in [enums.md](enums.md) | client |
 | **Preferences** | Language, theme, calendar system (independent of language), soon-window / snooze prefs, home grouping; grouped expandable sections in Preferences | client |

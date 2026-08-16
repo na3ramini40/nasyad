@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from devices.models import Device, DeviceLog
+from devices.models import Device, DeviceLog, DeviceTagLink, Tag
 
 
 class DeviceSerializer(serializers.ModelSerializer):
@@ -71,3 +71,29 @@ class DeviceLogSerializer(serializers.ModelSerializer):
             "cost_currency": {"allow_null": True, "required": False},
             "vendor": {"allow_null": True, "required": False},
         }
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = [
+            "id",
+            "name",
+            "created_at",
+            "updated_at",
+        ]
+
+    def validate_name(self, value: str) -> str:
+        if value is None or not str(value).strip():
+            raise serializers.ValidationError("This field may not be blank.")
+        return value.strip()
+
+
+class DeviceTagLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceTagLink
+        fields = [
+            "device_id",
+            "tag_id",
+            "created_at",
+        ]
