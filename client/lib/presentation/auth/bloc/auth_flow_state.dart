@@ -24,6 +24,8 @@ final class AuthFlowState extends Equatable {
     this.syncCancelled = false,
     this.syncConflictDeviceCount = 0,
     this.syncConflictBirthdayCount = 0,
+    this.syncConflictTagCount = 0,
+    this.syncConflictPlaceCount = 0,
   });
 
   final AuthFlowStep step;
@@ -37,9 +39,14 @@ final class AuthFlowState extends Equatable {
   final bool syncCancelled;
   final int syncConflictDeviceCount;
   final int syncConflictBirthdayCount;
+  final int syncConflictTagCount;
+  final int syncConflictPlaceCount;
 
   int get syncConflictTotal =>
-      syncConflictDeviceCount + syncConflictBirthdayCount;
+      syncConflictDeviceCount +
+      syncConflictBirthdayCount +
+      syncConflictTagCount +
+      syncConflictPlaceCount;
 
   bool get canResend => cooldownSeconds <= 0;
 
@@ -55,6 +62,8 @@ final class AuthFlowState extends Equatable {
     bool? syncCancelled,
     int? syncConflictDeviceCount,
     int? syncConflictBirthdayCount,
+    int? syncConflictTagCount,
+    int? syncConflictPlaceCount,
     bool clearError = false,
     bool clearNormalizedPhone = false,
   }) {
@@ -74,6 +83,9 @@ final class AuthFlowState extends Equatable {
           syncConflictDeviceCount ?? this.syncConflictDeviceCount,
       syncConflictBirthdayCount:
           syncConflictBirthdayCount ?? this.syncConflictBirthdayCount,
+      syncConflictTagCount: syncConflictTagCount ?? this.syncConflictTagCount,
+      syncConflictPlaceCount:
+          syncConflictPlaceCount ?? this.syncConflictPlaceCount,
     );
   }
 
@@ -90,5 +102,7 @@ final class AuthFlowState extends Equatable {
     syncCancelled,
     syncConflictDeviceCount,
     syncConflictBirthdayCount,
+    syncConflictTagCount,
+    syncConflictPlaceCount,
   ];
 }

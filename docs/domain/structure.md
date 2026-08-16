@@ -20,7 +20,7 @@ Local-first maintenance tracking for devices/assets (hierarchical) and recurring
 | 8 | Opening a device exposes schedule progress (remaining + target when usage), nested children, log history, and an always-available maintain action | client |
 | 8a | Client can share a human-readable **PDF** of maintenance history for a device subtree (not Transfer backup); empty subtree does not share | client |
 | 9 | Home exposes a reminders queue (due maintenance + upcoming birthdays) with filters, plus a feature menu; grouping may be **by device** or **by tag** | client |
-| 9a | **Tags** are local labels (not devices). Tag mode on Home shows one row per tag with rollup status; user never treats a tag as an asset device | client |
+| 9a | **Tags** label devices for Home rollup ([tag.md](tag.md)); tag mode shows one row per tag with rollup status; user never treats a tag as an asset device | both |
 | 10 | Preferences include language, theme, calendar system, app lock, and entry to data transfer; settings are grouped in expandable categories | client |
 | 10a | Optional **app lock**: method is password, PIN, or biometric; idle timeout locks the app until unlock; forgot lock uses existing phone OTP and resets lock to unset | client |
 | 11 | Export / import: scope (all / one / selected), formats (JSON / CSV / plain text), share or save; import from file | client |

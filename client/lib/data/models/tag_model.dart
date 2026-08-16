@@ -53,4 +53,26 @@ class TagModel {
       updatedAt: updatedAt,
     );
   }
+
+  /// Snake_case wire shape matching server [TagSerializer].
+  Map<String, dynamic> toSyncJson() => {
+    'id': id,
+    'name': name,
+    'created_at': createdAt.toUtc().toIso8601String(),
+    'updated_at': updatedAt.toUtc().toIso8601String(),
+  };
+
+  factory TagModel.fromSyncJson(Map<String, dynamic> json) {
+    return TagModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      createdAt: _parseTagIso(json['created_at']) ?? DateTime.now().toUtc(),
+      updatedAt: _parseTagIso(json['updated_at']) ?? DateTime.now().toUtc(),
+    );
+  }
+}
+
+DateTime? _parseTagIso(Object? value) {
+  if (value is! String || value.isEmpty) return null;
+  return DateTime.tryParse(value)?.toUtc();
 }

@@ -4,8 +4,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from devices.models import Device, DeviceLog
-from devices.serializers import DeviceLogSerializer, DeviceSerializer
+from devices.log_effects import apply_log_side_effects
+from devices.models import Device, DeviceLog, DeviceTagLink, Tag
+from devices.serializers import (
+    DeviceLogSerializer,
+    DeviceSerializer,
+    DeviceTagLinkSerializer,
+    TagSerializer,
+)
 
 
 def _parse_datetime(value) -> object | None:
@@ -124,5 +130,97 @@ class DeviceLogDetailView(APIView):
 
         serializer = DeviceLogSerializer(data=data)
         serializer.is_valid(raise_exception=True)
-        log = serializer.save(user=request.user)
+        with transaction.atomic():
+            log = serializer.save(user=request.user)
+            apply_log_side_effects(user=request.user, log=log)
         return Response(DeviceLogSerializer(log).data, status=status.HTTP_201_CREATED)
+
+
+class TagListView(APIView):
+    def get(self, request):
+        qs = Tag.objects.filter(user=request.user)
+        since = _parse_since(request.query_params.get("updated_since"))
+        if since is not None:
+            qs = qs.filter(updated_at__gt=since)
+        qs = qs.order_by("updated_at")
+        return Response({"results": TagSerializer(qs, many=True).data})
+
+
+class TagDetailView(APIView):
+    def get(self, request, id: str):
+        try:
+            tag = Tag.objects.get(user=request.user, id=id)
+        except Tag.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(TagSerializer(tag).data)
+
+    def put(self, request, id: str):
+        data = dict(request.data)
+        data["id"] = id
+        existing = Tag.objects.filter(user=request.user, id=id).first()
+
+        if existing is not None:
+            parsed = _parse_datetime(data.get("updated_at"))
+            if parsed is not None and existing.updated_at > parsed:
+                return Response(TagSerializer(existing).data, status=status.HTTP_200_OK)
+
+            serializer = TagSerializer(existing, data=data, partial=False)
+            serializer.is_valid(raise_exception=True)
+            tag = serializer.save(user=request.user)
+            return Response(TagSerializer(tag).data, status=status.HTTP_200_OK)
+
+        serializer = TagSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        tag = serializer.save(user=request.user)
+        return Response(TagSerializer(tag).data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, id: str):
+        tag = Tag.objects.filter(user=request.user, id=id).first()
+        if tag is None:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        with transaction.atomic():
+            DeviceTagLink.objects.filter(user=request.user, tag_id=id).delete()
+            tag.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DeviceTagLinkListView(APIView):
+    def get(self, request):
+        qs = DeviceTagLink.objects.filter(user=request.user)
+        since = _parse_since(request.query_params.get("created_since"))
+        if since is not None:
+            qs = qs.filter(created_at__gt=since)
+        qs = qs.order_by("created_at")
+        return Response({"results": DeviceTagLinkSerializer(qs, many=True).data})
+
+
+class DeviceTagLinkDetailView(APIView):
+    def put(self, request, device_id: str, tag_id: str):
+        existing = DeviceTagLink.objects.filter(
+            user=request.user,
+            device_id=device_id,
+            tag_id=tag_id,
+        ).first()
+        if existing is not None:
+            return Response(
+                DeviceTagLinkSerializer(existing).data,
+                status=status.HTTP_200_OK,
+            )
+
+        data = dict(request.data)
+        data["device_id"] = device_id
+        data["tag_id"] = tag_id
+        serializer = DeviceTagLinkSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        link = serializer.save(user=request.user)
+        return Response(DeviceTagLinkSerializer(link).data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, device_id: str, tag_id: str):
+        deleted, _ = DeviceTagLink.objects.filter(
+            user=request.user,
+            device_id=device_id,
+            tag_id=tag_id,
+        ).delete()
+        if not deleted:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)

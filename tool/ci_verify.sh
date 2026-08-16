@@ -26,5 +26,8 @@ else
 fi
 "$ROOT/server/tool/check.sh"
 
+echo "==> sync integration (two-device live API)"
+"$ROOT/tool/sync_integration_test.sh"
+
 echo
 echo "ci_verify OK — client + server green; safe to open or update a PR."

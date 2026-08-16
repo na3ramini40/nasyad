@@ -117,6 +117,58 @@ jobs:
           --dart-define=GITHUB_OWNER=na3ramini40
           --dart-define=GITHUB_REPO=nasyad
 
+  sync_integration:
+    name: Sync integration (two-device)
+    needs: changes
+    if: >
+      needs.changes.outputs.client == 'true' ||
+      needs.changes.outputs.server == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Create server venv and install
+        run: |
+          python3 -m venv server/.venv
+          server/.venv/bin/pip install -q -r server/requirements.txt
+
+      - name: Client pub get
+        working-directory: client
+        run: flutter pub get
+
+      - name: Two-device sync integration
+        run: ./tool/sync_integration_test.sh
+
+  sync_integration_docs_only:
+    name: Sync integration (two-device)
+    needs: changes
+    if: >
+      needs.changes.outputs.client != 'true' &&
+      needs.changes.outputs.server != 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Skip sync integration
+        run: echo "No client/server paths changed; sync integration skipped."
+
   verify_docs_only:
     name: Verify
     needs: changes

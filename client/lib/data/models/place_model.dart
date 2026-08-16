@@ -85,6 +85,46 @@ class PlaceModel {
     );
   }
 
+  /// Snake_case wire shape matching server [PlaceSerializer].
+  Map<String, dynamic> toSyncJson() => {
+    'id': id,
+    'name': name,
+    'kind': kind.storageValue,
+    'points': points
+        .map((point) => {'lat': point.latitude, 'lng': point.longitude})
+        .toList(growable: false),
+    'notes': notes,
+    'created_at': createdAt.toUtc().toIso8601String(),
+    'updated_at': updatedAt.toUtc().toIso8601String(),
+  };
+
+  factory PlaceModel.fromSyncJson(Map<String, dynamic> json) {
+    final rawPoints = json['points'];
+    final points = rawPoints is List
+        ? rawPoints
+              .whereType<Map>()
+              .map(
+                (entry) => GeoPoint(
+                  latitude: (entry['lat'] as num).toDouble(),
+                  longitude: (entry['lng'] as num).toDouble(),
+                ),
+              )
+              .toList(growable: false)
+        : const <GeoPoint>[];
+
+    return PlaceModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      kind: PlaceGeometryKind.fromStorage(
+        json['kind'] as String? ?? PlaceGeometryKind.point.storageValue,
+      ),
+      points: points,
+      notes: json['notes'] as String?,
+      createdAt: _parsePlaceIso(json['created_at']) ?? DateTime.now().toUtc(),
+      updatedAt: _parsePlaceIso(json['updated_at']) ?? DateTime.now().toUtc(),
+    );
+  }
+
   static String encodePoints(List<GeoPoint> points) {
     return jsonEncode(
       points
@@ -107,4 +147,9 @@ class PlaceModel {
         )
         .toList(growable: false);
   }
+}
+
+DateTime? _parsePlaceIso(Object? value) {
+  if (value is! String || value.isEmpty) return null;
+  return DateTime.tryParse(value)?.toUtc();
 }

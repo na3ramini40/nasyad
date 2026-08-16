@@ -7,8 +7,12 @@ import 'package:nasyad/data/datasources/sync_api_exception.dart';
 import 'package:nasyad/data/models/birthday_model.dart';
 import 'package:nasyad/data/models/device_log_model.dart';
 import 'package:nasyad/data/models/device_model.dart';
+import 'package:nasyad/data/models/device_tag_link_model.dart';
+import 'package:nasyad/data/models/place_model.dart';
+import 'package:nasyad/data/models/tag_model.dart';
 
-/// HTTP adapter for syncable resources (devices, logs, birthdays).
+/// HTTP adapter for syncable resources (devices, logs, birthdays, places,
+/// tags, links).
 abstract class SyncRemoteDataSource {
   Future<List<DeviceModel>> listDevices({
     required String token,
@@ -38,6 +42,41 @@ abstract class SyncRemoteDataSource {
   Future<BirthdayModel> upsertBirthday({
     required String token,
     required BirthdayModel birthday,
+  });
+
+  Future<List<PlaceModel>> listPlaces({
+    required String token,
+    DateTime? updatedSince,
+  });
+
+  Future<PlaceModel> upsertPlace({
+    required String token,
+    required PlaceModel place,
+  });
+
+  Future<List<TagModel>> listTags({
+    required String token,
+    DateTime? updatedSince,
+  });
+
+  Future<TagModel> upsertTag({required String token, required TagModel tag});
+
+  Future<void> deleteTag({required String token, required String id});
+
+  Future<List<DeviceTagLinkModel>> listDeviceTagLinks({
+    required String token,
+    DateTime? createdSince,
+  });
+
+  Future<DeviceTagLinkModel> upsertDeviceTagLink({
+    required String token,
+    required DeviceTagLinkModel link,
+  });
+
+  Future<void> deleteDeviceTagLink({
+    required String token,
+    required String deviceId,
+    required String tagId,
   });
 }
 
@@ -157,6 +196,118 @@ class HttpSyncRemoteDataSource implements SyncRemoteDataSource {
     return BirthdayModel.fromSyncJson(_expectMap(response));
   }
 
+  @override
+  Future<List<PlaceModel>> listPlaces({
+    required String token,
+    DateTime? updatedSince,
+  }) async {
+    final query = <String, String>{
+      if (updatedSince != null)
+        'updated_since': updatedSince.toUtc().toIso8601String(),
+    };
+    final response = await _client.get(
+      _uri('/api/places/', query),
+      headers: _jsonHeaders(token),
+    );
+    return _parseResults(response, (map) => PlaceModel.fromSyncJson(map));
+  }
+
+  @override
+  Future<PlaceModel> upsertPlace({
+    required String token,
+    required PlaceModel place,
+  }) async {
+    final response = await _client.put(
+      _uri('/api/places/${place.id}/'),
+      headers: _jsonHeaders(token),
+      body: jsonEncode(place.toSyncJson()),
+    );
+    return PlaceModel.fromSyncJson(_expectMap(response));
+  }
+
+  @override
+  Future<List<TagModel>> listTags({
+    required String token,
+    DateTime? updatedSince,
+  }) async {
+    final query = <String, String>{
+      if (updatedSince != null)
+        'updated_since': updatedSince.toUtc().toIso8601String(),
+    };
+    final response = await _client.get(
+      _uri('/api/devices/tags/', query),
+      headers: _jsonHeaders(token),
+    );
+    return _parseResults(response, (map) => TagModel.fromSyncJson(map));
+  }
+
+  @override
+  Future<TagModel> upsertTag({
+    required String token,
+    required TagModel tag,
+  }) async {
+    final response = await _client.put(
+      _uri('/api/devices/tags/${tag.id}/'),
+      headers: _jsonHeaders(token),
+      body: jsonEncode(tag.toSyncJson()),
+    );
+    return TagModel.fromSyncJson(_expectMap(response));
+  }
+
+  @override
+  Future<void> deleteTag({required String token, required String id}) async {
+    final response = await _client.delete(
+      _uri('/api/devices/tags/$id/'),
+      headers: _jsonHeaders(token),
+    );
+    _expectEmptySuccess(response);
+  }
+
+  @override
+  Future<List<DeviceTagLinkModel>> listDeviceTagLinks({
+    required String token,
+    DateTime? createdSince,
+  }) async {
+    final query = <String, String>{
+      if (createdSince != null)
+        'created_since': createdSince.toUtc().toIso8601String(),
+    };
+    final response = await _client.get(
+      _uri('/api/devices/tag-links/', query),
+      headers: _jsonHeaders(token),
+    );
+    return _parseResults(
+      response,
+      (map) => DeviceTagLinkModel.fromSyncJson(map),
+    );
+  }
+
+  @override
+  Future<DeviceTagLinkModel> upsertDeviceTagLink({
+    required String token,
+    required DeviceTagLinkModel link,
+  }) async {
+    final response = await _client.put(
+      _uri('/api/devices/tag-links/${link.deviceId}/${link.tagId}/'),
+      headers: _jsonHeaders(token),
+      body: jsonEncode(link.toSyncJson()),
+    );
+    return DeviceTagLinkModel.fromSyncJson(_expectMap(response));
+  }
+
+  @override
+  Future<void> deleteDeviceTagLink({
+    required String token,
+    required String deviceId,
+    required String tagId,
+  }) async {
+    final response = await _client.delete(
+      _uri('/api/devices/tag-links/$deviceId/$tagId/'),
+      headers: _jsonHeaders(token),
+    );
+    _expectEmptySuccess(response);
+  }
+
   List<T> _parseResults<T>(
     http.Response response,
     T Function(Map<String, dynamic>) map,
@@ -181,6 +332,12 @@ class HttpSyncRemoteDataSource implements SyncRemoteDataSource {
       throw _exceptionFrom(response.statusCode, body);
     }
     return body;
+  }
+
+  void _expectEmptySuccess(http.Response response) {
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw _exceptionFrom(response.statusCode, _decodeBody(response.body));
+    }
   }
 
   Map<String, dynamic> _decodeBody(String raw) {

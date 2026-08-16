@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "accounts",
     "devices",
     "birthdays",
+    "places",
     "app_config",
 ]
 
@@ -88,7 +89,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": Path(
+            os.environ.get("NASYAD_TEST_DB", str(BASE_DIR / "db.sqlite3"))
+        ),
     }
 }
 

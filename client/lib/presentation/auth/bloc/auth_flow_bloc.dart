@@ -155,6 +155,8 @@ class AuthFlowBloc extends Bloc<AuthFlowEvent, AuthFlowState> {
               status: AuthFlowStatus.awaitingSyncConfirm,
               syncConflictDeviceCount: preview.summary.deviceCount,
               syncConflictBirthdayCount: preview.summary.birthdayCount,
+              syncConflictTagCount: preview.summary.tagCount,
+              syncConflictPlaceCount: preview.summary.placeCount,
               clearError: true,
             ),
           );
@@ -219,6 +221,8 @@ class AuthFlowBloc extends Bloc<AuthFlowEvent, AuthFlowState> {
             status: AuthFlowStatus.awaitingSyncConfirm,
             syncConflictDeviceCount: preview.summary.deviceCount,
             syncConflictBirthdayCount: preview.summary.birthdayCount,
+            syncConflictTagCount: preview.summary.tagCount,
+            syncConflictPlaceCount: preview.summary.placeCount,
             clearError: true,
           ),
         );
