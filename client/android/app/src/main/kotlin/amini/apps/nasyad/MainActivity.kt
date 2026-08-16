@@ -30,6 +30,9 @@ class MainActivity : FlutterFragmentActivity() {
                             result.error("install_failed", error.message, null)
                         }
                     }
+                    "getSupportedAbis" -> {
+                        result.success(Build.SUPPORTED_ABIS.toList())
+                    }
                     else -> result.notImplemented()
                 }
             }
