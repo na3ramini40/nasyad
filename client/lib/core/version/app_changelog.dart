@@ -40,14 +40,16 @@ abstract final class AppChangelog {
       en: [
         'Share a device’s maintenance history as a PDF (and its parts) via the system share sheet — plain-text clipboard fallback when share isn’t available.',
         'Confirm maintenance with the current usage reading; see remaining and target for usage-based schedules.',
-        'Label devices with local tags and group Home reminders by tag.',
+        'Label devices with tags and group Home reminders by tag — tags and map places sync to your other devices when signed in.',
+        'Signing in on a second device pulls your existing tags and places instead of wiping the account catalog.',
         'Pinch with two fingers (or use Preferences) to scale the whole UI; pick a color-blind theme so status colors stay clear without red vs green.',
         'Android downloads are split by device architecture so installs stay smaller; in-app updates pick the matching build.',
       ],
       fa: [
         'تاریخچهٔ نگهداری یک دستگاه (و قطعاتش) را به‌صورت PDF از طریق اشتراک سیستم بفرستید — اگر اشتراک در دسترس نباشد، متن ساده در کلیپ‌بورد کپی می‌شود.',
         'نگهداری را با خواندن فعلی کارکرد تأیید کنید؛ برای زمان‌بندی‌های مبتنی بر کارکرد، باقی‌مانده و هدف را ببینید.',
-        'دستگاه‌ها را با برچسب‌های محلی نام‌گذاری کنید و یادآورهای صفحهٔ اصلی را بر اساس برچسب گروه‌بندی کنید.',
+        'دستگاه‌ها را با برچسب نام‌گذاری کنید و یادآورهای صفحهٔ اصلی را بر اساس برچسب گروه‌بندی کنید — برچسب‌ها و مکان‌های نقشه وقتی وارد شده‌اید با دستگاه‌های دیگر همگام می‌شوند.',
+        'ورود روی دستگاه دوم، برچسب‌ها و مکان‌های موجود را می‌کشد؛ فهرست حساب پاک نمی‌شود.',
         'با دو انگشت (یا از تنظیمات) کل رابط را بزرگ یا کوچک کنید؛ تم مناسب کوررنگی انتخاب کنید تا رنگ وضعیت بدون تکیه بر قرمز در برابر سبز خوانا بماند.',
         'دانلود اندروید بر اساس معماری دستگاه جدا شده تا نصب سبک‌تر بماند؛ به‌روزرسانی درون‌برنامه‌ای همان نسخهٔ سازگار را برمی‌دارد.',
       ],
