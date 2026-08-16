@@ -159,18 +159,21 @@ jobs:
           storeFile=keystore/nasyad-release.jks
           EOF
 
-      - name: Build release APK
+      - name: Build release APKs (per ABI)
         run: >
-          flutter build apk --release
+          flutter build apk --release --split-per-abi
           --dart-define=GITHUB_OWNER=na3ramini40
           --dart-define=GITHUB_REPO=nasyad
 
-      - name: Upload APK artifact
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nasyad-apk-v${{ steps.app_version.outputs.name }}-${{ github.sha }}
           # upload-artifact paths are repo-root relative (ignores defaults.run.working-directory)
-          path: client/build/app/outputs/flutter-apk/app-release.apk
+          path: |
+            client/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            client/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            client/build/app/outputs/flutter-apk/app-x86_64-release.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -328,10 +331,12 @@ jobs:
           name: nasyad-windows-v${{ needs.build_windows.outputs.app_version_name }}-${{ github.sha }}
           path: dist/windows
 
-      - name: Rename APK for release
+      - name: Rename APKs for release
         run: |
           VERSION="${{ needs.build_apk.outputs.app_version_name }}"
-          mv dist/apk/app-release.apk "dist/nasyad-v${VERSION}.apk"
+          mv dist/apk/app-armeabi-v7a-release.apk "dist/nasyad-v${VERSION}-armeabi-v7a.apk"
+          mv dist/apk/app-arm64-v8a-release.apk "dist/nasyad-v${VERSION}-arm64-v8a.apk"
+          mv dist/apk/app-x86_64-release.apk "dist/nasyad-v${VERSION}-x86_64.apk"
 
       - name: Collect release assets
         run: |
@@ -345,7 +350,9 @@ jobs:
           name: Nasyad ${{ needs.build_apk.outputs.app_version_name }}
           body_path: docs/domain/releases/v${{ needs.build_apk.outputs.app_version_name }}.md
           files: |
-            dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}.apk
+            dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}-armeabi-v7a.apk
+            dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}-arm64-v8a.apk
+            dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}-x86_64.apk
             dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}-linux-x64.tar.gz
             dist/nasyad-v${{ needs.build_apk.outputs.app_version_name }}-windows-x64.zip
           generate_release_notes: false

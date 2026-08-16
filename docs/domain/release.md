@@ -10,9 +10,13 @@ Each tagged release (`vX.Y.Z`) ships:
 
 | Platform | File | Install |
 |----------|------|---------|
-| Android | `nasyad-vX.Y.Z.apk` | Open APK → Update (same app) |
+| Android ARM 32-bit | `nasyad-vX.Y.Z-armeabi-v7a.apk` | Open APK → Update (same app) |
+| Android ARM 64-bit | `nasyad-vX.Y.Z-arm64-v8a.apk` | Open APK → Update (same app) — most phones |
+| Android x86_64 | `nasyad-vX.Y.Z-x86_64.apk` | Emulators / x86 devices |
 | Linux x64 | `nasyad-vX.Y.Z-linux-x64.tar.gz` | Extract over previous bundle or replace the folder |
 | Windows x64 | `nasyad-vX.Y.Z-windows-x64.zip` | Extract over previous install folder |
+
+CI builds with `flutter build apk --split-per-abi` so each asset contains only one CPU architecture (smaller downloads). In-app updates pick the matching ABI automatically. For manual install on a modern phone, use **arm64-v8a**.
 
 macOS builds are not in CI yet; build locally with `flutter build macos --release`.
 
@@ -51,7 +55,7 @@ Nasyad can check [GitHub Releases](https://github.com/na3ramini40/nasyad/release
 
 ### Download behavior
 
-- Downloads the **full release asset** (APK, tar.gz, or zip) — binary delta patches are not used yet.
+- Downloads the **full release asset** for the current platform (and on Android, the matching CPU ABI) — binary delta patches are not used yet.
 - Supports **resumable downloads** (HTTP Range) if a download is interrupted.
 - Skips re-download when a cached file matches the expected size and SHA-256 checksum.
 
