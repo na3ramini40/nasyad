@@ -151,7 +151,11 @@ class DeviceLogBloc extends Bloc<DeviceLogEvent, DeviceLogFormState> {
     Emitter<DeviceLogFormState> emit,
   ) async {
     int? usageValue;
-    if (state.kind == DeviceLogKind.usageUpdate) {
+    final requiresUsage =
+        state.kind == DeviceLogKind.usageUpdate ||
+        (state.kind == DeviceLogKind.maintenanceDone &&
+            state.usageOwner != null);
+    if (requiresUsage) {
       usageValue = int.tryParse(state.usageValue.trim());
       if (usageValue == null) {
         emit(

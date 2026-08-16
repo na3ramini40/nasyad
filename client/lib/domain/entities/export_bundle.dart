@@ -2,7 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:nasyad/domain/entities/birthday.dart';
 import 'package:nasyad/domain/entities/device.dart';
 import 'package:nasyad/domain/entities/device_log.dart';
+import 'package:nasyad/domain/entities/device_tag_link.dart';
 import 'package:nasyad/domain/entities/place.dart';
+import 'package:nasyad/domain/entities/tag.dart';
 
 class ExportDeviceBundle extends Equatable {
   final Device device;
@@ -19,8 +21,9 @@ class ExportDeviceBundle extends Equatable {
 class ExportBundle extends Equatable {
   static const formatName = 'nasyad';
 
-  /// v1: devices + legacy rules; v2: schedule on device; v3: + birthdays/places.
-  static const currentVersion = 3;
+  /// v1: devices + legacy rules; v2: schedule on device; v3: + birthdays/places;
+  /// v4: + tags / device_tags.
+  static const currentVersion = 4;
 
   final String format;
   final int version;
@@ -28,6 +31,8 @@ class ExportBundle extends Equatable {
   final List<ExportDeviceBundle> devices;
   final List<Birthday> birthdays;
   final List<Place> places;
+  final List<Tag> tags;
+  final List<DeviceTagLink> deviceTags;
 
   const ExportBundle({
     this.format = formatName,
@@ -36,6 +41,8 @@ class ExportBundle extends Equatable {
     this.devices = const [],
     this.birthdays = const [],
     this.places = const [],
+    this.tags = const [],
+    this.deviceTags = const [],
   });
 
   int get deviceCount => devices.length;
@@ -46,7 +53,14 @@ class ExportBundle extends Equatable {
 
   int get placeCount => places.length;
 
-  bool get isEmpty => devices.isEmpty && birthdays.isEmpty && places.isEmpty;
+  int get tagCount => tags.length;
+
+  bool get isEmpty =>
+      devices.isEmpty &&
+      birthdays.isEmpty &&
+      places.isEmpty &&
+      tags.isEmpty &&
+      deviceTags.isEmpty;
 
   ExportBundle copyWith({
     String? format,
@@ -55,6 +69,8 @@ class ExportBundle extends Equatable {
     List<ExportDeviceBundle>? devices,
     List<Birthday>? birthdays,
     List<Place>? places,
+    List<Tag>? tags,
+    List<DeviceTagLink>? deviceTags,
   }) {
     return ExportBundle(
       format: format ?? this.format,
@@ -63,6 +79,8 @@ class ExportBundle extends Equatable {
       devices: devices ?? this.devices,
       birthdays: birthdays ?? this.birthdays,
       places: places ?? this.places,
+      tags: tags ?? this.tags,
+      deviceTags: deviceTags ?? this.deviceTags,
     );
   }
 
@@ -74,6 +92,8 @@ class ExportBundle extends Equatable {
     devices,
     birthdays,
     places,
+    tags,
+    deviceTags,
   ];
 }
 

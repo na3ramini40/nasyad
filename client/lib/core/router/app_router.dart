@@ -28,6 +28,8 @@ import 'package:nasyad/presentation/place/bloc/place_edit_bloc.dart';
 import 'package:nasyad/presentation/place/bloc/place_list_bloc.dart';
 import 'package:nasyad/presentation/place/pages/place_edit_page.dart';
 import 'package:nasyad/presentation/place/pages/place_list_page.dart';
+import 'package:nasyad/presentation/tag/bloc/tag_list_bloc.dart';
+import 'package:nasyad/presentation/tag/pages/tag_list_page.dart';
 import 'package:nasyad/domain/entities/lock_method.dart';
 import 'package:nasyad/presentation/app_lock/pages/app_lock_setup_page.dart';
 import 'package:nasyad/presentation/preferences/pages/preferences_page.dart';
@@ -61,6 +63,7 @@ abstract final class AppRoutes {
   static const places = 'places';
   static const placeNew = 'place_new';
   static const placeEdit = 'place_edit';
+  static const tags = 'tags';
   static const deviceNew = 'device_new';
   static const deviceView = 'device_view';
   static const deviceEdit = 'device_edit';
@@ -321,6 +324,22 @@ GoRouter createAppRouter() {
                       ),
                     ],
                   ),
+                  GoRoute(
+                    path: 'tags',
+                    name: AppRoutes.tags,
+                    builder: (context, state) {
+                      final services = AppServicesScope.of(context);
+                      return BlocProvider(
+                        create: (_) => TagListBloc(
+                          watchTags: services.watchTags,
+                          createTag: services.createTag,
+                          updateTag: services.updateTag,
+                          deleteTag: services.deleteTag,
+                        )..add(const TagListStarted()),
+                        child: const TagListPage(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ],
@@ -375,6 +394,10 @@ GoRouter createAppRouter() {
               createDevice: services.createDevice,
               updateDevice: services.updateDevice,
               deleteDevice: services.deleteDevice,
+              watchTags: services.watchTags,
+              watchTagsForDevice: services.watchTagsForDevice,
+              createTag: services.createTag,
+              setDeviceTags: services.setDeviceTags,
             )..add(const DeviceEditStarted()),
             child: DeviceEditPage(parentId: parentId),
           );
@@ -410,6 +433,10 @@ GoRouter createAppRouter() {
                   createDevice: services.createDevice,
                   updateDevice: services.updateDevice,
                   deleteDevice: services.deleteDevice,
+                  watchTags: services.watchTags,
+                  watchTagsForDevice: services.watchTagsForDevice,
+                  createTag: services.createTag,
+                  setDeviceTags: services.setDeviceTags,
                 )..add(const DeviceEditStarted()),
                 child: DeviceEditPage(deviceId: id),
               );

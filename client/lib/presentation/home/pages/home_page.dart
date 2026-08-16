@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import 'package:nasyad/core/app_services.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
+import 'package:nasyad/core/preferences/home_grouping_cubit.dart';
 import 'package:nasyad/core/theme/app_radius.dart';
 import 'package:nasyad/core/theme/app_spacing.dart';
 import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/presentation/app_update/widgets/app_update_banner.dart';
+import 'package:nasyad/domain/entities/home_grouping.dart';
 import 'package:nasyad/domain/entities/home_reminder.dart';
 import 'package:nasyad/domain/entities/home_reminder_filter.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
@@ -124,6 +126,8 @@ class _HomeBody extends StatelessWidget {
         SectionHeader(title: l10n.remindersSection),
         _ReminderFilters(l10n: l10n, selected: filter),
         const SizedBox(height: AppSpacing.sm),
+        _HomeGroupingControl(l10n: l10n),
+        const SizedBox(height: AppSpacing.sm),
         if (reminders.isEmpty)
           _EmptyReminders(l10n: l10n)
         else
@@ -135,9 +139,11 @@ class _HomeBody extends StatelessWidget {
                 subtitle: _reminderSubtitle(l10n, item),
                 badgeLabel: _reminderBadgeLabel(l10n, item),
                 badgeVariant: _reminderBadgeVariant(item),
-                icon: item.kind == HomeReminderKind.device
-                    ? Icons.devices_other
-                    : Icons.cake_outlined,
+                icon: switch (item.kind) {
+                  HomeReminderKind.device => Icons.devices_other,
+                  HomeReminderKind.tag => Icons.label_outline,
+                  HomeReminderKind.birthday => Icons.cake_outlined,
+                },
                 snoozeTooltip: l10n.reminderSnooze,
                 onTap: () => _openReminder(context, item),
                 onQuickActions: item.kind == HomeReminderKind.device
@@ -175,6 +181,13 @@ class _HomeBody extends StatelessWidget {
           icon: Icons.map_outlined,
           onTap: () => context.push('/places'),
         ),
+        const SizedBox(height: AppSpacing.sm),
+        FeatureMenuTile(
+          title: l10n.tags,
+          subtitle: l10n.tagsFeatureHint,
+          icon: Icons.label_outline,
+          onTap: () => context.push('/tags'),
+        ),
       ],
     );
   }
@@ -182,6 +195,7 @@ class _HomeBody extends StatelessWidget {
   void _openReminder(BuildContext context, HomeReminder item) {
     switch (item.kind) {
       case HomeReminderKind.device:
+      case HomeReminderKind.tag:
         context.push('/device/${item.deviceId}');
       case HomeReminderKind.birthday:
         context.push('/birthdays/${item.birthdayId}/edit');
@@ -249,6 +263,7 @@ class _HomeBody extends StatelessWidget {
         MaintenanceStatus.soon => l10n.reminderDeviceSoon,
         _ => l10n.reminderDeviceSoon,
       },
+      HomeReminderKind.tag => l10n.reminderTagRollup,
       HomeReminderKind.birthday => switch (item.daysUntilBirthday) {
         0 => l10n.reminderBirthdayToday,
         1 => l10n.reminderBirthdayTomorrow,
@@ -312,6 +327,52 @@ class _ReminderFilters extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _HomeGroupingControl extends StatelessWidget {
+  const _HomeGroupingControl({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeGroupingCubit, HomeGrouping>(
+      builder: (context, grouping) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.homeGroupingLabel,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _FilterChip(
+                    label: l10n.homeGroupingByDevice,
+                    selected: grouping == HomeGrouping.device,
+                    onTap: () => context.read<HomeGroupingCubit>().setGrouping(
+                      HomeGrouping.device,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  _FilterChip(
+                    label: l10n.homeGroupingByTag,
+                    selected: grouping == HomeGrouping.tag,
+                    onTap: () => context.read<HomeGroupingCubit>().setGrouping(
+                      HomeGrouping.tag,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -68,6 +68,28 @@ void main() {
     expect(logs.created, hasLength(1));
     expect(logs.created.first.notes, 'cleaned');
     expect(logs.created.first.kind, DeviceLogKind.maintenanceDone);
+    expect(logs.created.first.usageValue, 1000);
+  });
+
+  test('maintenance done requires usage reading when owner exists', () async {
+    bloc.add(const DeviceLogStarted());
+    await Future<void>.delayed(Duration.zero);
+    bloc.add(const DeviceLogUsageValueChanged(''));
+    bloc.add(
+      const DeviceLogSubmitRequested(
+        usageReadingRequiredMessage: 'reading required',
+        invalidCostMessage: 'invalid cost',
+      ),
+    );
+
+    await expectLater(
+      bloc.stream,
+      emitsThrough(
+        isA<DeviceLogFormState>()
+            .having((s) => s.status, 'status', DeviceLogStatus.failure)
+            .having((s) => s.errorMessage, 'error', 'reading required'),
+      ),
+    );
   });
 
   test('usage update requires reading', () async {

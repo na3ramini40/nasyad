@@ -7,6 +7,7 @@ import 'package:nasyad/core/calendar/calendar_preference_store.dart';
 import 'package:nasyad/core/notifications/reminder_notification_preference_store.dart';
 import 'package:nasyad/core/calendar/calendar_system_cubit.dart';
 import 'package:nasyad/core/l10n/l10n.dart';
+import 'package:nasyad/core/preferences/home_grouping_preference_store.dart';
 import 'package:nasyad/core/preferences/reminder_snooze_store.dart';
 import 'package:nasyad/core/preferences/soon_window_preference_store.dart';
 import 'package:nasyad/core/theme/app_breakpoints.dart';
@@ -61,6 +62,7 @@ Future<AppServices> _testServices() {
     reminderNotificationPreferenceStore:
         ReminderNotificationPreferenceStore.memory(),
     soonWindowPreferenceStore: SoonWindowPreferenceStore.memory(),
+    homeGroupingPreferenceStore: HomeGroupingPreferenceStore.memory(),
     reminderSnoozeStore: ReminderSnoozeStore.memory(),
   );
 }

@@ -9,7 +9,7 @@ Syncable. Append-only history on a [Device](device.md). Photos: local path on de
 | `date` | datetime | event date |
 | `notes` | string? | |
 | `kind` | enum | `maintenanceDone` \| `usageUpdate` |
-| `usage_value` | int? | absolute reading when usage update |
+| `usage_value` | int? | absolute reading; required for `usageUpdate`; required for `maintenanceDone` when a usage owner exists |
 | `usage_unit` | enum? | [enums.md](enums.md) |
 | `cost` | number? | |
 | `cost_currency` | string? | |
@@ -22,7 +22,11 @@ Syncable. Append-only history on a [Device](device.md). Photos: local path on de
 | Rule | Where |
 |------|-------|
 | `usageUpdate` sets absolute usage on the usage owner; does **not** reset maintenance baselines | both |
-| `maintenanceDone` resets that device’s maintenance cycle only | both |
+| Absolute usage must not decrease below the usage owner’s current reading | both |
+| Crossing an interval only changes computed due/soon — it never auto-creates maintenance | both |
+| `maintenanceDone` resets **that** device’s maintenance cycle only | both |
+| When a usage owner exists, `maintenanceDone` **also** records `usage_value` on the owner (same absolute-reading rules), then sets `usage_at_last_maintenance` to that reading | both |
+| When no usage owner exists, `maintenanceDone` only sets `last_maintained_at` (calendar / fixed schedules) | both |
 | Logs are append-oriented history for a device (edit/delete policy must not silently rewrite history without a domain update) | both |
 | Photo bytes may travel in export/sync transit as `photo_base64`; durable local attachment is `photo_path` | client |
 

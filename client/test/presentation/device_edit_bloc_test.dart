@@ -259,38 +259,43 @@ void main() {
     expect(repository.devices.single.intervalValue, 500);
   });
 
-  test('create child keeps parentId and initialElapsed', () async {
-    final bloc = _build(repository, parentId: 'car');
-    addTearDown(bloc.close);
+  test(
+    'create child keeps parentId and inherits parent usage by default',
+    () async {
+      final bloc = _build(repository, parentId: 'car');
+      addTearDown(bloc.close);
 
-    await _startBloc(bloc);
-    expect(bloc.state.parentId, 'car');
+      await _startBloc(bloc);
+      expect(bloc.state.parentId, 'car');
+      expect(bloc.state.useParentUsage, isTrue);
 
-    bloc.add(const DeviceEditNameChanged('Oil'));
-    bloc.add(const DeviceEditScheduleTypeChanged(ScheduleType.usageInterval));
-    bloc.add(const DeviceEditIntervalUnitChanged('km'));
-    bloc.add(const DeviceEditIntervalChanged('1000'));
-    bloc.add(const DeviceEditInitialElapsedChanged('300'));
-    bloc.add(
-      const DeviceEditSaveRequested(
-        nameRequiredMessage: 'name',
-        selectScheduleTypeMessage: 'schedule',
-        selectIntervalUnitMessage: 'unit',
-        intervalAmountRequiredMessage: 'amount',
-      ),
-    );
-
-    await expectLater(
-      bloc.stream,
-      emitsThrough(
-        isA<DeviceEditState>().having(
-          (s) => s.status,
-          'status',
-          DeviceEditStatus.saved,
+      bloc.add(const DeviceEditNameChanged('Oil'));
+      bloc.add(const DeviceEditScheduleTypeChanged(ScheduleType.usageInterval));
+      bloc.add(const DeviceEditIntervalUnitChanged('km'));
+      bloc.add(const DeviceEditIntervalChanged('1000'));
+      bloc.add(const DeviceEditInitialElapsedChanged('300'));
+      bloc.add(
+        const DeviceEditSaveRequested(
+          nameRequiredMessage: 'name',
+          selectScheduleTypeMessage: 'schedule',
+          selectIntervalUnitMessage: 'unit',
+          intervalAmountRequiredMessage: 'amount',
         ),
-      ),
-    );
-    expect(repository.devices.single.parentId, 'car');
-    expect(repository.lastInitialElapsed, 300);
-  });
+      );
+
+      await expectLater(
+        bloc.stream,
+        emitsThrough(
+          isA<DeviceEditState>().having(
+            (s) => s.status,
+            'status',
+            DeviceEditStatus.saved,
+          ),
+        ),
+      );
+      expect(repository.devices.single.parentId, 'car');
+      expect(repository.devices.single.usageUnit, isNull);
+      expect(repository.lastInitialElapsed, 300);
+    },
+  );
 }

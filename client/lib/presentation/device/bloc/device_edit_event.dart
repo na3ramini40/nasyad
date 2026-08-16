@@ -101,6 +101,15 @@ final class DeviceEditUsageUnitChanged extends DeviceEditEvent {
   List<Object?> get props => [usageUnit];
 }
 
+final class DeviceEditUseParentUsageChanged extends DeviceEditEvent {
+  const DeviceEditUseParentUsageChanged(this.useParentUsage);
+
+  final bool useParentUsage;
+
+  @override
+  List<Object?> get props => [useParentUsage];
+}
+
 final class DeviceEditTemplateApplied extends DeviceEditEvent {
   const DeviceEditTemplateApplied(this.template);
 
@@ -108,6 +117,33 @@ final class DeviceEditTemplateApplied extends DeviceEditEvent {
 
   @override
   List<Object?> get props => [template];
+}
+
+final class DeviceEditTagToggled extends DeviceEditEvent {
+  const DeviceEditTagToggled(this.tagId);
+
+  final String tagId;
+
+  @override
+  List<Object?> get props => [tagId];
+}
+
+final class DeviceEditTagCreateRequested extends DeviceEditEvent {
+  const DeviceEditTagCreateRequested(this.name);
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}
+
+final class _DeviceEditTagsCatalogUpdated extends DeviceEditEvent {
+  const _DeviceEditTagsCatalogUpdated(this.tags);
+
+  final List<Tag> tags;
+
+  @override
+  List<Object?> get props => [tags];
 }
 
 final class DeviceEditSaveRequested extends DeviceEditEvent {

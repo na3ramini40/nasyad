@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasyad/core/utils/id_generator.dart';
@@ -11,8 +13,13 @@ import 'package:nasyad/domain/usecases/device/delete_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/get_device_usecase.dart';
 import 'package:nasyad/domain/usecases/device/update_device_usecase.dart';
 import 'package:nasyad/domain/entities/schedule_template.dart';
+import 'package:nasyad/domain/entities/tag.dart';
 import 'package:nasyad/domain/services/schedule_due_offset.dart';
 import 'package:nasyad/domain/services/schedule_template_catalog.dart';
+import 'package:nasyad/domain/usecases/tag/create_tag_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/set_device_tags_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/watch_tags_for_device_usecase.dart';
+import 'package:nasyad/domain/usecases/tag/watch_tags_usecase.dart';
 
 part 'device_edit_event.dart';
 part 'device_edit_state.dart';
@@ -25,10 +32,18 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     required CreateDeviceUsecase createDevice,
     required UpdateDeviceUsecase updateDevice,
     required DeleteDeviceUsecase deleteDevice,
+    WatchTagsUsecase? watchTags,
+    WatchTagsForDeviceUsecase? watchTagsForDevice,
+    CreateTagUsecase? createTag,
+    SetDeviceTagsUsecase? setDeviceTags,
   }) : _getDevice = getDevice,
        _createDevice = createDevice,
        _updateDevice = updateDevice,
        _deleteDevice = deleteDevice,
+       _watchTags = watchTags,
+       _watchTagsForDevice = watchTagsForDevice,
+       _createTag = createTag,
+       _setDeviceTags = setDeviceTags,
        super(DeviceEditState(isEdit: deviceId != null, parentId: parentId)) {
     on<DeviceEditStarted>(_onStarted);
     on<DeviceEditNameChanged>(_onNameChanged);
@@ -41,7 +56,11 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     on<DeviceEditIntervalUnitChanged>(_onIntervalUnitChanged);
     on<DeviceEditInitialElapsedChanged>(_onInitialElapsedChanged);
     on<DeviceEditUsageUnitChanged>(_onUsageUnitChanged);
+    on<DeviceEditUseParentUsageChanged>(_onUseParentUsageChanged);
     on<DeviceEditTemplateApplied>(_onTemplateApplied);
+    on<DeviceEditTagToggled>(_onTagToggled);
+    on<DeviceEditTagCreateRequested>(_onTagCreate);
+    on<_DeviceEditTagsCatalogUpdated>(_onTagsCatalogUpdated);
     on<DeviceEditSaveRequested>(_onSave);
     on<DeviceEditDeleteRequested>(_onDelete);
   }
@@ -52,8 +71,13 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
   final CreateDeviceUsecase _createDevice;
   final UpdateDeviceUsecase _updateDevice;
   final DeleteDeviceUsecase _deleteDevice;
+  final WatchTagsUsecase? _watchTags;
+  final WatchTagsForDeviceUsecase? _watchTagsForDevice;
+  final CreateTagUsecase? _createTag;
+  final SetDeviceTagsUsecase? _setDeviceTags;
 
   Device? _existing;
+  StreamSubscription? _tagsSub;
 
   Future<void> _onStarted(
     DeviceEditStarted event,
@@ -62,6 +86,13 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     emit(state.copyWith(status: DeviceEditStatus.loading));
     try {
       final templates = await ScheduleTemplateCatalog.load();
+      final watchTags = _watchTags;
+      if (watchTags != null) {
+        await _tagsSub?.cancel();
+        _tagsSub = watchTags().listen(
+          (tags) => add(_DeviceEditTagsCatalogUpdated(tags)),
+        );
+      }
 
       if (deviceId == null) {
         emit(
@@ -72,6 +103,17 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
 
       final device = await _getDevice(deviceId!);
       _existing = device;
+      final resolvedParentId = device?.parentId ?? parentId;
+      final isChild = resolvedParentId != null;
+      final inheritsParentUsage = isChild && device?.usageUnit == null;
+
+      var selectedTagIds = const <String>[];
+      final watchForDevice = _watchTagsForDevice;
+      if (watchForDevice != null) {
+        selectedTagIds = (await watchForDevice(
+          deviceId!,
+        ).first).map((tag) => tag.id).toList(growable: false);
+      }
 
       emit(
         state.copyWith(
@@ -81,13 +123,15 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
           categoryPreset: device?.categoryPreset,
           locationLabel: device?.locationLabel ?? '',
           notes: device?.description ?? '',
-          parentId: device?.parentId ?? parentId,
+          parentId: resolvedParentId,
           scheduleEnabled: device?.hasSchedule ?? false,
           scheduleType: device?.scheduleType,
           intervalUnit: device?.intervalUnit,
           intervalValue: device?.intervalValue?.toString() ?? '',
           fixedDueAt: device?.fixedDueAt,
           usageUnit: device?.usageUnit,
+          useParentUsage: inheritsParentUsage,
+          selectedTagIds: selectedTagIds,
           clearScheduleType: device?.scheduleType == null,
           clearIntervalUnit: device?.intervalUnit == null,
           clearUsageUnit: device?.usageUnit == null,
@@ -204,7 +248,18 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
     DeviceEditUsageUnitChanged event,
     Emitter<DeviceEditState> emit,
   ) {
-    emit(state.copyWith(usageUnit: event.usageUnit));
+    emit(state.copyWith(usageUnit: event.usageUnit, useParentUsage: false));
+  }
+
+  void _onUseParentUsageChanged(
+    DeviceEditUseParentUsageChanged event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    if (event.useParentUsage) {
+      emit(state.copyWith(useParentUsage: true, clearUsageUnit: true));
+    } else {
+      emit(state.copyWith(useParentUsage: false));
+    }
   }
 
   void _onTemplateApplied(
@@ -220,6 +275,12 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
           )
         : null;
 
+    final inherits = state.isChild && state.useParentUsage;
+    final templateUsageUnit =
+        template.scheduleType == ScheduleType.usageInterval
+        ? UsageIntervalUnitX.fromStorage(template.intervalUnit)
+        : null;
+
     emit(
       state.copyWith(
         scheduleEnabled: true,
@@ -229,11 +290,68 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
         fixedDueAt: fixedDueAt,
         clearFixedDueAt: fixedDueAt == null,
         appliedTemplateId: template.id,
-        usageUnit: template.scheduleType == ScheduleType.usageInterval
-            ? UsageIntervalUnitX.fromStorage(template.intervalUnit)
-            : state.usageUnit,
+        usageUnit: inherits ? null : (templateUsageUnit ?? state.usageUnit),
+        clearUsageUnit: inherits,
+        useParentUsage: inherits,
       ),
     );
+  }
+
+  void _onTagToggled(
+    DeviceEditTagToggled event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    final selected = List<String>.from(state.selectedTagIds);
+    if (selected.contains(event.tagId)) {
+      selected.remove(event.tagId);
+    } else {
+      selected.add(event.tagId);
+    }
+    emit(state.copyWith(selectedTagIds: selected));
+  }
+
+  Future<void> _onTagCreate(
+    DeviceEditTagCreateRequested event,
+    Emitter<DeviceEditState> emit,
+  ) async {
+    final name = event.name.trim();
+    if (name.isEmpty) return;
+    final createTag = _createTag;
+    if (createTag == null) return;
+
+    final existing = state.availableTags
+        .where((tag) => tag.name.toLowerCase() == name.toLowerCase())
+        .toList(growable: false);
+    if (existing.isNotEmpty) {
+      final tagId = existing.first.id;
+      if (!state.selectedTagIds.contains(tagId)) {
+        emit(state.copyWith(selectedTagIds: [...state.selectedTagIds, tagId]));
+      }
+      return;
+    }
+
+    final now = DateTime.now();
+    final tag = Tag(
+      id: IdGenerator.newId(),
+      name: name,
+      createdAt: now,
+      updatedAt: now,
+    );
+    await createTag(tag);
+    emit(
+      state.copyWith(
+        selectedTagIds: [...state.selectedTagIds, tag.id],
+        availableTags: [...state.availableTags, tag]
+          ..sort((a, b) => a.name.compareTo(b.name)),
+      ),
+    );
+  }
+
+  void _onTagsCatalogUpdated(
+    _DeviceEditTagsCatalogUpdated event,
+    Emitter<DeviceEditState> emit,
+  ) {
+    emit(state.copyWith(availableTags: event.tags));
   }
 
   Future<void> _onSave(
@@ -293,12 +411,18 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
 
     final now = DateTime.now();
     final id = deviceId ?? IdGenerator.newId();
-    final resolvedUsageUnit =
-        state.usageUnit ??
-        (state.scheduleType == ScheduleType.usageInterval &&
-                state.intervalUnit != null
-            ? UsageIntervalUnitX.fromStorage(state.intervalUnit!)
-            : null);
+    final isChild = (state.parentId ?? _existing?.parentId) != null;
+    final UsageIntervalUnit? resolvedUsageUnit;
+    if (isChild && state.useParentUsage) {
+      resolvedUsageUnit = null;
+    } else {
+      resolvedUsageUnit =
+          state.usageUnit ??
+          (state.scheduleType == ScheduleType.usageInterval &&
+                  state.intervalUnit != null
+              ? UsageIntervalUnitX.fromStorage(state.intervalUnit!)
+              : null);
+    }
 
     final device = Device(
       id: id,
@@ -330,6 +454,10 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
       } else {
         await _createDevice(device, initialElapsed: initialElapsed);
       }
+      final setTags = _setDeviceTags;
+      if (setTags != null) {
+        await setTags(id, state.selectedTagIds);
+      }
       emit(state.copyWith(status: DeviceEditStatus.saved));
     } catch (error) {
       emit(
@@ -358,5 +486,11 @@ class DeviceEditBloc extends Bloc<DeviceEditEvent, DeviceEditState> {
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _tagsSub?.cancel();
+    return super.close();
   }
 }

@@ -15,6 +15,7 @@ import 'package:nasyad/core/deep_link/deep_link_handler.dart';
 import 'package:nasyad/core/deep_link/deep_link_resolver.dart';
 import 'package:nasyad/core/platform/firebase_platform.dart';
 import 'package:nasyad/core/router/app_router.dart';
+import 'package:nasyad/core/preferences/home_grouping_cubit.dart';
 import 'package:nasyad/core/preferences/soon_window_cubit.dart';
 import 'package:nasyad/core/preferences/sync_preference_cubit.dart';
 import 'package:nasyad/core/theme/app_fonts.dart';
@@ -141,6 +142,11 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(
             create: (_) => SoonWindowCubit(
               store: widget.services.soonWindowPreferenceStore,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => HomeGroupingCubit(
+              store: widget.services.homeGroupingPreferenceStore,
             ),
           ),
           BlocProvider(

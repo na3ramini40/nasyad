@@ -12,13 +12,14 @@ Local-first maintenance tracking for devices/assets (hierarchical) and recurring
 |---|------|-------|
 | 1 | Users create and manage tracked items in a **tree** (children of children allowed) | both |
 | 2 | Any node may have an optional maintenance schedule: calendar interval, usage interval, or fixed date — including an initial “already elapsed” offset | both |
-| 3 | Usage-based schedules share one usage reading on the nearest usage-owner ancestor; calendar schedules progress by wall clock | both |
-| 4 | Users update usage (absolute reading) or mark a node maintained (resets **that** node’s cycle only) | both |
+| 3 | Usage-based schedules share one usage reading on the nearest usage-owner ancestor (children inherit by default; opt out by setting own `usage_unit`); calendar schedules progress by wall clock | both |
+| 4 | Users update usage (absolute reading) or confirm maintenance (resets **that** node’s cycle only; with a usage owner, maintenance also records the absolute reading) | both |
 | 5 | Archive / delete cascades to the **entire subtree** | both |
-| 6 | Due / soon / progress are **computed** from schedule + logs/usage — not stored fields | both |
-| 7 | Root devices expose aggregate due status and progress for parent views | client |
-| 8 | Opening a device exposes schedule progress, nested children, and log history | client |
-| 9 | Home exposes a reminders queue (due maintenance + upcoming birthdays) with filters, plus a feature menu | client |
+| 6 | Due / soon / progress / remaining / target are **computed** from schedule + last maintenance + usage — not stored fields; no schedule ⇒ no own next/progress | both |
+| 7 | Parent status = worst of own schedule (if any) and each child’s aggregate; roots expose that for list/home | client |
+| 8 | Opening a device exposes schedule progress (remaining + target when usage), nested children, log history, and an always-available maintain action | client |
+| 9 | Home exposes a reminders queue (due maintenance + upcoming birthdays) with filters, plus a feature menu; grouping may be **by device** or **by tag** | client |
+| 9a | **Tags** are local labels (not devices). Tag mode on Home shows one row per tag with rollup status; user never treats a tag as an asset device | client |
 | 10 | Preferences include language, theme, calendar system, app lock, and entry to data transfer; settings are grouped in expandable categories | client |
 | 10a | Optional **app lock**: method is password, PIN, or biometric; idle timeout locks the app until unlock; forgot lock uses existing phone OTP and resets lock to unset | client |
 | 11 | Export / import: scope (all / one / selected), formats (JSON / CSV / plain text), share or save; import from file | client |
@@ -36,11 +37,12 @@ Not UI widgets — named places a client must provide. Any UI toolkit maps to th
 
 | Surface | Shows / does |
 |---------|----------------|
-| **Home** | Reminders queue (due maintenance, upcoming birthdays) + filters + feature menu |
+| **Home** | Reminders queue (due maintenance, upcoming birthdays) + filters + feature menu; optional device vs tag grouping |
 | **Device list** | Root devices: latest log summary, aggregate due status + progress |
-| **Device edit** | Name; optional schedule + initial elapsed; optional usage unit (typically roots) |
-| **Device detail** | Status, schedule progress, children, logs; add child; add log |
-| **Log edit** | Kind: maintenance done or usage update (+ optional cost/vendor/photo) |
+| **Device edit** | Name; optional schedule + initial elapsed; usage unit (roots, or child opt-out); optional tags |
+| **Device detail** | Status, schedule progress (remaining/target when usage), children, logs; maintain; add child; add log |
+| **Log edit** | Kind: maintenance done or usage update; usage reading when required (+ optional cost/vendor/photo) |
+| **Tag manage** | Create/rename/delete local tags; assign devices to tags (tags are not devices) |
 | **Birthday list / edit** | People: name + month/day + calendar system |
 | **Preferences** | Expandable categories: app lock, language & region, reminders, appearance, sync, data, about |
 | **App unlock** | Full-screen gate when locked; unlock via configured method; forgot → phone OTP then lock cleared |

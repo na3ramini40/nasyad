@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nasyad/domain/entities/device_status.dart';
+import 'package:nasyad/domain/entities/export_bundle.dart';
 import 'package:nasyad/domain/entities/export_format.dart';
 import 'package:nasyad/domain/entities/geo_point.dart';
 import 'package:nasyad/domain/entities/interval_unit.dart';
@@ -106,7 +107,7 @@ void main() {
       final bundle = sampleBundle();
       expect(bundle.deviceCount, 1);
       expect(bundle.logCount, 1);
-      expect(bundle.version, 3);
+      expect(bundle.version, ExportBundle.currentVersion);
     });
   });
 

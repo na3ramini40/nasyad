@@ -284,6 +284,26 @@ class AppLocalizationsFa extends AppLocalizations {
   String get markMaintained => 'ثبت سرویس';
 
   @override
+  String get maintainAction => 'سرویس';
+
+  @override
+  String remainingUsageLabel(String remaining) {
+    return 'باقی‌مانده: $remaining';
+  }
+
+  @override
+  String targetUsageLabel(String target) {
+    return 'هدف: $target';
+  }
+
+  @override
+  String get useParentUsage => 'استفاده از مصرف والد';
+
+  @override
+  String get useParentUsageSubtitle =>
+      'خوانش مصرف از والد به ارث می‌رسد. برای ردیابی جداگانه خاموش کنید.';
+
+  @override
   String get updateUsage => 'به‌روزرسانی مصرف';
 
   @override
@@ -610,6 +630,65 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get placesFeatureHint =>
       'نقطه، مسیر و محدوده را روی نقشه ذخیره کنید تا آفلاین در دسترس باشد.';
+
+  @override
+  String get tags => 'برچسب‌ها';
+
+  @override
+  String get tagsFeatureHint =>
+      'دستگاه‌ها را برای گروه‌بندی صفحهٔ خانه برچسب بزنید. برچسب دستگاه نیست.';
+
+  @override
+  String get addTag => 'افزودن برچسب';
+
+  @override
+  String get editTag => 'ویرایش برچسب';
+
+  @override
+  String get tagName => 'نام برچسب';
+
+  @override
+  String get tagNameHint => 'نام برچسب…';
+
+  @override
+  String get tagNameRequired => 'نام برچسب الزامی است';
+
+  @override
+  String get createTag => 'ایجاد برچسب';
+
+  @override
+  String get noTagsTitle => 'هنوز برچسبی نیست';
+
+  @override
+  String get noTagsHint =>
+      'برچسب بسازید تا دستگاه‌ها را در صفحهٔ خانه گروه کنید.';
+
+  @override
+  String get deleteTagTitle => 'حذف برچسب؟';
+
+  @override
+  String deleteTagBody(String name) {
+    return '$name حذف می‌شود و انتساب دستگاه‌ها پاک می‌شود.';
+  }
+
+  @override
+  String get deviceTagsSection => 'برچسب‌ها';
+
+  @override
+  String get deviceTagsHint => 'برچسب‌های اختیاری برای گروه‌بندی یادآورها.';
+
+  @override
+  String get homeGroupingByDevice => 'بر اساس دستگاه';
+
+  @override
+  String get homeGroupingByTag => 'بر اساس برچسب';
+
+  @override
+  String get homeGroupingLabel => 'گروه‌بندی یادآورها';
+
+  @override
+  String get reminderTagRollup =>
+      'جمع‌بندی برچسب · بدترین وضعیت دستگاه‌های مرتبط';
 
   @override
   String get addPlace => 'افزودن مکان';

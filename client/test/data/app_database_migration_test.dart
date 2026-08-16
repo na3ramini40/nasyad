@@ -145,7 +145,7 @@ void main() {
     final database = AppDatabase(executor);
     addTearDown(database.close);
 
-    expect(database.schemaVersion, 7);
+    expect(database.schemaVersion, 8);
 
     final devices = await database.select(database.devicesTable).get();
     expect(devices, hasLength(1));
@@ -167,7 +167,7 @@ void main() {
     final database = AppDatabase(executor);
     addTearDown(database.close);
 
-    expect(database.schemaVersion, 7);
+    expect(database.schemaVersion, 8);
 
     final devices = await database.select(database.devicesTable).get();
     expect(devices, hasLength(1));
@@ -197,7 +197,7 @@ void main() {
     final database = AppDatabase(NativeDatabase.memory());
     addTearDown(database.close);
 
-    expect(database.schemaVersion, 7);
+    expect(database.schemaVersion, 8);
 
     await database
         .into(database.devicesTable)

@@ -22,7 +22,7 @@ Screen chrome and copy: `.cursor/skills/shared/product/` (app-map wins for UX de
 | Birthday | [domain/birthday.md](domain/birthday.md) |
 | User (account / OTP / profile) | [domain/user.md](domain/user.md) |
 | App config / feature flags | [domain/app-config.md](domain/app-config.md) |
-| Local-only capabilities | [domain/local.md](domain/local.md) |
+| Local-only capabilities (tags, home grouping, …) | [domain/local.md](domain/local.md) |
 | Enums (wire strings) | [domain/enums.md](domain/enums.md) |
 | Sync | [domain/sync.md](domain/sync.md) |
 | Client local store | [domain/client-store.md](domain/client-store.md) |

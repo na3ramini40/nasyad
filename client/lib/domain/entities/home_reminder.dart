@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nasyad/domain/entities/maintenance_status.dart';
 
-enum HomeReminderKind { device, birthday }
+enum HomeReminderKind { device, birthday, tag }
 
 enum HomeReminderUrgency { due, soon, upcoming }
 
@@ -14,6 +14,7 @@ class HomeReminder extends Equatable {
     required this.sortKey,
     this.deviceId,
     this.birthdayId,
+    this.tagId,
     this.deviceStatus,
     this.deviceProgress,
     this.daysUntilBirthday,
@@ -26,6 +27,7 @@ class HomeReminder extends Equatable {
   final int sortKey;
   final String? deviceId;
   final String? birthdayId;
+  final String? tagId;
   final MaintenanceStatus? deviceStatus;
   final double? deviceProgress;
   final int? daysUntilBirthday;
@@ -39,6 +41,7 @@ class HomeReminder extends Equatable {
     sortKey,
     deviceId,
     birthdayId,
+    tagId,
     deviceStatus,
     deviceProgress,
     daysUntilBirthday,

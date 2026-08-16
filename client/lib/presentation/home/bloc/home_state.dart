@@ -26,7 +26,11 @@ final class HomeLoaded extends HomeState {
       HomeReminderFilter.all => allReminders,
       HomeReminderFilter.devices =>
         allReminders
-            .where((item) => item.kind == HomeReminderKind.device)
+            .where(
+              (item) =>
+                  item.kind == HomeReminderKind.device ||
+                  item.kind == HomeReminderKind.tag,
+            )
             .toList(growable: false),
       HomeReminderFilter.birthdays =>
         allReminders

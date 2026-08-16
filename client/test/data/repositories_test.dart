@@ -125,7 +125,7 @@ void main() {
     expect(device?.usageAtLastMaintenance, 10);
   });
 
-  test('mark maintained resets baseline to current usage', () async {
+  test('maintain with usageValue updates owner reading and baseline', () async {
     await devices.createDevice(
       sampleDevice(
         usageUnit: UsageIntervalUnit.km,
@@ -137,13 +137,82 @@ void main() {
       ),
     );
     await logs.createLog(
-      sampleLog(kind: DeviceLogKind.maintenanceDone, usageValue: null),
+      sampleLog(
+        kind: DeviceLogKind.maintenanceDone,
+        usageValue: 520,
+        usageUnit: UsageIntervalUnit.km,
+      ),
     );
 
     final device = await devices.getDevice('device-1');
-    expect(device?.usageAtLastMaintenance, 500);
+    expect(device?.currentUsage, 520);
+    expect(device?.usageAtLastMaintenance, 520);
     expect(device?.lastMaintainedAt, isNotNull);
   });
+
+  test('maintain without usageValue when owner exists throws', () async {
+    await devices.createDevice(
+      sampleDevice(
+        usageUnit: UsageIntervalUnit.km,
+        currentUsage: 500,
+        usageAtLastMaintenance: 0,
+        scheduleType: ScheduleType.usageInterval,
+        intervalValue: 1000,
+        intervalUnit: 'km',
+      ),
+    );
+
+    expect(
+      () => logs.createLog(
+        sampleLog(kind: DeviceLogKind.maintenanceDone, usageValue: null),
+      ),
+      throwsA(isA<ArgumentError>()),
+    );
+  });
+
+  test(
+    'maintain on child updates parent owner km and child baseline',
+    () async {
+      await devices.createDevice(
+        sampleDevice(
+          id: 'car',
+          name: 'Car',
+          usageUnit: UsageIntervalUnit.km,
+          currentUsage: 9000,
+          scheduleType: null,
+          intervalValue: null,
+          intervalUnit: null,
+        ),
+      );
+      await devices.createDevice(
+        sampleDevice(
+          id: 'oil',
+          parentId: 'car',
+          name: 'Oil',
+          scheduleType: ScheduleType.usageInterval,
+          intervalValue: 1000,
+          intervalUnit: 'km',
+          usageAtLastMaintenance: 8000,
+        ),
+      );
+
+      await logs.createLog(
+        sampleLog(
+          id: 'log-oil',
+          deviceId: 'oil',
+          kind: DeviceLogKind.maintenanceDone,
+          usageValue: 9100,
+          usageUnit: UsageIntervalUnit.km,
+        ),
+      );
+
+      final car = await devices.getDevice('car');
+      final oil = await devices.getDevice('oil');
+      expect(car?.currentUsage, 9100);
+      expect(oil?.usageAtLastMaintenance, 9100);
+      expect(oil?.lastMaintainedAt, isNotNull);
+    },
+  );
 
   test('createLog throws when device missing', () async {
     expect(() => logs.createLog(sampleLog()), throwsA(isA<StateError>()));

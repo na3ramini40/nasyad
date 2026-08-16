@@ -8,7 +8,7 @@ abstract final class LocalReminderNotificationCopy {
     HomeReminder reminder,
   ) {
     return switch (reminder.kind) {
-      HomeReminderKind.device => (
+      HomeReminderKind.device || HomeReminderKind.tag => (
         title: reminder.title,
         body: reminder.deviceStatus == MaintenanceStatus.due
             ? l10n.reminderDeviceDue
