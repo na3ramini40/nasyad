@@ -138,7 +138,7 @@ SPECTACULAR_SETTINGS = {
         "(Swagger Authorize: paste the full value including the Token prefix). "
         "Obtain a token via the accounts login/OTP flow."
     ),
-    "VERSION": "1.3.0",
+    "VERSION": "1.4.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
     "SERVE_AUTHENTICATION": [],
