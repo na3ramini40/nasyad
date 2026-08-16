@@ -13,6 +13,7 @@ From `client/pubspec.yaml` — default to these:
 | App lock | `local_auth`, `flutter_secure_storage` (secrets; not synced) |
 | Calendar | `shamsi_date` |
 | Transfer | `share_plus`, `path_provider`, `file_selector` |
+| Share history | `pdf` (maintenance-history PDF), plus Transfer share path (`share_plus` / `path_provider`) |
 | Updates/network | `http`, `crypto` (GitHub release checks only) |
 | Notifications | `firebase_core`, `firebase_messaging`, `flutter_local_notifications` (skipped on Linux) |
 | Deep links | `app_links` |

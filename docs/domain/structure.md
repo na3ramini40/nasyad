@@ -18,6 +18,7 @@ Local-first maintenance tracking for devices/assets (hierarchical) and recurring
 | 6 | Due / soon / progress / remaining / target are **computed** from schedule + last maintenance + usage — not stored fields; no schedule ⇒ no own next/progress | both |
 | 7 | Parent status = worst of own schedule (if any) and each child’s aggregate; roots expose that for list/home | client |
 | 8 | Opening a device exposes schedule progress (remaining + target when usage), nested children, log history, and an always-available maintain action | client |
+| 8a | Client can share a human-readable **PDF** of maintenance history for a device subtree (not Transfer backup); empty subtree does not share | client |
 | 9 | Home exposes a reminders queue (due maintenance + upcoming birthdays) with filters, plus a feature menu; grouping may be **by device** or **by tag** | client |
 | 9a | **Tags** are local labels (not devices). Tag mode on Home shows one row per tag with rollup status; user never treats a tag as an asset device | client |
 | 10 | Preferences include language, theme, calendar system, app lock, and entry to data transfer; settings are grouped in expandable categories | client |
@@ -40,7 +41,7 @@ Not UI widgets — named places a client must provide. Any UI toolkit maps to th
 | **Home** | Reminders queue (due maintenance, upcoming birthdays) + filters + feature menu; optional device vs tag grouping |
 | **Device list** | Root devices: latest log summary, aggregate due status + progress |
 | **Device edit** | Name; optional schedule + initial elapsed; usage unit (roots, or child opt-out); optional tags |
-| **Device detail** | Status, schedule progress (remaining/target when usage), children, logs; maintain; add child; add log |
+| **Device detail** | Status, schedule progress (remaining/target when usage), children, logs; maintain; add child; add log; share maintenance history (PDF) |
 | **Log edit** | Kind: maintenance done or usage update; usage reading when required (+ optional cost/vendor/photo) |
 | **Tag manage** | Create/rename/delete local tags; assign devices to tags (tags are not devices) |
 | **Birthday list / edit** | People: name + month/day + calendar system |

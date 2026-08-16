@@ -14,25 +14,27 @@ Durable design bets and gaps — not a sprint backlog. Update when UI ships or a
 - Places exist on the map but are weakly tied to maintenance jobs
 - Home Features menu can grow into a dumping ground — new domains need a clear job
 - Sync/conflict and guest→signed-in are understood by power path; guest empty states still carry most first-run weight
-- No way to send a service person a readable “what I’ve done so far” for one device (car / home asset) — Transfer Share is machine backup, wrong job
-- App “share” wording is easy to confuse with backup export, account sync, and human handoff — keep jobs named and separated in UX
+- App “share” wording is easy to confuse with backup export, account sync, and human handoff — keep jobs named and separated in UX (device history share = PDF handoff)
 
 ## Open bets
 
 - Deepen “what’s due → I maintained it” before adding new top-level domains
 - Tags are for Home rollup only — never promote tags into assets
-- Device history share = human-readable message for a service person; keep Transfer/file export and account sync as the only backup/move paths
+- Device history share = human-readable **PDF** for a service person (maintenanceDone + parts; clipboard fallback); keep Transfer/file export and account sync as the only backup/move paths
 
 ## When asked “what we have to do” / next cool feature — say these **in order**
 
 Parked 2026-08-16 as the preferred Nasyad deepening queue (not journal / Capsule / Record). Recite this list when the user asks what to do next:
 
-1. **Device history share** — From a device, send a human-readable “what I’ve done so far” (logs, dates, cost/vendor/photos as available) via OS share. Not Transfer backup; not account sync.
-2. **Tie Places to maintenance** — Optional link place ↔ device and/or log (“lives at…”, “serviced at…”); don’t overbuild maps.
-3. **Smarter Home → Maintain** — Fewer taps from a due reminder to maintain (+ usage when needed); explicit confirm stays sacred.
-4. **Local “story of this device”** — Calm chronological timeline on device detail from existing logs; no AI/analytics product.
+1. **Tie Places to maintenance** — Optional link place ↔ device and/or log (“lives at…”, “serviced at…”); don’t overbuild maps.
+2. **Smarter Home → Maintain** — Fewer taps from a due reminder to maintain (+ usage when needed); explicit confirm stays sacred.
+3. **Local “story of this device”** — Calm chronological timeline on device detail from existing logs; no AI/analytics product.
 
 After these (or if identity expands): only then revisit parked journal / Capsule / Record.
+
+## Shipped deepening (recent)
+
+- 2026-08-16 — **Device history share**: PDF of `maintenanceDone` for device + parts via OS share; clipboard plain-text fallback; not Transfer; not sync.
 
 ## Rejected / parked (do not reopen lightly)
 

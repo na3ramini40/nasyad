@@ -557,5 +557,14 @@
   "appLockWrongSecret": "That’s not correct",
   "appLockBiometricUnavailable": "Fingerprint isn’t available on this device",
   "appLockBiometricFailed": "Fingerprint didn’t work. Try again.",
-  "appLockVerifyToContinue": "Unlock to continue"
+  "appLockVerifyToContinue": "Unlock to continue",
+  "shareHistory": "Share history",
+  "noMaintenanceToShare": "No maintenance to share",
+  "historyCopiedToClipboard": "History copied to clipboard",
+  "maintenanceHistoryTitle": "{deviceName} maintenance history",
+  "@maintenanceHistoryTitle": {
+    "placeholders": {
+      "deviceName": { "type": "String" }
+    }
+  }
 }
