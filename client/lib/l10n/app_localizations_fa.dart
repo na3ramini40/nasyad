@@ -81,6 +81,21 @@ class AppLocalizationsFa extends AppLocalizations {
   String get seasonWinter => 'زمستان';
 
   @override
+  String get seasonColorBlind => 'مناسب کوررنگی';
+
+  @override
+  String get seasonColorBlindHint => 'رنگ‌های وضعیت بدون وابستگی به قرمز و سبز';
+
+  @override
+  String get displaySize => 'اندازه نمایش';
+
+  @override
+  String get displaySizeHint => 'با دو انگشت بکشید یا از لغزنده استفاده کنید';
+
+  @override
+  String get displaySizeReset => 'بازنشانی';
+
+  @override
   String get brightness => 'روشنایی';
 
   @override

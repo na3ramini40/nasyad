@@ -22,6 +22,8 @@ import 'package:nasyad/core/theme/app_fonts.dart';
 import 'package:nasyad/core/theme/app_theme.dart';
 import 'package:nasyad/core/theme/season_theme_cubit.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
+import 'package:nasyad/core/theme/ui_scale_cubit.dart';
+import 'package:nasyad/core/ui/ui_scale_wrapper.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
 import 'package:nasyad/data/services/local_reminder_notification_service.dart';
 import 'package:nasyad/data/services/push_notification_service.dart';
@@ -130,6 +132,10 @@ class _MyAppState extends State<MyApp> {
                 ThemeModeCubit(store: widget.services.themeModePreferenceStore),
           ),
           BlocProvider(
+            create: (_) =>
+                UiScaleCubit(store: widget.services.uiScalePreferenceStore),
+          ),
+          BlocProvider(
             create: (_) => SeasonThemeCubit(
               store: widget.services.seasonThemePreferenceStore,
             ),
@@ -217,9 +223,11 @@ class _MyAppState extends State<MyApp> {
                         ],
                         routerConfig: _router,
                         builder: (context, child) {
-                          return AppLockGate(
-                            router: _router,
-                            child: child ?? const SizedBox.shrink(),
+                          return UiScaleWrapper(
+                            child: AppLockGate(
+                              router: _router,
+                              child: child ?? const SizedBox.shrink(),
+                            ),
                           );
                         },
                       );

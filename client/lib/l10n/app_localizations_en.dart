@@ -81,6 +81,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seasonWinter => 'Winter';
 
   @override
+  String get seasonColorBlind => 'Color blind';
+
+  @override
+  String get seasonColorBlindHint =>
+      'Keeps status colors clear without red vs green';
+
+  @override
+  String get displaySize => 'Display size';
+
+  @override
+  String get displaySizeHint => 'Pinch with two fingers, or use the slider';
+
+  @override
+  String get displaySizeReset => 'Reset';
+
+  @override
   String get brightness => 'Brightness';
 
   @override

@@ -16,10 +16,12 @@ import 'package:nasyad/core/theme/season_theme_cubit.dart';
 import 'package:nasyad/core/theme/season_theme_preference_store.dart';
 import 'package:nasyad/core/theme/theme_mode_cubit.dart';
 import 'package:nasyad/core/theme/theme_mode_preference_store.dart';
+import 'package:nasyad/core/theme/ui_scale_preference_store.dart';
 import 'package:nasyad/core/ui/ui.dart';
 import 'package:nasyad/core/version/last_seen_version_store.dart';
 import 'package:nasyad/data/local/auth_session_store.dart';
 import 'package:nasyad/data/local/db/app_database.dart';
+import 'package:nasyad/domain/entities/season_theme.dart';
 import 'package:nasyad/main.dart';
 import 'package:nasyad/presentation/splash/bloc/splash_cubit.dart';
 
@@ -59,6 +61,7 @@ Future<AppServices> _testServices() {
     calendarPreferenceStore: CalendarPreferenceStore.memory(),
     seasonThemePreferenceStore: SeasonThemePreferenceStore.memory(),
     themeModePreferenceStore: ThemeModePreferenceStore.memory(),
+    uiScalePreferenceStore: UiScalePreferenceStore.memory(),
     reminderNotificationPreferenceStore:
         ReminderNotificationPreferenceStore.memory(),
     soonWindowPreferenceStore: SoonWindowPreferenceStore.memory(),
@@ -161,6 +164,57 @@ void main() {
     await _disposeApp(tester, services);
   });
 
+  testWidgets('preferences can set color blind theme and display size', (
+    tester,
+  ) async {
+    final services = await _testServices();
+
+    await _pumpApp(tester, services);
+
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    final appearance = find.text('Appearance');
+    await tester.scrollUntilVisible(
+      appearance,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(appearance);
+    await tester.pumpAndSettle();
+
+    final colorBlind = find.text('Color blind');
+    await tester.scrollUntilVisible(
+      colorBlind,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(colorBlind);
+    await tester.pumpAndSettle();
+
+    expect(
+      await services.seasonThemePreferenceStore.read(),
+      SeasonTheme.colorBlind,
+    );
+
+    final displaySize = find.text('Display size');
+    await tester.scrollUntilVisible(
+      displaySize,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Slider), findsOneWidget);
+    await tester.drag(find.byType(Slider), const Offset(100, 0));
+    await tester.pumpAndSettle();
+
+    expect(await services.uiScalePreferenceStore.read(), greaterThan(1.0));
+
+    await _disposeApp(tester, services);
+  });
+
   test('SplashCubit emits ready after delay', () async {
     final services = await _testServices();
     final cubit = SplashCubit(
@@ -182,6 +236,7 @@ void main() {
       calendarPreferenceStore: CalendarPreferenceStore.memory(),
       seasonThemePreferenceStore: SeasonThemePreferenceStore.memory(),
       themeModePreferenceStore: ThemeModePreferenceStore.memory(),
+      uiScalePreferenceStore: UiScalePreferenceStore.memory(),
       reminderNotificationPreferenceStore:
           ReminderNotificationPreferenceStore.memory(),
       soonWindowPreferenceStore: SoonWindowPreferenceStore.memory(),
