@@ -19,9 +19,55 @@ defaults:
   run:
     working-directory: client
 
+# PRs: skip full client/server verify when only docs/.cursor/etc. changed.
+# Non-PR (push/tag/dispatch): always run full verify so master/tag builds stay gated.
+# Stub jobs keep the same check names so branch protection still sees "Verify".
 jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      client: ${{ steps.result.outputs.client }}
+      server: ${{ steps.result.outputs.server }}
+    steps:
+      - name: Checkout
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v5
+
+      - name: Filter paths
+        if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            client:
+              - 'client/**'
+              - 'tool/**'
+              - 'docker-compose.yml'
+              - 'env.example/**'
+              - '.github/workflows/**'
+            server:
+              - 'server/**'
+              - 'tool/**'
+              - 'docker-compose.yml'
+              - 'env.example/**'
+              - '.github/workflows/**'
+
+      - name: Set outputs
+        id: result
+        run: |
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+            echo "client=true" >> "$GITHUB_OUTPUT"
+            echo "server=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "client=${{ steps.filter.outputs.client }}" >> "$GITHUB_OUTPUT"
+            echo "server=${{ steps.filter.outputs.server }}" >> "$GITHUB_OUTPUT"
+          fi
+
   verify:
     name: Verify
+    needs: changes
+    if: needs.changes.outputs.client == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -71,8 +117,22 @@ jobs:
           --dart-define=GITHUB_OWNER=na3ramini40
           --dart-define=GITHUB_REPO=nasyad
 
+  verify_docs_only:
+    name: Verify
+    needs: changes
+    if: needs.changes.outputs.client != 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Skip full client Verify
+        run: echo "No client/tool/CI paths changed on this PR; full Verify skipped."
+
   verify_server:
     name: Verify server
+    needs: changes
+    if: needs.changes.outputs.server == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -92,14 +152,29 @@ jobs:
       - name: Django check
         run: python manage.py check
 
+  verify_server_docs_only:
+    name: Verify server
+    needs: changes
+    if: needs.changes.outputs.server != 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Skip full server Verify
+        run: echo "No server/tool/CI paths changed on this PR; full Verify server skipped."
+
   build_apk:
     name: Build APK
-    needs: verify
+    needs: [changes, verify]
     if: >
-      github.event_name == 'workflow_dispatch' ||
-      startsWith(github.ref, 'refs/tags/') ||
-      (github.event_name == 'push' &&
-        (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
+      always() &&
+      needs.changes.outputs.client == 'true' &&
+      needs.verify.result == 'success' &&
+      (github.event_name == 'workflow_dispatch' ||
+       startsWith(github.ref, 'refs/tags/') ||
+       (github.event_name == 'push' &&
+         (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')))
     runs-on: ubuntu-latest
     outputs:
       app_version: ${{ steps.app_version.outputs.full }}
@@ -179,12 +254,15 @@ jobs:
 
   build_linux:
     name: Build Linux
-    needs: verify
+    needs: [changes, verify]
     if: >
-      github.event_name == 'workflow_dispatch' ||
-      startsWith(github.ref, 'refs/tags/') ||
-      (github.event_name == 'push' &&
-        (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
+      always() &&
+      needs.changes.outputs.client == 'true' &&
+      needs.verify.result == 'success' &&
+      (github.event_name == 'workflow_dispatch' ||
+       startsWith(github.ref, 'refs/tags/') ||
+       (github.event_name == 'push' &&
+         (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')))
     runs-on: ubuntu-latest
     outputs:
       app_version_name: ${{ steps.app_version.outputs.name }}
@@ -235,12 +313,15 @@ jobs:
 
   build_windows:
     name: Build Windows
-    needs: verify
+    needs: [changes, verify]
     if: >
-      github.event_name == 'workflow_dispatch' ||
-      startsWith(github.ref, 'refs/tags/') ||
-      (github.event_name == 'push' &&
-        (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
+      always() &&
+      needs.changes.outputs.client == 'true' &&
+      needs.verify.result == 'success' &&
+      (github.event_name == 'workflow_dispatch' ||
+       startsWith(github.ref, 'refs/tags/') ||
+       (github.event_name == 'push' &&
+         (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')))
     # windows-latest currently has VS 2026; Flutter 3.35.x maps unknown VS to
     # "Visual Studio 16 2019" and fails. Pin 2022 until we bump Flutter past 3.38.2.
     runs-on: windows-2022
