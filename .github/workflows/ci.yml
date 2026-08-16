@@ -26,6 +26,10 @@ jobs:
   changes:
     name: Detect changes
     runs-on: ubuntu-latest
+    # Tag/push skip checkout; must not inherit repo-wide client/ cwd.
+    defaults:
+      run:
+        working-directory: .
     outputs:
       client: ${{ steps.result.outputs.client }}
       server: ${{ steps.result.outputs.server }}
