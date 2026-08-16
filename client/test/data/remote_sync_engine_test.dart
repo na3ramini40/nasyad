@@ -481,64 +481,57 @@ void main() {
       expect(await state.readTagsUpdatedSince(), DateTime.utc(2026, 4, 1));
     });
 
-    test('deletes remote-only links and remote-only tags on push', () async {
-      final tags = _MemoryTags()
-        ..seed(
-          TagModel(
-            id: 't1',
-            name: 'Keep',
-            createdAt: DateTime.utc(2026, 1, 1),
-            updatedAt: DateTime.utc(2026, 1, 1),
-          ),
-        )
-        ..seedLink(
-          DeviceTagLinkModel(
-            deviceId: 'd1',
-            tagId: 't1',
-            createdAt: DateTime.utc(2026, 1, 1),
-          ),
-        );
+    test('empty second install does not wipe remote tags or links', () async {
+      final tags = _MemoryTags();
       final remote = _RecordingRemote()
         ..pulledTags = [
           TagModel(
-            id: 't1',
-            name: 'Keep',
-            createdAt: DateTime.utc(2026, 1, 1),
-            updatedAt: DateTime.utc(2026, 1, 1),
-          ),
-          TagModel(
-            id: 't-gone',
-            name: 'Remote only tag',
+            id: 't-home',
+            name: 'home',
             createdAt: DateTime.utc(2026, 1, 1),
             updatedAt: DateTime.utc(2026, 1, 1),
           ),
         ]
         ..pulledLinks = [
           DeviceTagLinkModel(
-            deviceId: 'd1',
-            tagId: 't1',
-            createdAt: DateTime.utc(2026, 1, 1),
-          ),
-          DeviceTagLinkModel(
-            deviceId: 'd2',
-            tagId: 't-gone',
+            deviceId: 'car',
+            tagId: 't-home',
             createdAt: DateTime.utc(2026, 1, 2),
           ),
+        ]
+        ..pulledDevices = [
+          DeviceModel.fromEntity(sampleDevice(id: 'car', name: 'Car')),
+        ]
+        ..pulledLogs = [
+          DeviceLogModel.fromEntity(sampleLog(id: 'log-1', deviceId: 'car')),
+        ]
+        ..pulledBirthdays = [
+          BirthdayModel.fromEntity(sampleBirthday(id: 'b1', name: 'Ada')),
         ];
+      final devices = _MemoryDevices();
+      final logs = _MemoryLogs();
+      final birthdays = _MemoryBirthdays();
       final engine = RemoteSyncEngine(
         remote: remote,
-        devices: _MemoryDevices(),
-        logs: _MemoryLogs(),
-        birthdays: _MemoryBirthdays(),
+        devices: devices,
+        logs: logs,
+        birthdays: birthdays,
         tags: tags,
         syncState: SyncStateStore.memory(),
       );
 
       await engine.sync(token: 'tok');
 
-      expect(remote.deletedTagIds, contains('t-gone'));
-      expect(remote.deletedLinkKeys, contains('d2/t-gone'));
-      expect(remote.deletedLinkKeys, isNot(contains('d1/t1')));
+      expect(remote.deletedTagIds, isEmpty);
+      expect(remote.deletedLinkKeys, isEmpty);
+      expect((await devices.getDevice('car'))?.name, 'Car');
+      expect((await logs.getLogById('log-1'))?.id, 'log-1');
+      expect((await birthdays.getBirthday('b1'))?.name, 'Ada');
+      expect((await tags.getTag('t-home'))?.name, 'home');
+      final links = await tags.getDeviceTagLinks();
+      expect(links, hasLength(1));
+      expect(links.single.deviceId, 'car');
+      expect(links.single.tagId, 't-home');
     });
 
     test('pull links append-only by pair', () async {

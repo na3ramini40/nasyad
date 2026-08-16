@@ -15,6 +15,8 @@ Optional remote replication of syncable entities ([device.md](device.md), [devic
 | Pull cursors: devices/birthdays/tags by `updated_at`; logs by `created_at`; device–tag links by `created_at` | both |
 | Upserts keyed by client-assigned entity `id` (idempotent); device–tag links by `(device_id, tag_id)` | both |
 | Creating a device log on the server applies the same usage / maintenance side effects as the client ([device-log.md](device-log.md)) and bumps affected devices’ `updated_at` | server |
+| Tag / link push is upsert-only — never delete remote-only rows (an empty second install must not wipe the account). Hard deletes do not propagate without tombstones | client |
+| Not synced (stay on-device / export-import): [places](local.md), log photos, preferences, snooze, app lock, home-grouping preference | client |
 | Server enforces `user_id` + row-level isolation; after a confirmed local-wins push the client may advance `updated_at` so the server store accepts the owner’s chosen row | both |
 | Client never trusts another user’s rows; sync fills the local store, never replaces local-first reads | client |
 | Auth secrets live in env / host secrets only — never in the domain model or repo | server |

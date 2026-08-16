@@ -18,9 +18,9 @@ import 'package:nasyad/domain/services/remote_sync_port.dart';
 /// Conflict policy: **local wins** for devices/birthdays/tags after confirm;
 /// logs and device–tag links are append-only (insert if missing id / pair).
 ///
-/// Tags and links: this install’s local catalog is authoritative on push —
-/// upsert all local rows, then DELETE remote tags/links absent locally
-/// (same class of limitation as birthday delete; no tombstones).
+/// Tags and links: push **upserts only** (never DELETE remote-only rows). An
+/// empty second install must not wipe the account catalog; deletions do not
+/// propagate until tombstones exist (same class as birthday delete).
 ///
 /// Device log pull does **not** re-apply usage/maintenance side effects:
 /// server applies them on create and bumps device `updated_at`; device rows
@@ -182,12 +182,11 @@ class RemoteSyncEngine implements RemoteSyncPort {
     }
   }
 
-  /// Local tag catalog wins: upsert all local, then DELETE remote-only ids.
+  /// Upsert local tags only — never DELETE remote-only rows (empty install safe).
   Future<void> _pushTags(String token) async {
     final remoteRows = await _remote.listTags(token: token);
     final remoteById = {for (final t in remoteRows) t.id: t};
     final local = await _tags.getAllTags();
-    final localIds = {for (final t in local) t.id};
 
     for (final tag in local) {
       var toPush = tag;
@@ -203,34 +202,13 @@ class RemoteSyncEngine implements RemoteSyncPort {
       }
       await _remote.upsertTag(token: token, tag: toPush);
     }
-
-    for (final remote in remoteRows) {
-      if (!localIds.contains(remote.id)) {
-        await _remote.deleteTag(token: token, id: remote.id);
-      }
-    }
   }
 
-  /// Local link set wins: upsert all local, then DELETE remote-only pairs.
+  /// Upsert local links only — never DELETE remote-only pairs (empty install safe).
   Future<void> _pushDeviceTagLinks(String token) async {
     final local = await _tags.getDeviceTagLinks();
-    final localKeys = {
-      for (final link in local) _linkKey(link.deviceId, link.tagId),
-    };
-
     for (final link in local) {
       await _remote.upsertDeviceTagLink(token: token, link: link);
-    }
-
-    final remoteRows = await _remote.listDeviceTagLinks(token: token);
-    for (final remote in remoteRows) {
-      if (!localKeys.contains(_linkKey(remote.deviceId, remote.tagId))) {
-        await _remote.deleteDeviceTagLink(
-          token: token,
-          deviceId: remote.deviceId,
-          tagId: remote.tagId,
-        );
-      }
     }
   }
 
